@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="{{ asset('admin/assets/css/fullcalendar.css') }}" />
         <link rel="stylesheet" href="{{ asset('admin/assets/css/main.css') }}" />
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -555,7 +556,18 @@
 
 
         <!-- ========= All Javascript files linkup ======== -->
-        <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#select-multiple').select2({
+                placeholder: 'Veuillez choisir un ou plusieurs rôles'
+            });
+        });
+    </script>
+
+
+    <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('admin/assets/js/Chart.min.js') }}"></script>
         <script src="{{ asset('admin/assets/js/dynamic-pie-chart.js') }}"></script>
         <script src="{{ asset('admin/assets/js/moment.min.js') }}"></script>
@@ -564,6 +576,7 @@
         <script src="{{ asset('admin/assets/js/world-merc.js') }}"></script>
         <script src="{{ asset('admin/assets/js/polyfill.js') }}"></script>
         <script src="{{ asset('admin/assets/js/main.js') }}"></script>
+
 
         <script>
             // ======== jvectormap activation

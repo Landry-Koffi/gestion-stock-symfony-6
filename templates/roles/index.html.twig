@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Roles index{% endblock %}
+
+{% block body %}
+<section class="table-components mt-5">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des rôles</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('app_roles_new') }}" class="btn btn-primary">Ajouter un rôle</a>
+            </div>
+        </div>
+
+        <table class="table table-striped mt-3">
+            <thead class="table-primary p-1">
+            <tr>
+                <th><h6>Libellé</h6></th>
+                <th><h6>Action</h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+            {% for role in roles %}
+                <tr>
+                    <td class="min-width">
+                        <p>{{ role.libelle }}</p>
+                    </td>
+                    <td>
+                        <div class="action">
+                            <a class="text-danger" href="{{ path('app_roles_show', {'id': role.id}) }}">
+                                <i class="lni lni-trash-can"></i>
+                            </a> &nbsp; &nbsp;
+                            <a class="text-dark-emphasis" href="{{ path('app_roles_edit', {'id': role.id}) }}">
+                                <i class="lni lni-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">no records found</td>
+                </tr>
+            {% endfor %}
+            <!-- end table row -->
+            </tbody>
+        </table>
+
+
+    </div>
+</section>
+{% endblock %}
