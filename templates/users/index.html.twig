@@ -3,133 +3,146 @@
 {% block title %}Hello UsersController!{% endblock %}
 
 {% block body %}
-<section class="table-components mt-3">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-6">
-                <h2>Liste des utilisateurs</h2>
-            </div>
-            <div class="col-6 text-end">
-                <a href="{{ path('app_register') }}" class="btn btn-primary">Ajouter un utilisateur</a>
-            </div>
-        </div>
-    <table class="table table-striped mt-3">
-        <thead class="table-primary p-1">
-        <tr>
-            <th><h6>Username</h6></th>
-            <th><h6>Adresse</h6></th>
-            <th><h6>Roles</h6></th>
-            <th><h6>State</h6></th>
-            <th><h6>Create</h6></th>
-            <th><h6>Update</h6></th>
-            <th><h6>Action</h6></th>
-        </tr>
-        <!-- end table row-->
-        </thead>
-        <tbody>
-        {% for user in users %}
-        <tr>
-            <td class="min-width">
-                <p>{{ user.username }}</p>
-            </td>
-            <td class="min-width">
-                <p>{{ user.adresse }}</p>
-            </td>
-            <td class="min-width">
-                <p>
-                    {% for role in user.roles %}
-                        <span class="text-danger">{{ role }}</span>,
-                    {% endfor %}
-                </p>
-            </td>
-            <td class="min-width">
-                <a href="{{ path('app_users_state', {id: user.id}) }}">
-                {% if user.state == false %}
-                    <span class="status-btn success-btn">Activé</span>
-                {% else %}
-                    <span class="status-btn danger-btn">Désactivé</span>
-                {% endif %}
-                </a>
-            </td>
-            <td class="min-width">
-                <p>{{ user.createdAt|date('d-m-Y à H-i') }}</p>
-            </td>
-            <td class="min-width">
-                <p>{{ user.updatedAt|date('d-m-Y à H-i') }}</p>
-            </td>
-
-            <td>
-                <div class="action">
-                    <button class="text-danger" data-bs-toggle="modal" data-bs-target="#supprimer{{ user.id }}">
-                        <i class="lni lni-trash-can"></i>
-                    </button>
-                    <button class="text-dark-emphasis" data-bs-toggle="modal" data-bs-target="#modifier{{ user.id }}">
-                        <i class="lni lni-pencil"></i>
-                    </button>
+    <section class="table-components table-responsive mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h2>Liste des utilisateurs</h2>
                 </div>
-            </td>
-        </tr>
-
-            <!-- Modal -->
-            <div class="modal fade" id="supprimer{{ user.id }}" tabindex="-1" aria-labelledby="supprimerModalLabel{{ user.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="supprimerModalLabel{{ user.id }}">Suppression</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Souhaitez-vous vraiment supprimer cet utilisateur ?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a href="{{ path('app_users_delete', {id: user.id}) }}" class="btn btn-danger">Supprimer</a>
-                        </div>
-                    </div>
+                <div class="col-6 text-end">
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">Ajouter un utilisateur</a>
                 </div>
             </div>
+            <table class="table table-striped mt-3">
+                <thead class="table-primary p-1">
+                <tr>
+                    <th><h6>Username</h6></th>
+                    <th><h6>Adresse</h6></th>
+                    <th><h6>Roles</h6></th>
+                    <th><h6>State</h6></th>
+                    <th><h6>Create</h6></th>
+                    <th><h6>Update</h6></th>
+                    <th><h6>Action</h6></th>
+                </tr>
+                <!-- end table row-->
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="min-width">
+                            <p>{{ user.username }}</p>
+                        </td>
+                        <td class="min-width">
+                            <p>{{ user.adresse }}</p>
+                        </td>
+                        <td class="min-width">
+                            <p>
+                                {% for role in user.roles %}
+                                    <span class="text-danger">{{ role }}</span>,
+                                {% endfor %}
+                            </p>
+                        </td>
+                        <td class="min-width">
+                            <a href="{{ path('app_users_state', {id: user.id}) }}">
+                                {% if user.state == false %}
+                                    <span class="status-btn success-btn">Activé</span>
+                                {% else %}
+                                    <span class="status-btn danger-btn">Désactivé</span>
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td class="min-width">
+                            <p>{{ user.createdAt|date('d-m-Y à H-i') }}</p>
+                        </td>
+                        <td class="min-width">
+                            <p>{{ user.updatedAt|date('d-m-Y à H-i') }}</p>
+                        </td>
 
-            <!-- Modal -->
-            <div class="modal fade" id="modifier{{ user.id }}" tabindex="-1" aria-labelledby="modifierModalLabel{{ user.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modifierModalLabel{{ user.id }}">Modification</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post" action="{{ path('app_users_edit', { id: user.id }) }}">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label for="username">Username</label>
-                                        <input id="username" required type="text" value="{{ user.username }}" placeholder="Username" name="username" class="form-control">
-                                    </div>
+                        <td>
+                            <div class="action">
+                                <button class="text-danger" data-bs-toggle="modal"
+                                        data-bs-target="#supprimer{{ user.id }}">
+                                    <i class="lni lni-trash-can"></i>
+                                </button>
+                                <button class="text-dark-emphasis" data-bs-toggle="modal"
+                                        data-bs-target="#modifier{{ user.id }}">
+                                    <i class="lni lni-pencil"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="supprimer{{ user.id }}" tabindex="-1"
+                         aria-labelledby="supprimerModalLabel{{ user.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="supprimerModalLabel{{ user.id }}">Suppression</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label for="adresse">Adresse</label>
-                                        <input id="adresse" required type="text" value="{{ user.adresse }}" placeholder="Adresse" name="adresse" class="form-control">
-                                    </div>
+                                <div class="modal-body">
+                                    Souhaitez-vous vraiment supprimer cet utilisateur ?
                                 </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="button-group d-flex justify-content-center flex-wrap">
-                                        <button type="submit" class="main-btn primary-btn btn-hover w-100 text-center mt-3">Modifier</button>
-                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                    <a href="{{ path('app_users_delete', {id: user.id}) }}" class="btn btn-danger">Supprimer</a>
                                 </div>
                             </div>
-                            <!-- end row -->
-                            </form>
                         </div>
                     </div>
-                </div>
-            </div>
-        {% endfor %}
-        <!-- end table row -->
-        </tbody>
-    </table>
-    </div>
-</section>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modifier{{ user.id }}" tabindex="-1"
+                         aria-labelledby="modifierModalLabel{{ user.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modifierModalLabel{{ user.id }}">Modification</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{{ path('app_users_edit', { id: user.id }) }}">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-style-1">
+                                                    <label for="username">Username</label>
+                                                    <input id="username" required type="text"
+                                                           value="{{ user.username }}" placeholder="Username"
+                                                           name="username" class="form-control">
+                                                </div>
+                                            </div>
+                                            <!-- end col -->
+                                            <div class="col-12">
+                                                <div class="input-style-1">
+                                                    <label for="adresse">Adresse</label>
+                                                    <input id="adresse" required type="text" value="{{ user.adresse }}"
+                                                           placeholder="Adresse" name="adresse" class="form-control">
+                                                </div>
+                                            </div>
+                                            <!-- end col -->
+                                            <div class="col-12">
+                                                <div class="button-group d-flex justify-content-center flex-wrap">
+                                                    <button type="submit"
+                                                            class="main-btn primary-btn btn-hover w-100 text-center mt-3">
+                                                        Modifier
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end row -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- end table row -->
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock %}

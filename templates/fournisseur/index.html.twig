@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fournisseur index{% endblock %}
+
+{% block body %}
+<section class="table-components table-responsive table-responsive mt-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des fournisseurs</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('app_fournisseur_new') }}" class="btn btn-primary">Ajouter un fournisseur</a>
+            </div>
+        </div>
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Code</th>
+                <th>Libelle</th>
+                <th>Entreprise</th>
+                <th>Responsable</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th>Tel</th>
+                <th>Email</th>
+                <th>Matfiscal</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fournisseur in fournisseurs %}
+            <tr>
+                <td>{{ fournisseur.code }}</td>
+                <td>{{ fournisseur.libelle }}</td>
+                <td>{{ fournisseur.entreprise }}</td>
+                <td>{{ fournisseur.responsable }}</td>
+                <td>{{ fournisseur.adresse }}</td>
+                <td>{{ fournisseur.ville }}</td>
+                <td>{{ fournisseur.tel }}</td>
+                <td>{{ fournisseur.email }}</td>
+                <td>{{ fournisseur.matfiscal }}</td>
+                <td>
+                    <a class="text-dark-emphasis" href="{{ path('app_fournisseur_edit', {'id': fournisseur.id}) }}">
+                        <i class="lni lni-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}
