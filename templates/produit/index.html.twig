@@ -2,6 +2,19 @@
 
 {% block title %}Produit index{% endblock %}
 
+{% block stylesheets %}
+<style>
+    .zoom-image {
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .zoom-image:hover {
+        transform: scale(4) translate(-30%, -30%);
+        z-index: 9999;
+        cursor: zoom-out;
+    }
+
+</style>
+{% endblock %}
 {% block body %}
 <section class="table-components table-responsive table-responsive mt-5">
     <div class="container-fluid">
@@ -13,6 +26,7 @@
                 <a href="{{ path('app_produit_new') }}" class="btn btn-primary">Ajouter un produit</a>
             </div>
         </div>
+
 
         <table class="table table-striped mt-3">
             <thead class="table-dark">
@@ -36,7 +50,7 @@
                 <td>{{ produit.prixVente }} FCFA</td>
                 <td>{{ produit.tva }}</td>
                 <td>{{ produit.stock }}</td>
-                <td><img class="img-fluid img-thumbnail" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ produit.image }}" alt="{{ produit.libelle }}"></td>
+                <td class="zoom-cell"><img class="img-fluid img-thumbnail zoom-image" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ produit.image }}" alt="{{ produit.libelle }}"></td>
                 <td>
                     <a class="text-dark-emphasis" href="{{ path('app_produit_edit', {'id': produit.id}) }}">
                         <i class="lni lni-pencil"></i>
@@ -52,4 +66,6 @@
     </table>
     </div>
 </section>
+{% endblock %}
+{% block javascripts %}
 {% endblock %}
