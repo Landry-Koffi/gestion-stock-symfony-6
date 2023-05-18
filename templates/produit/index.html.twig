@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produit index{% endblock %}
+
+{% block body %}
+<section class="table-components table-responsive table-responsive mt-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des produits</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('app_produit_new') }}" class="btn btn-primary">Ajouter un produit</a>
+            </div>
+        </div>
+
+        <table class="table table-striped mt-3">
+            <thead class="table-dark">
+            <tr>
+                <th>N° article</th>
+                <th>Libelle</th>
+                <th>PrixAchat</th>
+                <th>PrixVente</th>
+                <th>Tva</th>
+                <th>Stock</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for produit in produits %}
+            <tr>
+                <td>{{ produit.numeroArticle }}</td>
+                <td>{{ produit.libelle }}</td>
+                <td>{{ produit.prixAchat }} FCFA</td>
+                <td>{{ produit.prixVente }} FCFA</td>
+                <td>{{ produit.tva }}</td>
+                <td>{{ produit.stock }}</td>
+                <td><img class="img-fluid img-thumbnail" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ produit.image }}" alt="{{ produit.libelle }}"></td>
+                <td>
+                    <a class="text-dark-emphasis" href="{{ path('app_produit_edit', {'id': produit.id}) }}">
+                        <i class="lni lni-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}

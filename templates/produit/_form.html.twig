@@ -1,0 +1,59 @@
+{{ form_start(form) }}
+    {{ form_row(form.libelle, {
+        label: false,
+        attr: {
+            placeholder: "Libellé",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.prixAchat, {
+        label: false,
+        attr: {
+            placeholder: "Prix achat",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.prixVente, {
+        label: false,
+        attr: {
+            placeholder: "Prix vente",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.tva, {
+        label: false,
+        attr: {
+            placeholder: "Tva",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.stock, {
+        label: false,
+        attr: {
+            placeholder: "Stock",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.image, {
+        label: false,
+        attr: {
+            placeholder: "image",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.numeroArticle, {
+        label: false,
+        attr: {
+            placeholder: "N° Article",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.category, {
+        label: false,
+        attr: {
+            placeholder: "Catégorie",
+            class: "form-control mb-3"
+        }
+    }) }}
+    <button class="btn btn-primary">{{ button_label|default('Sauvegarder') }}</button>
+{{ form_end(form) }}
