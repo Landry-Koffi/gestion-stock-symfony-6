@@ -24,11 +24,11 @@ class ProduitType extends AbstractType
             ->add('image', FileType::class, [
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/*',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid IMAGE',
+                        'mimeTypesMessage' => "S'il vous plaît téléchargez un image valide",
                     ])
                 ],
             ])
