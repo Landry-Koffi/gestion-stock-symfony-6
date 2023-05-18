@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MoyenReglement index{% endblock %}
+
+{% block body %}
+<section class="table-components table-responsive table-responsive mt-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des moyens de règlement</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('app_moyen_reglement_new') }}" class="btn btn-primary">Ajouter un moyen de règlement</a>
+            </div>
+        </div>
+
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Libelle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for moyen_reglement in moyen_reglements %}
+            <tr>
+                <td>{{ moyen_reglement.libelle }}</td>
+                <td>
+                    <a class="text-dark-emphasis" href="{{ path('app_moyen_reglement_edit', {'id': moyen_reglement.id}) }}">
+                        <i class="lni lni-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}
