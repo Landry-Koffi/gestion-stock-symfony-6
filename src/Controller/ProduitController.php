@@ -7,6 +7,7 @@ use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -71,12 +72,33 @@ class ProduitController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
+    /*#[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
     {
         return $this->render('produit/show.html.twig', [
             'produit' => $produit,
         ]);
+    }*/
+
+    #[Route('/{produitId}', name: 'app_produit', methods: ['GET'])]
+    public function getProduit($produitId, ProduitRepository $produitRepository): JsonResponse
+    {
+        $produit = $produitRepository->find($produitId);
+
+        if (!$produit) {
+            return new JsonResponse(['message' => 'Produit non trouvé.'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'id' => $produit->getId(),
+            'code' => $produit->getNumeroArticle(),
+            'libelle' => $produit->getLibelle(),
+            'stock' => $produit->getStock(),
+            'pv' => $produit->getPrixVente(),
+            'image' => $produit->getImage(),
+        ];
+
+        return new JsonResponse($data);
     }
 
     #[Route('/{id}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]

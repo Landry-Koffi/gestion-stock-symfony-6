@@ -26,13 +26,13 @@ class CommandeClient
     #[ORM\Column]
     private ?\DateTimeImmutable $dateCommandeAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $observation = null;
 
     #[ORM\Column]
     private ?int $totalHt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $totalTva = null;
 
     #[ORM\Column]

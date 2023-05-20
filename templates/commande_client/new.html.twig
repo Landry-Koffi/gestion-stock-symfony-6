@@ -1,0 +1,224 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CommandeClient{% endblock %}
+
+{% block body %}
+<section class="section mt-3">
+    <div class="container-fluid">
+    <h1 class="mb-3">Créer une nouvelle Commande Client</h1>
+
+    {{ include('commande_client/_form.html.twig') }}
+
+    <a href="{{ path('app_commande_client_index') }}">back to list</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+            var produitsAjoutes = {};
+
+
+            // Calculer la somme totale des produits ajoutés
+            function calculerSommeTotal() {
+                var sommeTotal = 0;
+                for (var produitCode in produitsAjoutes) {
+                    if (produitsAjoutes.hasOwnProperty(produitCode)) {
+                        sommeTotal += produitsAjoutes[produitCode].total;
+                    }
+                }
+                return sommeTotal;
+            }
+
+            // Fonction pour mettre à jour la somme totale affichée
+            function mettreAJourSommeTotal() {
+                var sommeTotal = calculerSommeTotal();
+                var tva = parseFloat($('#commande_client_totalTva').val());
+                $('#sommeTotal').text(sommeTotal);
+                $('#commande_client_totalHt').val(sommeTotal);
+                $('#commande_client_totalTtc').val(sommeTotal + sommeTotal * (tva/100));
+            }
+
+            // Écouteur d'événement pour la modification de la TVA
+            $(document).on('input', '#commande_client_totalTva', function() {
+                mettreAJourSommeTotal();
+            });
+
+            $('#commande_client_totalTva').change(function() {
+                mettreAJourSommeTotal();
+            });
+
+            // Récupérer les produits ajoutés depuis le cookie, s'il existe
+            var produitsAjoutesCookie = getCookie('produitsAjoutes');
+            if (produitsAjoutesCookie) {
+                produitsAjoutes = JSON.parse(produitsAjoutesCookie);
+            }
+
+            afficherProduitsAjoutes();
+
+            // Mettre à jour la somme totale affichée
+            mettreAJourSommeTotal();
+
+            // Fonction pour afficher les produits ajoutés dans la table HTML
+            function afficherProduitsAjoutes() {
+                var tableBody = $('#table-produits tbody');
+                tableBody.empty(); // Effacer le contenu actuel du corps de la table
+
+                var produitsAjoutesCookie = getCookie('produitsAjoutes'); // Récupérer la valeur du cookie
+                if (produitsAjoutesCookie) {
+                    produitsAjoutes = JSON.parse(produitsAjoutesCookie); // Parser les données du cookie en tant qu'objet JavaScript
+                }
+
+                for (var produitCode in produitsAjoutes) {
+                    if (produitsAjoutes.hasOwnProperty(produitCode)) {
+                        var produit = produitsAjoutes[produitCode];
+
+                        var newRow = $('<tr class="table-primary">');
+                        newRow.append('<td>' + produitCode + '</td>');
+                        newRow.append('<td>' + produit.libelle + '</td>');
+                        newRow.append('<td><img style="height: 60px;width: 60px" src="{{ asset('uploads/images/') }}' + produit.image + '" alt="Image du produit"></td>');
+                        newRow.append('<td>' + produit.prix + '</td>');
+                        newRow.append('<td><input type="number" class="quantite-input" id="quantiteInput_' + produitCode + '" required="required" min="1" max="'+ produit.stock +'" required="required" style="width: 100px" name="qte'+ produit.id +'" value="'+ produit.qte +'"></td>');
+                        newRow.append('<td><button type="button" class="btn btn-danger btn-sm delete-row">Supprimer</button></td>');
+                        newRow.append('<td class="total-cell">' + produit.total + '</td>');
+
+                        tableBody.append(newRow);
+                    }
+                }
+            }
+
+            $('#commande_client_produits').change(function() {
+                $.ajax({
+                    url: "/produit/" + $(this).val(),
+                    type: "GET",
+                    success: function(data) {
+                        var produitId = data.id;
+                        var prix = data.pv;
+
+                        if (produitsAjoutes.hasOwnProperty(data.code)) {
+                            $('#messageProductAdd').text("Ce produit a déjà été ajouté.");
+                            // Récupérer le contenu de la div
+                            var message = $('#messageProductAdd').text();
+                            // Vérifier si la valeur n'est pas vide
+                            if(message.trim() !== '') {
+                                // Afficher la div
+                                $('#messageProductAdd').show();
+                            }
+                            return;
+                        }
+                        $('#messageProductAdd').text("");
+                        $('#messageProductAdd').hide();
+
+                        produitsAjoutes[data.code] = {
+                            id_product: produitId,
+                            code: data.code,
+                            libelle: data.libelle,
+                            stock: data.stock,
+                            qte: 1,
+                            prix: prix,
+                            total: parseInt(prix),
+                            image: data.image
+                        };
+
+                        document.cookie = "produitsAjoutes=" + JSON.stringify(produitsAjoutes)+"; path=/";
+                        audio();
+
+                        // Afficher les produits ajoutés dans la table
+                        afficherProduitsAjoutes();
+
+                        // Calculer la somme totale des 'total'
+                        var sommeTotal = 0;
+                        for (var produitCode in produitsAjoutes) {
+                            if (produitsAjoutes.hasOwnProperty(produitCode)) {
+                                sommeTotal += produitsAjoutes[produitCode].total;
+                            }
+                        }
+                        // Mettre à jour la somme totale affichée
+                        $('#sommeTotal').text(sommeTotal);
+                        $('#commande_client_totalHt').val(sommeTotal);
+                        mettreAJourSommeTotal()
+                    }
+                });
+            });
+
+            // Écouteur d'événement pour la modification de la quantité
+            $(document).on('input', '.quantite-input', function() {
+                var produitCode = $(this).attr('id').split('_')[1]; // Obtenir l'ID du produit à partir de l'attribut id
+                var quantite = $(this).val();
+
+                // Mettre à jour la quantité et le total du produit correspondant
+                produitsAjoutes[produitCode].qte = quantite;
+                produitsAjoutes[produitCode].total = quantite * produitsAjoutes[produitCode].prix;
+
+                document.cookie = "produitsAjoutes=" + JSON.stringify(produitsAjoutes)+"; path=/";
+
+                // Mettre à jour les cellules de quantité et de total dans la table
+                $('.total-cell', $(this).closest('tr')).text(produitsAjoutes[produitCode].total);
+
+
+                // Recalculer la somme totale des 'total'
+                var sommeTotal = 0;
+                for (var produitCode2 in produitsAjoutes) {
+                    if (produitsAjoutes.hasOwnProperty(produitCode2)) {
+                        sommeTotal += produitsAjoutes[produitCode2].total;
+                    }
+                }
+                // Mettre à jour la somme totale affichée
+                $('#sommeTotal').text(sommeTotal);
+                $('#commande_client_totalHt').val(sommeTotal);
+                mettreAJourSommeTotal()
+            });
+
+
+
+            // Gestionnaire d'événements pour la suppression d'une ligne de produit
+            $(document).on('click', '.delete-row', function() {
+                var row = $(this).closest('tr');
+                var produitCode = row.find('td:first').text();
+
+                // Supprimer le produit du tableau produitsAjoutes
+                delete produitsAjoutes[produitCode];
+
+                // Retirer le produit du cookie
+                var produitsAjoutesCookie = JSON.parse(getCookie("produitsAjoutes"));
+                delete produitsAjoutesCookie[produitCode];
+                document.cookie = "produitsAjoutes=" + JSON.stringify(produitsAjoutesCookie) + "; path=/";
+
+
+                // Supprimer la ligne de la table
+                row.remove();
+
+                // Calculer la nouvelle somme totale des 'total'
+                var sommeTotal = 0;
+                for (var produitCode in produitsAjoutes) {
+                    if (produitsAjoutes.hasOwnProperty(produitCode)) {
+                        sommeTotal += produitsAjoutes[produitCode].total;
+                    }
+                }
+                // Mettre à jour la somme totale affichée
+                $('#sommeTotal').text(sommeTotal);
+                $('#commande_client_totalHt').val(sommeTotal);
+                mettreAJourSommeTotal();
+            });
+        });
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+
+        function audio() {
+            const audio = new Audio('{{ asset("audio/notif.mp3") }}');
+            audio.addEventListener('canplaythrough', () => {
+                audio.play();
+            });
+        }
+    </script>
+{% endblock %}
+

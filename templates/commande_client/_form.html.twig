@@ -1,0 +1,89 @@
+{{ form_start(form) }}
+    {{ form_row(form.client, {
+        label: "Client",
+        attr : {
+            placeholder: "Client",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.observation, {
+        label: false,
+        attr : {
+            placeholder: "Observation",
+            class: "form-control mb-3",
+            col: 20
+        }
+    }) }}
+    {{ form_row(form.totalHt, {
+        label: "Total Hors taxe",
+        attr : {
+            placeholder: "Total Hors taxe",
+            class: "form-control mb-3",
+            readonly: true
+        }
+    }) }}
+    {{ form_row(form.totalTva, {
+        label: "TVA",
+        attr : {
+            placeholder: "Total TVA",
+            class: "form-control mb-3",
+            value: 0,
+            min: 0,
+            required: "required"
+        }
+    }) }}
+    {{ form_row(form.totalTtc, {
+        label: "Total  TTC",
+        attr : {
+            placeholder: "Total  TTC",
+            class: "form-control mb-3",
+            readonly: true
+        }
+    }) }}
+
+
+    <div id="messageProductAdd" class="alert alert-danger text-center" style="display: none"></div>
+
+    <select name="produit" class="select-sm form-control" id="commande_client_produits">
+        <option>Sélectionnez un produit</option>
+        {% for produit in produits %}
+            <option data-id="{{ produit.id }}" value="{{ produit.id }}">{{ produit.libelle }}</option>
+        {% endfor %}
+    </select>
+<div id="total"></div>
+
+
+<div id="messageProductAdd" style="display: none;"></div>
+<table id="table-produits" class="table mb-5 mt-2">
+    <thead>
+    <tr>
+        <th>Code article</th>
+        <th>Libellé</th>
+        <th>Image</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Action</th>
+        <th>Total</th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <td colspan="6" style="text-align:right;"><strong>Total:</strong></td>
+        <td id="sommeTotal">0</td>
+    </tr>
+    </tfoot>
+    <tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<button class="btn btn-success form-control">{{ button_label|default('Enregistrer') }} <i class="fa fa-floppy-o"></i></button>
+{{ form_end(form) }}
+
+
