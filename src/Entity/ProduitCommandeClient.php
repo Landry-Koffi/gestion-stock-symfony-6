@@ -31,9 +31,6 @@ class ProduitCommandeClient
     private ?int $prixTotal = null;
 
     #[ORM\Column]
-    private ?float $tva = null;
-
-    #[ORM\Column]
     private ?bool $etatTraite = null;
 
     #[ORM\Column]
@@ -103,18 +100,6 @@ class ProduitCommandeClient
     public function setPrixTotal(int $prixTotal): self
     {
         $this->prixTotal = $prixTotal;
-
-        return $this;
-    }
-
-    public function getTva(): ?float
-    {
-        return $this->tva;
-    }
-
-    public function setTva(float $tva): self
-    {
-        $this->tva = $tva;
 
         return $this;
     }

@@ -1,98 +1,102 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}CommandeClient index{% endblock %}
-
+    {% block stylesheets %}
+        <style>
+            .pointer:hover {
+                cursor: pointer;
+            }
+        </style>
+    {% endblock %}
 {% block body %}
-<section class="table-components table-responsive table-responsive mt-5">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-6">
-                <h2>Liste des commandes clients</h2>
+    <section class="table-components table-responsive table-responsive mt-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h2>Liste des commandes clients</h2>
+                </div>
+                <div class="col-6 text-end">
+                    <a href="{{ path('app_commande_client_new') }}" class="btn btn-primary">Ajouter une commande</a>
+                </div>
             </div>
-            <div class="col-6 text-end">
-                <a href="{{ path('app_commande_client_new') }}" class="btn btn-primary">Ajouter une commande</a>
-            </div>
-        </div>
 
-        <table class="table table-striped table-bordered mt-3">
-            <thead class="table-dark">
-            <tr>
-                <th>N° commande</th>
-                <th>Date commande</th>
-                <th>Observation</th>
-                <th>Total Ht</th>
-                <th>Total Tva</th>
-                <th>Total Ttc</th>
-                <th>N° Facture</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for commande_client in commande_clients %}
-            <tr data-bs-toggle="collapse" data-bs-target="#accordion1" aria-expanded="false" aria-controls="accordion1">
-                <td scope="row">{{ commande_client.numeroCommande }}</td>
-                <td>{{ commande_client.dateCommandeAt ? commande_client.dateCommandeAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ commande_client.observation }}</td>
-                <td>{{ commande_client.totalHt }}</td>
-                <td>{{ commande_client.totalTva }}</td>
-                <td>{{ commande_client.totalTtc }}</td>
-                <td>{{ commande_client.numeroFacture }}</td>
-                <td>
-                    <div class="action">
-                        <a class="text-danger" href="{{ path('app_commande_client_show', {'id': commande_client.id}) }}">
-                            <i class="lni lni-trash-can"></i>
-                        </a> &nbsp; &nbsp;
-                        <a class="text-dark-emphasis" href="{{ path('app_commande_client_edit', {'id': commande_client.id}) }}">
-                            <i class="lni lni-pencil"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" class="p-0">
-                    <div class="collapse" id="accordion1">
-                        <div class="card card-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Header</th>
-                                    <th scope="col">Header</th>
-                                    <th scope="col">Header</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Cellule 1-1</td>
-                                    <td>Cellule 1-2</td>
-                                    <td>Cellule 1-3</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Cellule 2-1</td>
-                                    <td>Cellule 2-2</td>
-                                    <td>Cellule 2-3</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Cellule 3-1</td>
-                                    <td>Cellule 3-2</td>
-                                    <td>Cellule 3-3</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    </div>
-</section>
+            <table class="table table-striped mt-3">
+                <thead class="table-dark">
+                <tr>
+                    <th>N° commande</th>
+                    <th>Date commande</th>
+                    <th>Observation</th>
+                    <th>Total Ht</th>
+                    <th>Total Tva</th>
+                    <th>Total Ttc</th>
+                    <th>N° Facture</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for commande_client in commande_clients %}
+                    <tr class="pointer" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_client.id }}"
+                        aria-expanded="false" aria-controls="accordion{{ commande_client.id }}">
+                        <td scope="row">{{ commande_client.numeroCommande }}</td>
+                        <td>{{ commande_client.dateCommandeAt ? commande_client.dateCommandeAt|date('d-m-Y à H:i') : '' }}</td>
+                        <td>{{ commande_client.observation }}</td>
+                        <td>{{ commande_client.totalHt }}</td>
+                        <td>{{ commande_client.totalTva }}</td>
+                        <td>{{ commande_client.totalTtc }}</td>
+                        <td>{{ commande_client.numeroFacture }}</td>
+                        <td>
+                            <div class="action">
+                                <a class="text-danger"
+                                   href="{{ path('app_commande_client_show', {'id': commande_client.id}) }}">
+                                    <i class="lni lni-trash-can"></i>
+                                </a>  &nbsp; &nbsp;
+                                <a class="text-dark-emphasis" href="{{ path('app_commande_client_edit', {'id': commande_client.id}) }}">
+                                    <i class="fa fa-address-book"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" class="p-0">
+                            <div class="collapse" id="accordion{{ commande_client.id }}">
+                                <div class="card card-body">
+                                    <table class="table table-striped">
+                                        <thead class="table-primary">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Produit</th>
+                                            <th scope="col">Prix</th>
+                                            <th scope="col">Quantité</th>
+                                            <th scope="col">Prix Total</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for produit_commande_client in produit_commande_clients %}
+                                            {% if produit_commande_client.numeroCommande == commande_client.numeroCommande %}
+                                                <tr>
+                                                    <th scope="row">{{ produit_commande_client.produit.numeroArticle }}</th>
+                                                    <td>{{ produit_commande_client.produit.libelle }}</td>
+                                                    <td>{{ produit_commande_client.produit.prixVente }} FCFA</td>
+                                                    <td><input type="number" name="qte" value="{{ produit_commande_client.quantite }}"></td>
+                                                    <td><input type="number" name="prixTotal" value="{{ produit_commande_client.prixTotal }}"></td>
+                                                    <td><button type="submit" class="btn btn-warning"><i class="lni lni-pencil"></i></button></td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock %}
