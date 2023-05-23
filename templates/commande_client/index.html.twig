@@ -66,22 +66,37 @@
                                             <th scope="col">#</th>
                                             <th scope="col">Produit</th>
                                             <th scope="col">Prix</th>
-                                            <th scope="col">Quantité</th>
-                                            <th scope="col">Prix Total</th>
+                                            <th scope="col">Quantité commandée</th>
+                                            <th scope="col">Prix Total commandé</th>
+                                            <th scope="col">Quantité Livrée</th>
+                                            <th scope="col">Prix Total livré</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for produit_commande_client in produit_commande_clients %}
                                             {% if produit_commande_client.numeroCommande == commande_client.numeroCommande %}
-                                                <tr>
-                                                    <th scope="row">{{ produit_commande_client.produit.numeroArticle }}</th>
-                                                    <td>{{ produit_commande_client.produit.libelle }}</td>
-                                                    <td>{{ produit_commande_client.produit.prixVente }} FCFA</td>
-                                                    <td><input type="number" name="qte" value="{{ produit_commande_client.quantite }}"></td>
-                                                    <td><input type="number" name="prixTotal" value="{{ produit_commande_client.prixTotal }}"></td>
-                                                    <td><button type="submit" class="btn btn-warning"><i class="lni lni-pencil"></i></button></td>
-                                                </tr>
+                                                <form method="post" action="{{ path('app_commande_client_modifier', {id: produit_commande_client.id}) }}">
+                                                    <tr>
+                                                        <th scope="row">{{ produit_commande_client.produit.numeroArticle }}</th>
+                                                        <td>{{ produit_commande_client.produit.libelle }}</td>
+                                                        <td>{{ produit_commande_client.produit.prixVente }} FCFA</td>
+                                                        <td>{{ produit_commande_client.quantite }}</td>
+                                                        <td>{{ produit_commande_client.prixTotal }} FCFA</td>
+                                                        <td>
+                                                            <input type="number" style="width:100px" class="qte-input" min="0" max="{{ produit_commande_client.quantiteLivree == null ? produit_commande_client.quantite : produit_commande_client.quantite - produit_commande_client.quantiteLivree }}"
+                                                                   name="qte{{ produit_commande_client.id }}"
+                                                                   value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree  }}"
+                                                                   data-produit-id="{{ produit_commande_client.id }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" readonly class="prix-total-input" name="prixTotal{{ produit_commande_client.id }}" value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree * produit_commande_client.produit.prixVente }}">
+                                                        </td>
+                                                        <td>
+                                                            <button type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </form>
                                             {% endif %}
                                         {% endfor %}
                                         </tbody>
@@ -99,4 +114,19 @@
             </table>
         </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.qte-input').change(function() {
+                var qte = $(this).val();
+                var produitId = $(this).data('produit-id');
+                var prixVente = parseFloat($(`td:nth-child(3)`, $(this).closest('tr')).text()); // Récupérer le texte dans la 3ème cellule de la ligne actuelle
+                var prixTotal = qte * prixVente || 0;
+                $(`input[name="prixTotal${produitId}"]`).val(prixTotal.toFixed(0));
+            });
+        });
+    </script>
 {% endblock %}

@@ -39,6 +39,9 @@ class ProduitCommandeClient
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $quantiteLivree = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +139,18 @@ class ProduitCommandeClient
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getQuantiteLivree(): ?int
+    {
+        return $this->quantiteLivree;
+    }
+
+    public function setQuantiteLivree(?int $quantiteLivree): self
+    {
+        $this->quantiteLivree = $quantiteLivree;
 
         return $this;
     }

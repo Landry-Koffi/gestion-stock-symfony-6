@@ -79,6 +79,17 @@ class CommandeClientController extends AbstractController
         ]);
     }
 
+    #[Route('/modifier/{id}', name: 'app_commande_client_modifier', methods: ['GET', 'POST'])]
+    public function modifier($id, Request $request, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    {
+        $qteLivree = $request->request->get("qte".$id);
+        $produitCommandeClient = $produitCommandeClientRepository->findOneBy(['id' => $id]);
+        $produitCommandeClient->setQuantiteLivree($qteLivree);
+        $produitCommandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
+        $produitCommandeClientRepository->save($produitCommandeClient, true);
+        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'app_commande_client_show', methods: ['GET'])]
     public function show(CommandeClient $commandeClient): Response
     {
