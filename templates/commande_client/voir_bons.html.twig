@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}commande-client-{{ commande_client.numeroCommande }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .fond-table{
+            background-color: #4a6cf7;
+            color: whitesmoke;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section class="section mt-3">
+        <div class="container-fluid">
+
+            <div class="row print">
+                <div class="col-md-10">
+                    <h1>BON DE COMMANDE CLIENT</h1>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="window.print();return false;">Imprimer</button>
+                </div>
+            </div>
+
+            <div class="container mt-5 d-flex justify-content-center">
+                <div class="fond w-75 bg-light shadow p-3 border-1" style="border: 1px dotted black">
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6 text-primary fw-bold fs-4 text-end">
+                                Bon de commande
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p>Entreprise</p>
+                                <p>{{ app.user.adresse }}</p>
+                                <p>Ville</p>
+                                <p>Téléphone</p>
+                            </div>
+                            <div class="col-md-6 text-end">
+
+
+
+
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Commande N° :</div>
+                                    <div class="col-5"><b>{{ commande_client.numeroCommande }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Date :</div>
+                                    <div class="col-5"><b>{{ commande_client.dateCommandeAt|date('d/m/Y') }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Nom client :</div>
+                                    <div class="col-5"><b>{{ commande_client.client.libelle }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Adresse :</div>
+                                    <div class="col-5" style="font-size: 0.8em"><b>{{ commande_client.client.adresse }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Ville :</div>
+                                    <div class="col-5"><b>{{ commande_client.client.ville }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Téléphone :</div>
+                                    <div class="col-5"><b>{{ commande_client.client.tel }}</b></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <table class="table table-striped">
+                                    <thead class="fond-table">
+                                        <tr class="text-center">
+                                            <th>Vendeur</th>
+                                            <th>Paiement</th>
+                                            <th>Livraison</th>
+                                            <th>Echéance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td>Entreprise</td>
+                                            <td>Mode paiement</td>
+                                            <td>Date livraison</td>
+                                            <td>Nombre de jours</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <table class="table table-striped">
+                                    <thead class="fond-table">
+                                        <tr class="text-center">
+                                            <th class="text-start">Article</th>
+                                            <th>Description</th>
+                                            <th>Qte</th>
+                                            <th>Prix Unitaire HT</th>
+                                            <th class="text-end">Total HT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for produitCommandeClient in produitCommandeClients %}
+                                            <tr class="text-center">
+                                                <td class="text-start">{{ produitCommandeClient.produit.libelle }}</td>
+                                                <td>Description</td>
+                                                <td>{{ produitCommandeClient.quantite }}</td>
+                                                <td>{{ produitCommandeClient.produit.prixVente }} F</td>
+                                                <td class="text-end">{{ produitCommandeClient.prixTotal }} F</td>
+                                            </tr>
+                                        {% endfor %}
+                                        {% set i = 0 %}
+                                        {% for i in 1..2 %}
+                                        <tr class="text-center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="">
+                                            <td colspan="4"></td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-2"></div>
+                                                    <div class="col-5 text-start">T.HT</div>
+                                                    <div class="col-5 text-end">{{ commande_client.totalHt }}F</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2"></div>
+                                                    <div class="col-5">TVA {{ commande_client.totalTva }}%</div>
+                                                    <div class="col-5 text-end">{{ commande_client.totalHt * (commande_client.totalTva / 100) }}F</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2"></div>
+                                                    <div class="col-5 text-primary">T.TTC</div>
+                                                    <div class="col-5 text-end bg-primary p-1 text-light">{{ commande_client.totalTtc }}F</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <p class="text-center">Conditions générales de vente au verso</p>
+                        </div>
+                        <div class="row">
+                            <p class="text-center text-primary">Merci de votre confiance</p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -79,6 +79,16 @@ class CommandeClientController extends AbstractController
         ]);
     }
 
+    #[Route('/voir-bons/{id}', name: 'app_commande_client_voir_bons', methods: ['GET'])]
+    public function voirBons(CommandeClient $commandeClient, Request $request, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    {
+        $produitCommandeClients = $produitCommandeClientRepository->findBy(["commandeClient" => $commandeClient]);
+        return $this->render('commande_client/voir_bons.html.twig', [
+            'commande_client' => $commandeClient,
+            'produitCommandeClients' => $produitCommandeClients,
+        ]);
+    }
+
     #[Route('/modifier/{id}', name: 'app_commande_client_modifier', methods: ['GET', 'POST'])]
     public function modifier($id, Request $request, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {

@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="print" href="{{ asset('css/print.css') }}" />
 
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
@@ -33,7 +34,7 @@
 <body>
 
 <!-- ======== sidebar-nav start =========== -->
-<aside class="sidebar-nav-wrapper">
+<aside class="sidebar-nav-wrapper print">
     <div class="navbar-logo">
         <a href="index.html">
             <img src="{{ asset('admin/assets/images/logo/logo.svg') }}" alt="logo"/>
@@ -165,13 +166,13 @@
         </a>
     </div>#}
 </aside>
-<div class="overlay"></div>
+<div class="overlay print"></div>
 <!-- ======== sidebar-nav end =========== -->
 <!-- ======== main-wrapper start =========== -->
 <main class="main-wrapper">
 
     <!-- ========== header start ========== -->
-    <header class="header">
+    <header class="header print">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-5 col-md-5 col-6">
@@ -372,7 +373,7 @@
     <!-- ========== header end ========== -->
     {% block body %}{% endblock %}
     <!-- ========== footer start =========== -->
-    <footer class="footer">
+    <footer class="footer print">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 order-last order-md-first">
