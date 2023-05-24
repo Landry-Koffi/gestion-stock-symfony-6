@@ -23,7 +23,7 @@ class CommandeClientController extends AbstractController
     {
         return $this->render('commande_client/index.html.twig', [
             'commande_clients' => $commandeClientRepository->findAll(),
-            'produit_commande_clients' => $produitCommandeClientRepository->findAll(),
+            'produit_commande_clients' => $produitCommandeClientRepository->findBy([],["numeroCommande" => "DESC"]),
         ]);
     }
 

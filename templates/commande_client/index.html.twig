@@ -66,10 +66,10 @@
                                             <th scope="col">#</th>
                                             <th scope="col">Produit</th>
                                             <th scope="col">Prix</th>
-                                            <th scope="col">Quantité commandée</th>
-                                            <th scope="col">Prix Total commandé</th>
-                                            <th scope="col">Quantité Livrée</th>
-                                            <th scope="col">Prix Total livré</th>
+                                            <th scope="col">Qte cmd</th>
+                                            <th scope="col">P.T cmd</th>
+                                            <th scope="col">Qte Livrée</th>
+                                            <th scope="col">P.T livré</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                         </thead>
@@ -84,13 +84,16 @@
                                                         <td>{{ produit_commande_client.quantite }}</td>
                                                         <td>{{ produit_commande_client.prixTotal }} FCFA</td>
                                                         <td>
-                                                            <input type="number" style="width:100px" class="qte-input" min="0" max="{{ produit_commande_client.quantiteLivree == null ? produit_commande_client.quantite : produit_commande_client.quantite - produit_commande_client.quantiteLivree }}"
+                                                            <input type="number" style="width:100px" class="qte-input" min="0"
+                                                                   max="{{ produit_commande_client.quantite }}"
                                                                    name="qte{{ produit_commande_client.id }}"
                                                                    value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree  }}"
                                                                    data-produit-id="{{ produit_commande_client.id }}">
                                                         </td>
                                                         <td>
-                                                            <input type="number" readonly class="prix-total-input" name="prixTotal{{ produit_commande_client.id }}" value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree * produit_commande_client.produit.prixVente }}">
+                                                            <input type="number" readonly class="prix-total-input"
+                                                                   name="prixTotal{{ produit_commande_client.id }}"
+                                                                   value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree * produit_commande_client.produit.prixVente }}">
                                                         </td>
                                                         <td>
                                                             <button type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
@@ -101,6 +104,9 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
+                                    <div class="text-end">
+                                        <a href="" class="btn btn-info">Voir bon <i class="fa fa-eye"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </td>
