@@ -32,19 +32,21 @@
                                 Bon de commande
                             </div>
                         </div>
+                        <div class="text-center">
+                            <span style="display: {{ commande_client.etatTraite ? 'none' : 'block' }}" class="text-bg-primary text-uppercase fw-bold">Encours de traitement</span>
+                            <span style="display: {{ commande_client.etatTraite and commande_client.etatValide == false ? 'block' : 'none' }}" class="text-bg-warning text-uppercase fw-bold">Traitement effectué, en attente de livraison</span>
+                            <span style="display: {{ commande_client.etatValide ? 'block' : 'none' }}" class="text-bg-success text-uppercase fw-bold">Livrée</span>
+                        </div>
 
 
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <p>Entreprise</p>
+                                <p>{{ app.user.entreprise }}</p>
                                 <p>{{ app.user.adresse }}</p>
-                                <p>Ville</p>
-                                <p>Téléphone</p>
+                                <p>{{ app.user.ville }}</p>
+                                <p>{{ app.user.tel }}</p>
                             </div>
                             <div class="col-md-6 text-end">
-
-
-
 
                                 <div class="row">
                                     <div class="col-2"></div>
@@ -92,10 +94,10 @@
                                     </thead>
                                     <tbody>
                                         <tr class="text-center">
-                                            <td>Entreprise</td>
-                                            <td>Mode paiement</td>
-                                            <td>Date livraison</td>
-                                            <td>Nombre de jours</td>
+                                            <td>{{ app.user.entreprise }}</td>
+                                            <td>{{ commande_client.moyenPaiement == null ? '' : commande_client.moyenPaiement.libelle }}</td>
+                                            <td>{{ commande_client.dateLivraisonAt == null ? commande_client.dateLivraisonAt : commande_client.dateLivraisonAt|date('d/m/Y') }}</td>
+                                            <td>{{ commande_client.echeance }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

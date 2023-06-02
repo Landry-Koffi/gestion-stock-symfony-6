@@ -33,15 +33,21 @@ class UsersController extends AbstractController
     #[Route('/users/edit/{id}', name: 'app_users_edit')]
     public function edit(Users $users, Request $request, UsersRepository $usersRepository)
     {
-        $username = $request->request->get("username");
+        //$username = $request->request->get("username");
         $adresse = $request->request->get("adresse");
-        $user = $usersRepository->findOneBy(['username' => $username]);
+        $entreprise = $request->request->get("entreprise");
+        $ville = $request->request->get("ville");
+        $tel = $request->request->get("tel");
+        /*$user = $usersRepository->findOneBy(['username' => $username]);
         if ($user){
             // TODO :: Message pour informer que l'user est déjà prit
             return $this->redirectToRoute('app_users');
-        }
-        $users->setUsername($username);
+        }*/
+        //$users->setUsername($username);
         $users->setAdresse($adresse);
+        $users->setEntreprise($entreprise);
+        $users->setVille($ville);
+        $users->setTel($tel);
         $users->setUpdatedAt(new \DateTimeImmutable('now'));
         $usersRepository->save($users, true);
         if ($users->getId() == $this->getUser()->getId()){

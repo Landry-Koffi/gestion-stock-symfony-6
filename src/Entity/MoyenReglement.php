@@ -21,9 +21,13 @@ class MoyenReglement
     #[ORM\OneToMany(mappedBy: 'modeReglement', targetEntity: Reglement::class)]
     private Collection $reglements;
 
+    #[ORM\OneToMany(mappedBy: 'moyenPaiement', targetEntity: CommandeClient::class)]
+    private Collection $commandeClients;
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
+        $this->commandeClients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,6 +71,36 @@ class MoyenReglement
             // set the owning side to null (unless already changed)
             if ($reglement->getModeReglement() === $this) {
                 $reglement->setModeReglement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeClient>
+     */
+    public function getCommandeClients(): Collection
+    {
+        return $this->commandeClients;
+    }
+
+    public function addCommandeClient(CommandeClient $commandeClient): self
+    {
+        if (!$this->commandeClients->contains($commandeClient)) {
+            $this->commandeClients->add($commandeClient);
+            $commandeClient->setMoyenPaiement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeClient(CommandeClient $commandeClient): self
+    {
+        if ($this->commandeClients->removeElement($commandeClient)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeClient->getMoyenPaiement() === $this) {
+                $commandeClient->setMoyenPaiement(null);
             }
         }
 

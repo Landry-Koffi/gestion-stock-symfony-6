@@ -42,6 +42,9 @@ class ProduitCommandeClient
     #[ORM\Column(nullable: true)]
     private ?int $quantiteLivree = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $quantiteUpdate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -151,6 +154,18 @@ class ProduitCommandeClient
     public function setQuantiteLivree(?int $quantiteLivree): self
     {
         $this->quantiteLivree = $quantiteLivree;
+
+        return $this;
+    }
+
+    public function getQuantiteUpdate(): ?int
+    {
+        return $this->quantiteUpdate;
+    }
+
+    public function setQuantiteUpdate(?int $quantiteUpdate): self
+    {
+        $this->quantiteUpdate = $quantiteUpdate;
 
         return $this;
     }

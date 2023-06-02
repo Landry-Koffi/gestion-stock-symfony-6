@@ -59,6 +59,15 @@ class CommandeClient
     #[ORM\OneToMany(mappedBy: 'commandeClient', targetEntity: ProduitCommandeClient::class)]
     private Collection $produitCommandeClients;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateLivraisonAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $echeance = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commandeClients')]
+    private ?MoyenReglement $moyenPaiement = null;
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
@@ -270,6 +279,42 @@ class CommandeClient
                 $produitCommandeClient->setCommandeClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateLivraisonAt(): ?\DateTimeImmutable
+    {
+        return $this->dateLivraisonAt;
+    }
+
+    public function setDateLivraisonAt(\DateTimeImmutable $dateLivraisonAt): self
+    {
+        $this->dateLivraisonAt = $dateLivraisonAt;
+
+        return $this;
+    }
+
+    public function getEcheance(): ?string
+    {
+        return $this->echeance;
+    }
+
+    public function setEcheance(?string $echeance): self
+    {
+        $this->echeance = $echeance;
+
+        return $this;
+    }
+
+    public function getMoyenPaiement(): ?MoyenReglement
+    {
+        return $this->moyenPaiement;
+    }
+
+    public function setMoyenPaiement(?MoyenReglement $moyenPaiement): self
+    {
+        $this->moyenPaiement = $moyenPaiement;
 
         return $this;
     }

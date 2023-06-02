@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CommandeFournisseur index{% endblock %}
+{% block stylesheets %}
+    <style>
+        .pointer:hover {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <section class="table-components table-responsive table-responsive mt-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h2>Liste des commandes fournisseurs</h2>
+                </div>
+                <div class="col-6 text-end">
+                    <a href="{{ path('app_commande_fournisseur_new') }}" class="btn btn-primary">Ajouter une commande</a>
+                </div>
+            </div>
+
+            <table class="table table-striped mt-3">
+                <thead class="table-dark">
+                <tr>
+                    <th>N° commande</th>
+                    <th>Date commande</th>
+                    <th>Date Livrée</th>
+                    <th>Observation</th>
+                    <th>N° Facture</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for commande_fournisseur in commande_fournisseurs %}
+                    <tr class="border-1 pointer {{ commande_fournisseur.etatValide ? 'text-bg-success text-light' : '' }}" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_fournisseur.id }}"
+                        aria-expanded="false" aria-controls="accordion{{ commande_fournisseur.id }}">
+                        <td scope="row">{{ commande_fournisseur.numeroCommande }}</td>
+                        <td>{{ commande_fournisseur.dateCommandeAt ? commande_fournisseur.dateCommandeAt|date('d-m-Y à H:i') : '' }}</td>
+                        <td>{{ commande_fournisseur.dateLivraisonAt ? commande_fournisseur.dateLivraisonAt|date('d-m-Y à H:i') : '' }}</td>
+                        <td>{{ commande_fournisseur.observation }}</td>
+                        <td>{{ commande_fournisseur.numeroFacture }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" class="p-0">
+                            <div class="collapse" id="accordion{{ commande_fournisseur.id }}">
+                                <div class="card card-body">
+                                    <table class="table table-striped">
+                                        <thead class="table-primary">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Produit</th>
+                                            <th scope="col">Qte cmd</th>
+                                            <th scope="col">Qte Livrée</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for produit_commande_fournisseur in produit_commande_fournisseurs %}
+                                            {% if produit_commande_fournisseur.numeroCommande == commande_fournisseur.numeroCommande %}
+                                                <form method="post" action="{{ path('app_commande_fournisseur_modifier', {id: produit_commande_fournisseur.id}) }}">
+                                                    <tr>
+                                                        <th scope="row">{{ produit_commande_fournisseur.produit.numeroArticle }}</th>
+                                                        <td>{{ produit_commande_fournisseur.produit.libelle }}</td>
+                                                        <td>{{ produit_commande_fournisseur.quantite }}</td>
+                                                        <td>
+                                                            <input type="number" {{ commande_fournisseur.etatValide ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
+                                                                   max="{{ produit_commande_fournisseur.quantite }}"
+                                                                   name="qte{{ produit_commande_fournisseur.id }}"
+                                                                   value="{{ produit_commande_fournisseur.quantiteLivree == null ? 0 : produit_commande_fournisseur.quantiteLivree  }}"
+                                                                   data-produit-id="{{ produit_commande_fournisseur.id }}">
+                                                        </td>
+                                                        <td>
+                                                            <button {{ commande_fournisseur.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="text-end">
+                                        {% set i = 0 %}
+                                        {% for produit_commande_fournisseur in produit_commande_fournisseurs %}
+                                            {% if produit_commande_fournisseur.numeroCommande == commande_fournisseur.numeroCommande %}
+                                                {% set i = i + 1 %}
+                                                {% if i == 1 %}
+                                                    <a data-bs-toggle="modal" data-bs-target="#traiterModal{{ commande_fournisseur.id }}" href="#" class="{{ commande_fournisseur.etatTraite ? 'disabled' : '' }} btn btn-primary">Traiter <i class="fa fa-pencil"></i></a>
+                                                    {% if commande_fournisseur.etatTraite and commande_fournisseur.etatValide %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_fournisseur.id }}" href="#" class="disabled btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% elseif commande_fournisseur.etatTraite == false %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_fournisseur.id }}" href="#" class="disabled btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% elseif commande_fournisseur.etatTraite and commande_fournisseur.etatValide == false %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_fournisseur.id }}" href="#" class="btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% endif %}
+                                                    <a href="{{ path('app_commande_fournisseur_voir_bons', {id: commande_fournisseur.id}) }}" class="btn btn-info" title="Voir bon"><i class="fa fa-eye"></i></a>
+                                                    {% if commande_fournisseur.etatTraite == false and commande_fournisseur.etatValide == false %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#supprimerModal{{ commande_fournisseur.id }}" href="#" class="btn btn-danger" title="Supprimer"><i class="fa fa-trash"></i></a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="traiterModal{{ commande_fournisseur.id }}" tabindex="-1" aria-labelledby="traiterModalLabel{{ commande_fournisseur.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="traiterModalLabel{{ commande_fournisseur.id }}">Traitement</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Etes-vous sûr de bien vouloir <span class="text-danger">marquer cette commande comme traitée</span> ?
+                                        <br>Cette action est irreverssible</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ path('app_commande_fournisseur_traiter', {id: commande_fournisseur.id}) }}" class="btn btn-primary">Traiter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="validerModal{{ commande_fournisseur.id }}" tabindex="-1" aria-labelledby="validerModalLabel{{ commande_fournisseur.id }}" aria-hidden="true">
+                        <form action="{{ path('app_commande_fournisseur_valider', {id: commande_fournisseur.id}) }}" method="post">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="validerModalLabel{{ commande_fournisseur.id }}">Validation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5>Etes-vous sûr de bien vouloir <span class="text-danger">valider</span> cette commande ?
+                                            <br>Cette action est irreverssible</h5>
+                                        <div class="form-group mt-3">
+                                            <label for="dateLivraison">Date de livraison <span class="text-danger">*</span></label>
+                                            <input required type="date" name="dateLivraison" id="dateLivraison" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Valider</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="supprimerModal{{ commande_fournisseur.id }}" tabindex="-1" aria-labelledby="supprimerModalLabel{{ commande_fournisseur.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="supprimerModalLabel{{ commande_fournisseur.id }}">Suppression</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Etes-vous sûr de bien vouloir <span class="text-danger">supprimer</span> cette commande ?
+                                        <br>Cette action est irreverssible</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ path('app_commande_fournisseur_supprimer', {id: commande_fournisseur.id}) }}" class="btn btn-danger">Supprimer</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.qte-input').change(function() {
+                var qte = $(this).val();
+                var produitId = $(this).data('produit-id');
+                var prixVente = parseFloat($(`td:nth-child(3)`, $(this).closest('tr')).text()); // Récupérer le texte dans la 3ème cellule de la ligne actuelle
+                var prixTotal = qte * prixVente || 0;
+                $(`input[name="prixTotal${produitId}"]`).val(prixTotal.toFixed(0));
+            });
+        });
+    </script>
+{% endblock %}

@@ -25,36 +25,26 @@
                 <tr>
                     <th>N° commande</th>
                     <th>Date commande</th>
+                    <th>Date Livrée</th>
                     <th>Observation</th>
                     <th>Total Ht</th>
                     <th>Total Tva</th>
                     <th>Total Ttc</th>
                     <th>N° Facture</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for commande_client in commande_clients %}
-                    <tr class="pointer" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_client.id }}"
+                    <tr class="border-1 pointer {{ commande_client.etatValide ? 'text-bg-success text-light' : '' }}" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_client.id }}"
                         aria-expanded="false" aria-controls="accordion{{ commande_client.id }}">
                         <td scope="row">{{ commande_client.numeroCommande }}</td>
                         <td>{{ commande_client.dateCommandeAt ? commande_client.dateCommandeAt|date('d-m-Y à H:i') : '' }}</td>
+                        <td>{{ commande_client.dateLivraisonAt ? commande_client.dateLivraisonAt|date('d-m-Y à H:i') : '' }}</td>
                         <td>{{ commande_client.observation }}</td>
                         <td>{{ commande_client.totalHt }}</td>
                         <td>{{ commande_client.totalTva }}</td>
                         <td>{{ commande_client.totalTtc }}</td>
                         <td>{{ commande_client.numeroFacture }}</td>
-                        <td>
-                            <div class="action">
-                                <a class="text-danger"
-                                   href="{{ path('app_commande_client_show', {'id': commande_client.id}) }}">
-                                    <i class="lni lni-trash-can"></i>
-                                </a>  &nbsp; &nbsp;
-                                <a class="text-dark-emphasis" href="{{ path('app_commande_client_edit', {'id': commande_client.id}) }}">
-                                    <i class="fa fa-address-book"></i>
-                                </a>
-                            </div>
-                        </td>
                     </tr>
                     <tr>
                         <td colspan="12" class="p-0">
@@ -84,19 +74,19 @@
                                                         <td>{{ produit_commande_client.quantite }}</td>
                                                         <td>{{ produit_commande_client.prixTotal }} FCFA</td>
                                                         <td>
-                                                            <input type="number" style="width:100px" class="qte-input" min="0"
+                                                            <input type="number" {{ commande_client.etatValide ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
                                                                    max="{{ produit_commande_client.quantite }}"
                                                                    name="qte{{ produit_commande_client.id }}"
                                                                    value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree  }}"
                                                                    data-produit-id="{{ produit_commande_client.id }}">
                                                         </td>
                                                         <td>
-                                                            <input type="number" readonly class="prix-total-input"
+                                                            <input type="number" {{ commande_client.etatValide ? 'disabled' : '' }} readonly class="prix-total-input"
                                                                    name="prixTotal{{ produit_commande_client.id }}"
                                                                    value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree * produit_commande_client.produit.prixVente }}">
                                                         </td>
                                                         <td>
-                                                            <button type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
+                                                            <button {{ commande_client.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -105,12 +95,110 @@
                                         </tbody>
                                     </table>
                                     <div class="text-end">
-                                        <a href="{{ path('app_commande_client_voir_bons', {id: commande_client.id}) }}" class="btn btn-info">Voir bon <i class="fa fa-eye"></i></a>
+                                        {% set i = 0 %}
+                                        {% for produit_commande_client in produit_commande_clients %}
+                                            {% if produit_commande_client.numeroCommande == commande_client.numeroCommande %}
+                                                {% set i = i + 1 %}
+                                                {% if i == 1 %}
+                                                    <a data-bs-toggle="modal" data-bs-target="#traiterModal{{ commande_client.id }}" href="#" class="{{ commande_client.etatTraite ? 'disabled' : '' }} btn btn-primary">Traiter <i class="fa fa-pencil"></i></a>
+                                                    {% if commande_client.etatTraite and commande_client.etatValide %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_client.id }}" href="#" class="disabled btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% elseif commande_client.etatTraite == false %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_client.id }}" href="#" class="disabled btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% elseif commande_client.etatTraite and commande_client.etatValide == false %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#validerModal{{ commande_client.id }}" href="#" class="btn btn-success">Valider <i class="fa fa-send"></i></a>
+                                                    {% endif %}
+                                                    <a href="{{ path('app_commande_client_voir_bons', {id: commande_client.id}) }}" class="btn btn-info" title="Voir bon"><i class="fa fa-eye"></i></a>
+                                                {% if commande_client.etatTraite == false and commande_client.etatValide == false %}
+                                                    <a data-bs-toggle="modal" data-bs-target="#supprimerModal{{ commande_client.id }}" href="#" class="btn btn-danger" title="Supprimer"><i class="fa fa-trash"></i></a>
+                                                {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
                         </td>
                     </tr>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="traiterModal{{ commande_client.id }}" tabindex="-1" aria-labelledby="traiterModalLabel{{ commande_client.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="traiterModalLabel{{ commande_client.id }}">Traitement</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Etes-vous sûr de bien vouloir <span class="text-danger">marquer cette commande comme traitée</span> ?
+                                        <br>Cette action est irreverssible</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ path('app_commande_client_traiter', {id: commande_client.id}) }}" class="btn btn-primary">Traiter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="validerModal{{ commande_client.id }}" tabindex="-1" aria-labelledby="validerModalLabel{{ commande_client.id }}" aria-hidden="true">
+                        <form action="{{ path('app_commande_client_valider', {id: commande_client.id}) }}" method="post">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="validerModalLabel{{ commande_client.id }}">Validation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5>Etes-vous sûr de bien vouloir <span class="text-danger">valider</span> cette commande ?
+                                            <br>Cette action est irreverssible</h5>
+                                            <div class="form-group mt-3">
+                                                <label for="dateLivraison">Date de livraison <span class="text-danger">*</span></label>
+                                                <input required type="date" name="dateLivraison" id="dateLivraison" class="form-control">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label for="echeance">Echéance <span class="text-danger">*</span></label>
+                                                <input required type="text" name="echeance" id="echeance" class="form-control">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label for="moyenPaiement">Moyen de paiement <span class="text-danger">*</span></label>
+                                                <select required name="moyenPaiement" id="moyenPaiement" class="form-control">
+                                                    <option value="">Sélectionnez un moyen de paiement</option>
+                                                    {% for moyen_reglement in moyen_reglements %}
+                                                        <option value="{{ moyen_reglement.id }}">{{ moyen_reglement.libelle }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Valider</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="supprimerModal{{ commande_client.id }}" tabindex="-1" aria-labelledby="supprimerModalLabel{{ commande_client.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="supprimerModalLabel{{ commande_client.id }}">Suppression</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Etes-vous sûr de bien vouloir <span class="text-danger">supprimer</span> cette commande ?
+                                        <br>Cette action est irreverssible</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ path('app_commande_client_supprimer', {id: commande_client.id}) }}" class="btn btn-danger">Supprimer</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
                     <tr>
                         <td colspan="8">no records found</td>

@@ -1,0 +1,49 @@
+{{ form_start(form) }}
+    {{ form_row(form.fournisseur, {
+        label: "Fournisseur",
+        attr : {
+            placeholder: "Fournisseur",
+            class: "form-control mb-3"
+        }
+    }) }}
+    {{ form_row(form.observation, {
+        label: false,
+        attr : {
+            placeholder: "Observation",
+            class: "form-control mb-3",
+            col: 20
+        }
+    }) }}
+<div id="messageProductAdd" class="alert alert-danger text-center" style="display: none"></div>
+
+<select name="produit" class="select-sm form-control" id="commande_fournisseur_produits">
+    <option>Sélectionnez un produit</option>
+    {% for produit in produits %}
+        <option data-id="{{ produit.id }}" value="{{ produit.id }}">{{ produit.libelle }}</option>
+    {% endfor %}
+</select>
+<div id="total"></div>
+
+
+<div id="messageProductAdd" style="display: none;"></div>
+<table id="table-produits" class="table mb-5 mt-2">
+    <thead>
+    <tr>
+        <th>Code article</th>
+        <th>Libellé</th>
+        <th>Image</th>
+        <th>Quantité</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<button class="btn btn-success form-control">{{ button_label|default('Enregistrer') }} <i class="fa fa-floppy-o"></i></button>
+{{ form_end(form) }}

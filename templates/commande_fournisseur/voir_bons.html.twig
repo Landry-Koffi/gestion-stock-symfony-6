@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}commande-fournisseur-{{ commande_fournisseur.numeroCommande }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .fond-table{
+            background-color: #4a6cf7;
+            color: whitesmoke;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section class="section mt-3">
+        <div class="container-fluid">
+
+            <div class="row print">
+                <div class="col-md-10">
+                    <h1>BON DE COMMANDE FOURNISSEUR</h1>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="window.print();return false;">Imprimer</button>
+                </div>
+            </div>
+
+            <div class="container mt-5 d-flex justify-content-center">
+                <div class="fond w-75 bg-light shadow p-3 border-1" style="border: 1px dotted black">
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6 text-primary fw-bold fs-4 text-end">
+                                Bon de commande
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <span style="display: {{ commande_fournisseur.etatTraite ? 'none' : 'block' }}" class="text-bg-primary text-uppercase fw-bold">Encours de traitement</span>
+                            <span style="display: {{ commande_fournisseur.etatTraite and commande_fournisseur.etatValide == false ? 'block' : 'none' }}" class="text-bg-warning text-uppercase fw-bold">Traitement effectué, en attente de livraison</span>
+                            <span style="display: {{ commande_fournisseur.etatValide ? 'block' : 'none' }}" class="text-bg-success text-uppercase fw-bold">Livrée</span>
+                        </div>
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <p>{{ app.user.entreprise }}</p>
+                                <p>{{ app.user.adresse }}</p>
+                                <p>{{ app.user.ville }}</p>
+                                <p>{{ app.user.tel }}</p>
+                            </div>
+                            <div class="col-md-6 text-end">
+
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Commande N° :</div>
+                                    <div class="col-5"><b>{{ commande_fournisseur.numeroCommande }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Date :</div>
+                                    <div class="col-5"><b>{{ commande_fournisseur.dateCommandeAt|date('d/m/Y') }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Nom fournisseur :</div>
+                                    <div class="col-5"><b>{{ commande_fournisseur.fournisseur.libelle }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Adresse :</div>
+                                    <div class="col-5" style="font-size: 0.8em"><b>{{ commande_fournisseur.fournisseur.adresse }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Ville :</div>
+                                    <div class="col-5"><b>{{ commande_fournisseur.fournisseur.ville }}</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-5">Téléphone :</div>
+                                    <div class="col-5"><b>{{ commande_fournisseur.fournisseur.tel }}</b></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <table class="table table-striped">
+                                    <thead class="fond-table">
+                                        <tr class="text-center">
+                                            <th class="text-start">Article</th>
+                                            <th>Description</th>
+                                            <th>Qte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for produitCommandeFournisseur in produitCommandeFournisseurs %}
+                                            <tr class="text-center">
+                                                <td class="text-start">{{ produitCommandeFournisseur.produit.libelle }}</td>
+                                                <td>Description</td>
+                                                <td>{{ produitCommandeFournisseur.quantite }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        {% set i = 0 %}
+                                        {% for i in 1..2 %}
+                                        <tr class="text-center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <p class="text-center">Conditions générales de vente au verso</p>
+                        </div>
+                        <div class="row">
+                            <p class="text-center text-primary">Merci de votre confiance</p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -6,6 +6,7 @@ use App\Entity\CommandeClient;
 use App\Entity\ProduitCommandeClient;
 use App\Form\CommandeClientType;
 use App\Repository\CommandeClientRepository;
+use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,16 +15,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use DateTime;
 
 #[Route('/commande/client')]
 class CommandeClientController extends AbstractController
 {
     #[Route('/', name: 'app_commande_client_index', methods: ['GET'])]
-    public function index(CommandeClientRepository $commandeClientRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function index(MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         return $this->render('commande_client/index.html.twig', [
-            'commande_clients' => $commandeClientRepository->findAll(),
+            'commande_clients' => $commandeClientRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
             'produit_commande_clients' => $produitCommandeClientRepository->findBy([],["numeroCommande" => "DESC"]),
+            'moyen_reglements' => $moyenReglementRepository->findBy([],["libelle" => "DESC"]),
         ]);
     }
 
@@ -90,13 +93,66 @@ class CommandeClientController extends AbstractController
     }
 
     #[Route('/modifier/{id}', name: 'app_commande_client_modifier', methods: ['GET', 'POST'])]
-    public function modifier($id, Request $request, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function modifier($id, Request $request, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitRepository $produitRepository): Response
     {
         $qteLivree = $request->request->get("qte".$id);
         $produitCommandeClient = $produitCommandeClientRepository->findOneBy(['id' => $id]);
+        $quantiteUpdate = $produitCommandeClient->getQuantiteUpdate();
         $produitCommandeClient->setQuantiteLivree($qteLivree);
+        $produitCommandeClient->setQuantiteUpdate($qteLivree);
         $produitCommandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
         $produitCommandeClientRepository->save($produitCommandeClient, true);
+
+        $produit = $produitRepository->findOneBy(['id' => $produitCommandeClient->getProduit()->getId()]);
+
+        if ($quantiteUpdate !== null){
+            $produit->setStock($produit->getStock() + $quantiteUpdate - $qteLivree);
+        }else{
+            $produit->setStock($produit->getStock() - $qteLivree);
+        }
+        $produitRepository->save($produit, true);
+
+        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/supprimer/{id}', name: 'app_commande_client_supprimer', methods: ['GET', 'POST'])]
+    public function supprimer($id, CommandeClientRepository $commandeClientRepository): Response
+    {
+        $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
+        $commandeClient->setDeletedAt(new \DateTimeImmutable('now'));
+        $commandeClientRepository->save($commandeClient, true);
+        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/traiter/{id}', name: 'app_commande_client_traiter', methods: ['GET', 'POST'])]
+    public function traiter($id, CommandeClientRepository $commandeClientRepository): Response
+    {
+        $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
+        $commandeClient->setEtatTraite(true);
+        $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
+        $commandeClientRepository->save($commandeClient, true);
+        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
+    public function valider($id, Request $request, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository): Response
+    {
+        $dateLivraison = $request->request->get("dateLivraison");
+        $moyenPaiement = $request->request->get("moyenPaiement");
+        $echeance = $request->request->get("echeance");
+        if ($dateLivraison != null and $moyenPaiement != null and $echeance != null){
+            $moyenPaiement = $moyenReglementRepository->findOneBy(['id' => $moyenPaiement]);
+
+            $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
+            $commandeClient->setEtatValide(true);
+            $commandeClient->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
+            $commandeClient->setMoyenPaiement($moyenPaiement);
+            $commandeClient->setEcheance($echeance);
+            $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
+            $commandeClientRepository->save($commandeClient, true);
+        }else{
+            // TODO :: Message d'erreur
+        }
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
 

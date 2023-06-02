@@ -107,20 +107,44 @@
                                 <div class="modal-body">
                                     <form method="post" action="{{ path('app_users_edit', { id: user.id }) }}">
                                         <div class="row">
-                                            <div class="col-12">
+                                            {#<div class="col-12">
                                                 <div class="input-style-1">
                                                     <label for="username">Username</label>
                                                     <input id="username" required type="text"
                                                            value="{{ user.username }}" placeholder="Username"
                                                            name="username" class="form-control">
                                                 </div>
-                                            </div>
+                                            </div>#}
                                             <!-- end col -->
                                             <div class="col-12">
                                                 <div class="input-style-1">
                                                     <label for="adresse">Adresse</label>
                                                     <input id="adresse" required type="text" value="{{ user.adresse }}"
                                                            placeholder="Adresse" name="adresse" class="form-control">
+                                                </div>
+                                            </div>
+                                            <!-- end col -->
+                                            <div class="col-12">
+                                                <div class="input-style-1">
+                                                    <label for="entreprise">Entreprise</label>
+                                                    <input id="entreprise" required type="text" value="{{ user.entreprise }}"
+                                                           placeholder="Entreprise" name="entreprise" class="form-control">
+                                                </div>
+                                            </div>
+                                            <!-- end col -->
+                                            <div class="col-12">
+                                                <div class="input-style-1">
+                                                    <label for="ville">Ville</label>
+                                                    <input id="ville" required type="text" value="{{ user.ville }}"
+                                                           placeholder="Ville" name="ville" class="form-control">
+                                                </div>
+                                            </div>
+                                            <!-- end col -->
+                                            <div class="col-12">
+                                                <div class="input-style-1">
+                                                    <label for="tel">Téléphone</label>
+                                                    <input id="tel" required type="text" value="{{ user.tel }}"
+                                                           placeholder="Téléphone" name="tel" class="form-control">
                                                 </div>
                                             </div>
                                             <!-- end col -->
