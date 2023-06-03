@@ -25,7 +25,7 @@ class Reglement
     private ?int $montant = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $echeanceAt = null;
+    private ?String $echeanceAt = null;
 
     public function getId(): ?int
     {
@@ -68,12 +68,12 @@ class Reglement
         return $this;
     }
 
-    public function getEcheanceAt(): ?\DateTimeImmutable
+    public function getEcheanceAt(): ?String
     {
         return $this->echeanceAt;
     }
 
-    public function setEcheanceAt(\DateTimeImmutable $echeanceAt): self
+    public function setEcheanceAt(String $echeanceAt): self
     {
         $this->echeanceAt = $echeanceAt;
 

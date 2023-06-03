@@ -32,7 +32,17 @@
     {% endblock %}
 </head>
 <body>
+{% for messageSuccess in app.flashes('success') %}
+    <div id="messageSuccess" class="alert alert-success text-center">
+        {{ messageSuccess }}
+    </div>
+{% endfor %}
 
+{% for messageError in app.flashes('error') %}
+    <div id="messageError" class="alert alert-danger text-center">
+        {{ messageError }}
+    </div>
+{% endfor %}
 <!-- ======== sidebar-nav start =========== -->
 <aside class="sidebar-nav-wrapper print">
     <div class="navbar-logo">
@@ -83,41 +93,32 @@
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
             app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
             ? 'active' : '' }}">
-                <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
+            <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
                    aria-expanded="true" aria-label="Toggle navigation">
                       <span class="icon">
                           <i class="lni lni-popup"></i>
                       </span>
                     <span class="text">Commande</span>
                 </a>
-                <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
-                    <li>
+            <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
+                <li>
                         <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
                     </li>
-                    <li>
+                <li>
                         <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
                     </li>
-                </ul>
+            </ul>
             </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
-            app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
-            ? 'active' : '' }}">
-                <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_1" aria-controls="ddmenu_1"
-                   aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="icon">
-                        <svg width="22" height="22" viewBox="0 0 22 22">
-                          <path d="M17.4167 4.58333V6.41667H13.75V4.58333H17.4167ZM8.25 4.58333V10.0833H4.58333V4.58333H8.25ZM17.4167 11.9167V17.4167H13.75V11.9167H17.4167ZM8.25 15.5833V17.4167H4.58333V15.5833H8.25ZM19.25 2.75H11.9167V8.25H19.25V2.75ZM10.0833 2.75H2.75V11.9167H10.0833V2.75ZM19.25 10.0833H11.9167V19.25H19.25V10.0833ZM10.0833 13.75H2.75V19.25H10.0833V13.75Z"/>
-                        </svg>
-                      </span>
-                      <span class="text">Règlement</span>
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_reglement_index' ? 'active' : '' }}">
+                <a href="{{ path('app_reglement_index') }}">
+              <span class="icon">
+                <i class="lni lni-codepen"></i>
+              </span>
+                    <span class="text">Règlement</span>
                 </a>
-                <ul id="ddmenu_1" class="collapse dropdown-nav">
-                    {#<li>
-                        <a href="{{ path('app_client_index') }}" class="active"> Clients </a>
-                    </li>#}
-                </ul>
             </li>
+
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
             app.request.attributes.get('_route') == 'app_roles_index' or
             app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
@@ -173,18 +174,18 @@
                                 <i class="lni lni-chevron-left me-2"></i> Menu
                             </button>
                         </div>
-                        <div class="header-search d-none d-md-flex">
+                        {#<div class="header-search d-none d-md-flex">
                             <form action="#">
                                 <input type="text" placeholder="Search..."/>
                                 <button><i class="lni lni-search-alt"></i></button>
                             </form>
-                        </div>
+                        </div>#}
                     </div>
                 </div>
                 <div class="col-lg-7 col-md-7 col-6">
                     <div class="header-right">
                         <!-- notification start -->
-                        <div class="notification-box ml-15 d-none d-md-flex">
+                        {#<div class="notification-box ml-15 d-none d-md-flex">
                             <button
                                     class="dropdown-toggle"
                                     type="button"
@@ -240,10 +241,10 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
+                        </div>#}
                         <!-- notification end -->
                         <!-- message start -->
-                        <div class="header-message-box ml-15 d-none d-md-flex">
+                        {#<div class="header-message-box ml-15 d-none d-md-flex">
                             <button
                                     class="dropdown-toggle"
                                     type="button"
@@ -295,14 +296,14 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
+                        </div>#}
                         <!-- message end -->
                         <!-- filter start -->
-                        <div class="filter-box ml-15 d-none d-md-flex">
+                        {#<div class="filter-box ml-15 d-none d-md-flex">
                             <button class="" type="button" id="filter">
                                 <i class="lni lni-funnel"></i>
                             </button>
-                        </div>
+                        </div>#}
                         <!-- filter end -->
                         <!-- profile start -->
                         <div class="profile-box ml-15">
@@ -422,6 +423,23 @@
 
 <script>
     // ======== jvectormap activation
+
+    function messageSuccess( jQuery ) {
+        $("#messageSuccess")
+            .delay(3000)  // Delay of 1 second (1000 milliseconds)
+            .fadeOut('slow')
+            .slideUp(3000)
+    }
+    $( window ).on( "load", messageSuccess );
+
+    function messageError( jQuery ) {
+        $("#messageError")
+            .delay(3000)  // Delay of 1 second (1000 milliseconds)
+            .fadeOut('slow')
+            .slideUp(3000)
+    }
+    $( window ).on( "load", messageError );
+
     var markers = [
         {name: "Egypt", coords: [26.8206, 30.8025]},
         {name: "Russia", coords: [61.524, 105.3188]},
@@ -429,6 +447,7 @@
         {name: "Greenland", coords: [71.7069, -42.6043]},
         {name: "Brazil", coords: [-14.235, -51.9253]},
     ];
+
 
     var jvm = new jsVectorMap({
         map: "world_merc",
@@ -920,6 +939,7 @@
         },
     });
     // =========== chart four end
+
 </script>
 </body>
 </html>

@@ -30,7 +30,7 @@ class RolesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $rolesRepository->save($role, true);
-
+            $this->addFlash('success', 'rôle ajouté !');
             return $this->redirectToRoute('app_roles_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -56,7 +56,7 @@ class RolesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $rolesRepository->save($role, true);
-
+            $this->addFlash('success', 'Rôle modifié !');
             return $this->redirectToRoute('app_roles_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -71,6 +71,7 @@ class RolesController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$role->getId(), $request->request->get('_token'))) {
             $rolesRepository->remove($role, true);
+            $this->addFlash('success', 'Rôle supprimé !');
         }
 
         return $this->redirectToRoute('app_roles_index', [], Response::HTTP_SEE_OTHER);

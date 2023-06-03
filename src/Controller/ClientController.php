@@ -32,7 +32,7 @@ class ClientController extends AbstractController
             $client->setCreatedAt(new \DateTimeImmutable('now'));
             $client->setUpdateAt(new \DateTimeImmutable('now'));
             $clientRepository->save($client, true);
-
+            $this->addFlash('success', 'Client ajouté !');
             return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,7 +58,7 @@ class ClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $clientRepository->save($client, true);
-
+            $this->addFlash('success', 'Client modifié !');
             return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -73,6 +73,7 @@ class ClientController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
             $clientRepository->remove($client, true);
+            $this->addFlash('success', 'Client supprimé !');
         }
 
         return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);

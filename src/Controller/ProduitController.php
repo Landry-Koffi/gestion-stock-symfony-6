@@ -33,7 +33,6 @@ class ProduitController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
             $brochureFile = $form->get('image')->getData();
 
             // this condition is needed because the 'brochure' field is not required
@@ -62,7 +61,7 @@ class ProduitController extends AbstractController
 
 
             $produitRepository->save($produit, true);
-
+            $this->addFlash('success', 'Produit ajouté !');
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -109,7 +108,7 @@ class ProduitController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $produitRepository->save($produit, true);
-
+            $this->addFlash('success', 'Produit modifié !');
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -124,6 +123,7 @@ class ProduitController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
             $produitRepository->remove($produit, true);
+            $this->addFlash('success', 'Produit supprimé !');
         }
 
         return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);

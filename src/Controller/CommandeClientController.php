@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\CommandeClient;
 use App\Entity\ProduitCommandeClient;
+use App\Entity\Reglement;
 use App\Form\CommandeClientType;
 use App\Repository\CommandeClientRepository;
 use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
+use App\Repository\ReglementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,6 +73,7 @@ class CommandeClientController extends AbstractController
                 $produitCommandeClient->setCreatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeClientRepository->save($produitCommandeClient, true);
             }
+            $this->addFlash('success', 'Commande client créée !');
             $response = new RedirectResponse($this->generateUrl('app_commande_client_index'), Response::HTTP_SEE_OTHER);
             $response->headers->setCookie(Cookie::create('produitsAjoutes', null, new \DateTime('yesterday')));
             return $response;
@@ -112,7 +115,7 @@ class CommandeClientController extends AbstractController
             $produit->setStock($produit->getStock() - $qteLivree);
         }
         $produitRepository->save($produit, true);
-
+        $this->addFlash('success', 'Commande client modifiée !');
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -122,6 +125,7 @@ class CommandeClientController extends AbstractController
         $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
         $commandeClient->setDeletedAt(new \DateTimeImmutable('now'));
         $commandeClientRepository->save($commandeClient, true);
+        $this->addFlash('success', 'Commande client supprimée !');
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -132,11 +136,12 @@ class CommandeClientController extends AbstractController
         $commandeClient->setEtatTraite(true);
         $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
         $commandeClientRepository->save($commandeClient, true);
+        $this->addFlash('success', 'Commande client traitée !');
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository): Response
+    public function valider($id, Request $request, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
@@ -151,8 +156,17 @@ class CommandeClientController extends AbstractController
             $commandeClient->setEcheance($echeance);
             $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
             $commandeClientRepository->save($commandeClient, true);
+
+            // Save reglement
+            $reglement = new Reglement();
+            $reglement->setCommandeClient($commandeClient);
+            $reglement->setMontant($commandeClient->getTotalTtc());
+            $reglement->setModeReglement($moyenPaiement);
+            $reglement->setEcheanceAt($echeance);
+            $reglementRepository->save($reglement, true);
+            $this->addFlash('success', 'Commande client validée !');
         }else{
-            // TODO :: Message d'erreur
+            $this->addFlash('error', 'Veuillez renseigner tous les champs svp !');
         }
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -173,7 +187,7 @@ class CommandeClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeClientRepository->save($commandeClient, true);
-
+            $this->addFlash('success', 'Commande client modifiée !');
             return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -188,6 +202,7 @@ class CommandeClientController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$commandeClient->getId(), $request->request->get('_token'))) {
             $commandeClientRepository->remove($commandeClient, true);
+            $this->addFlash('success', 'Commande client supprimée !');
         }
 
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);

@@ -32,7 +32,7 @@ class FournisseurController extends AbstractController
             $fournisseur->setCreatedAt(new \DateTimeImmutable('now'));
             $fournisseur->setUpdatedAt(new \DateTimeImmutable('now'));
             $fournisseurRepository->save($fournisseur, true);
-
+            $this->addFlash('success', 'Fournisseur ajouté !');
             return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,7 +58,7 @@ class FournisseurController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $fournisseurRepository->save($fournisseur, true);
-
+            $this->addFlash('success', 'Fournisseur modifié !');
             return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -73,6 +73,7 @@ class FournisseurController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$fournisseur->getId(), $request->request->get('_token'))) {
             $fournisseurRepository->remove($fournisseur, true);
+            $this->addFlash('success', 'Fournisseur supprimé !');
         }
 
         return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);

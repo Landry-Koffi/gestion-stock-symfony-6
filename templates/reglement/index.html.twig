@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReglementController!{% endblock %}
+
+{% block body %}
+<section class="table-components table-responsive table-responsive mt-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des règlements</h2>
+            </div>
+        </div>
+
+        <table class="table table-striped mt-3">
+            <thead class="table-dark">
+            <tr>
+                <th>N° commande</th>
+                <th>Moyen règlement</th>
+                <th>Montant</th>
+                <th>Échéance</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reglement in reglements %}
+                <tr>
+                    <td>{{ reglement.commandeClient.numeroCommande }}</td>
+                    <td>{{ reglement.modeReglement.libelle }}</td>
+                    <td>{{ reglement.montant }} FCFA</td>
+                    <td>{{ reglement.echeanceAt }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

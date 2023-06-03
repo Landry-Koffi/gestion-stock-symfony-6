@@ -19,6 +19,8 @@ security:
             custom_authenticator: App\Security\UsersAuthenticator
             logout:
                 path: app_logout
+            pattern: ^/
+            user_checker: App\Security\UserChecker
                 # where to redirect after logout
                 # target: app_any_route
 

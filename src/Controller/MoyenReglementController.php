@@ -30,7 +30,7 @@ class MoyenReglementController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $moyenReglementRepository->save($moyenReglement, true);
-
+            $this->addFlash('success', 'Moyen de paiement ajouté !');
             return $this->redirectToRoute('app_moyen_reglement_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -56,7 +56,7 @@ class MoyenReglementController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $moyenReglementRepository->save($moyenReglement, true);
-
+            $this->addFlash('success', 'Moyen de paiement modifié !');
             return $this->redirectToRoute('app_moyen_reglement_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -71,6 +71,7 @@ class MoyenReglementController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$moyenReglement->getId(), $request->request->get('_token'))) {
             $moyenReglementRepository->remove($moyenReglement, true);
+            $this->addFlash('success', 'Moyen de paiement supprimé !');
         }
 
         return $this->redirectToRoute('app_moyen_reglement_index', [], Response::HTTP_SEE_OTHER);

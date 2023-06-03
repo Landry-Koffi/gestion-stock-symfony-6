@@ -24,6 +24,7 @@ class UsersController extends AbstractController
     {
         $users->setDeletedAt(new \DateTimeImmutable('now'));
         $usersRepository->save($users, true);
+        $this->addFlash('success', 'Utilisateur supprimé !');
         if ($users->getId() == $this->getUser()->getId()){
             return $this->redirectToRoute('app_logout');
         }
@@ -33,23 +34,17 @@ class UsersController extends AbstractController
     #[Route('/users/edit/{id}', name: 'app_users_edit')]
     public function edit(Users $users, Request $request, UsersRepository $usersRepository)
     {
-        //$username = $request->request->get("username");
         $adresse = $request->request->get("adresse");
         $entreprise = $request->request->get("entreprise");
         $ville = $request->request->get("ville");
         $tel = $request->request->get("tel");
-        /*$user = $usersRepository->findOneBy(['username' => $username]);
-        if ($user){
-            // TODO :: Message pour informer que l'user est déjà prit
-            return $this->redirectToRoute('app_users');
-        }*/
-        //$users->setUsername($username);
         $users->setAdresse($adresse);
         $users->setEntreprise($entreprise);
         $users->setVille($ville);
         $users->setTel($tel);
         $users->setUpdatedAt(new \DateTimeImmutable('now'));
         $usersRepository->save($users, true);
+        $this->addFlash('success', 'Utilisateur modifié !');
         if ($users->getId() == $this->getUser()->getId()){
             return $this->redirectToRoute('app_logout');
         }
@@ -61,8 +56,10 @@ class UsersController extends AbstractController
     {
         if ($users->isState()){
             $users->setState(false);
+            $this->addFlash('success', 'Compte activé !');
         }else{
             $users->setState(true);
+            $this->addFlash('success', 'Compte désactivé !');
         }
         $usersRepository->save($users, true);
         return $this->redirectToRoute('app_users');

@@ -2,11 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\CommandeClient;
 use App\Entity\CommandeFournisseur;
-use App\Entity\ProduitCommandeClient;
 use App\Entity\ProduitCommandeFournisseur;
-use App\Form\CommandeClientType;
 use App\Form\CommandeFournisseurType;
 use App\Repository\CommandeFournisseurRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
@@ -70,6 +67,7 @@ class CommandeFournisseurController extends AbstractController
                 $produitCommandeFounisseur->setCreatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeFournisseurRepository->save($produitCommandeFounisseur, true);
             }
+            $this->addFlash('success', 'Commande fournisseur créée !');
             $response = new RedirectResponse($this->generateUrl('app_commande_fournisseur_index'), Response::HTTP_SEE_OTHER);
             $response->headers->setCookie(Cookie::create('produitsAjoutesFournisseur', null, new \DateTime('yesterday')));
             return $response;
@@ -110,6 +108,7 @@ class CommandeFournisseurController extends AbstractController
             $produit->setStock($produit->getStock() + $qteLivree);
         }
         $produitRepository->save($produit, true);
+        $this->addFlash('success', 'Commande fournisseur modifiée !');
 
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -121,6 +120,7 @@ class CommandeFournisseurController extends AbstractController
         $commandeFournisseur = $commandeFournisseurRepository->findOneBy(['id' => $id]);
         $commandeFournisseur->setDeletedAt(new \DateTimeImmutable('now'));
         $commandeFournisseurRepository->save($commandeFournisseur, true);
+        $this->addFlash('success', 'Commande fournisseur supprimée !');
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -131,6 +131,7 @@ class CommandeFournisseurController extends AbstractController
         $commandeFournisseur->setEtatTraite(true);
         $commandeFournisseur->setUpdatedAt(new \DateTimeImmutable('now'));
         $commandeFournisseurRepository->save($commandeFournisseur, true);
+        $this->addFlash('success', 'Commande fournisseur traitée !');
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -144,8 +145,9 @@ class CommandeFournisseurController extends AbstractController
             $commandeFournisseur->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
             $commandeFournisseur->setUpdatedAt(new \DateTimeImmutable('now'));
             $commandeFournisseurRepository->save($commandeFournisseur, true);
+            $this->addFlash('success', 'Commande fournisseur validée !');
         }else{
-            // TODO :: Message d'erreur
+            $this->addFlash('error', 'Veuillez renseigner tous les champs svp !');
         }
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -166,7 +168,7 @@ class CommandeFournisseurController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeFournisseurRepository->save($commandeFournisseur, true);
-
+            $this->addFlash('success', 'Commande fournisseur modifiée !');
             return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -181,6 +183,7 @@ class CommandeFournisseurController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$commandeFournisseur->getId(), $request->request->get('_token'))) {
             $commandeFournisseurRepository->remove($commandeFournisseur, true);
+            $this->addFlash('success', 'Commande fournisseur supprimée !');
         }
 
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
