@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/moyen/reglement')]
+#[Route('/dashboard/moyen/reglement')]
 class MoyenReglementController extends AbstractController
 {
     #[Route('/', name: 'app_moyen_reglement_index', methods: ['GET'])]

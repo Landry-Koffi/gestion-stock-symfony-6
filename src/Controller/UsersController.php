@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UsersController extends AbstractController
 {
-    #[Route('/users', name: 'app_users')]
+    #[Route('/dashboard/users', name: 'app_users')]
     public function index(UsersRepository $usersRepository): Response
     {
         return $this->render('users/index.html.twig', [

@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <!-- ========== table components start ========== -->
+    <section class="section">
+        <div class="container-fluid">
+            <!-- ========== title-wrapper start ========== -->
+            <div class="title-wrapper pt-30">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="title mb-30">
+                            <h2>Dashboard</h2>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-md-6">
+                        <div class="breadcrumb-wrapper mb-30">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="#0">Dashboard</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        Tables
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- ========== title-wrapper end ========== -->
+
+            <!-- ========== title-wrapper end ========== -->
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon orange">
+                            <i class="lni lni-jsfiddle"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande client</h6>
+                            <h6 class="text-bold mb-10">{{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA</h6>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_encours }}
+                                <span class="text-gray">Encour{{ nb_commande_client_encours > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon success">
+                            <i class="lni lni-checkmark"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande client</h6>
+                            <h6 class="text-bold mb-10">{{ somme_commande_client_traites|number_format(0, '.', '.') }} FCFA</h6>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_traite }}
+                                <span class="text-gray">Traitée{{ nb_commande_client_traite > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon orange">
+                            <i class="lni lni-spinner"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande client</h6>
+                            <h6 class="text-bold mb-10">{{ somme_commande_client_attente_validations|number_format(0, '.', '.') }} FCFA</h6>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_en_attente_validation }}
+                                <span class="text-gray"> Attente{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }} validation{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon success">
+                            <i class="lni lni-checkmark"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande client</h6>
+                            <h6 class="text-bold mb-10">{{ somme_commande_client_validees|number_format(0, '.', '.') }} FCFA</h6>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_validee }}
+                                <span class="text-gray"> Validée{{ nb_commande_client_validee > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+            </div>
+
+
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon orange">
+                            <i class="lni lni-jsfiddle"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande fournisseur</h6>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_fournisseur_encours }}
+                                <span class="text-gray"> Encour{{ nb_commande_fournisseur_encours > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon success">
+                            <i class="lni lni-checkmark"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande fournisseur</h6>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_fournisseur_traite }}
+                                <span class="text-gray"> Traitée{{ nb_commande_fournisseur_traite > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon orange">
+                            <i class="lni lni-spinner"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande fournisseur</h6>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_fournisseur_en_attente_validation }}
+                                <span class="text-gray"> Attente{{ nb_commande_fournisseur_en_attente_validation > 1 ? 's':'' }} validation{{ nb_commande_fournisseur_en_attente_validation > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <div class="icon-card mb-30">
+                        <div class="icon success">
+                            <i class="lni lni-checkmark"></i>
+                        </div>
+                        <div class="content">
+                            <h6 class="mb-10">Commande fournisseur</h6>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-cart-full"></i> {{ nb_commande_fournisseur_validee }}
+                                <span class="text-gray"> Validée{{ nb_commande_fournisseur_validee > 1 ? 's':'' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End Icon Cart -->
+                </div>
+                <!-- End Col -->
+            </div>
+            <!-- End Row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-style calendar-card mb-30">
+                        <div id="calendar-mini"></div>
+                    </div>
+                </div>
+                <!-- End Col -->
+            </div>
+            <!-- ========== tables-wrapper end ========== -->
+        </div>
+        <!-- end container -->
+    </section>
+    <!-- ========== table components end ========== -->
+{% endblock %}

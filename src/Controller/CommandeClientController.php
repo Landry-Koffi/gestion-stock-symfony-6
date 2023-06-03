@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 
-#[Route('/commande/client')]
+#[Route('/dashboard/commande/client')]
 class CommandeClientController extends AbstractController
 {
     #[Route('/', name: 'app_commande_client_index', methods: ['GET'])]

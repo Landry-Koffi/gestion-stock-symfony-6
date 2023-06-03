@@ -36,91 +36,73 @@
 <!-- ======== sidebar-nav start =========== -->
 <aside class="sidebar-nav-wrapper print">
     <div class="navbar-logo">
-        <a href="index.html">
-            <img src="{{ asset('admin/assets/images/logo/logo.svg') }}" alt="logo"/>
+        <a href="{{ path('app_dashboard') }}">
+            <img src="{{ asset('images/edstock1.jpeg') }}" style="width: 70px; height: 40px" alt="logo"/>
         </a>
     </div>
     <nav class="sidebar-nav">
         <span class="divider"><hr/></span>
         <ul>
-            <li class="nav-item">
+
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_produit_index' ? 'active' : '' }}">
                 <a href="{{ path('app_produit_index') }}">
               <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.58333 3.66675H17.4167C17.9029 3.66675 18.3692 3.8599 18.713 4.20372C19.0568 4.54754 19.25 5.01385 19.25 5.50008V16.5001C19.25 16.9863 19.0568 17.4526 18.713 17.7964C18.3692 18.1403 17.9029 18.3334 17.4167 18.3334H4.58333C4.0971 18.3334 3.63079 18.1403 3.28697 17.7964C2.94315 17.4526 2.75 16.9863 2.75 16.5001V5.50008C2.75 5.01385 2.94315 4.54754 3.28697 4.20372C3.63079 3.8599 4.0971 3.66675 4.58333 3.66675ZM4.58333 7.33341V11.0001H10.0833V7.33341H4.58333ZM11.9167 7.33341V11.0001H17.4167V7.33341H11.9167ZM4.58333 12.8334V16.5001H10.0833V12.8334H4.58333ZM11.9167 12.8334V16.5001H17.4167V12.8334H11.9167Z"/>
-                </svg>
+                <i class="lni lni-producthunt"></i>
               </span>
                     <span class="text">Produits</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_client_index' ? 'active' : '' }}">
                 <a href="{{ path('app_client_index') }}">
               <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.58333 3.66675H17.4167C17.9029 3.66675 18.3692 3.8599 18.713 4.20372C19.0568 4.54754 19.25 5.01385 19.25 5.50008V16.5001C19.25 16.9863 19.0568 17.4526 18.713 17.7964C18.3692 18.1403 17.9029 18.3334 17.4167 18.3334H4.58333C4.0971 18.3334 3.63079 18.1403 3.28697 17.7964C2.94315 17.4526 2.75 16.9863 2.75 16.5001V5.50008C2.75 5.01385 2.94315 4.54754 3.28697 4.20372C3.63079 3.8599 4.0971 3.66675 4.58333 3.66675ZM4.58333 7.33341V11.0001H10.0833V7.33341H4.58333ZM11.9167 7.33341V11.0001H17.4167V7.33341H11.9167ZM4.58333 12.8334V16.5001H10.0833V12.8334H4.58333ZM11.9167 12.8334V16.5001H17.4167V12.8334H11.9167Z"/>
-                </svg>
+                <i class="lni lni-users"></i>
               </span>
                     <span class="text">Clients</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fournisseur_index' ? 'active' : '' }}">
                 <a href="{{ path('app_fournisseur_index') }}">
               <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.58333 3.66675H17.4167C17.9029 3.66675 18.3692 3.8599 18.713 4.20372C19.0568 4.54754 19.25 5.01385 19.25 5.50008V16.5001C19.25 16.9863 19.0568 17.4526 18.713 17.7964C18.3692 18.1403 17.9029 18.3334 17.4167 18.3334H4.58333C4.0971 18.3334 3.63079 18.1403 3.28697 17.7964C2.94315 17.4526 2.75 16.9863 2.75 16.5001V5.50008C2.75 5.01385 2.94315 4.54754 3.28697 4.20372C3.63079 3.8599 4.0971 3.66675 4.58333 3.66675ZM4.58333 7.33341V11.0001H10.0833V7.33341H4.58333ZM11.9167 7.33341V11.0001H17.4167V7.33341H11.9167ZM4.58333 12.8334V16.5001H10.0833V12.8334H4.58333ZM11.9167 12.8334V16.5001H17.4167V12.8334H11.9167Z"/>
-                </svg>
+                <i class="lni lni-users"></i>
               </span>
                     <span class="text">Fournisseurs</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_category_index' ? 'active' : '' }}">
                 <a href="{{ path('app_category_index') }}">
               <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.58333 3.66675H17.4167C17.9029 3.66675 18.3692 3.8599 18.713 4.20372C19.0568 4.54754 19.25 5.01385 19.25 5.50008V16.5001C19.25 16.9863 19.0568 17.4526 18.713 17.7964C18.3692 18.1403 17.9029 18.3334 17.4167 18.3334H4.58333C4.0971 18.3334 3.63079 18.1403 3.28697 17.7964C2.94315 17.4526 2.75 16.9863 2.75 16.5001V5.50008C2.75 5.01385 2.94315 4.54754 3.28697 4.20372C3.63079 3.8599 4.0971 3.66675 4.58333 3.66675ZM4.58333 7.33341V11.0001H10.0833V7.33341H4.58333ZM11.9167 7.33341V11.0001H17.4167V7.33341H11.9167ZM4.58333 12.8334V16.5001H10.0833V12.8334H4.58333ZM11.9167 12.8334V16.5001H17.4167V12.8334H11.9167Z"/>
-                </svg>
+                <i class="lni lni-list"></i>
               </span>
                     <span class="text">Catégories</span>
                 </a>
             </li>
 
-            <li class="nav-item nav-item-has-children">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
+            app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
+            ? 'active' : '' }}">
                 <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
                    aria-expanded="true" aria-label="Toggle navigation">
                       <span class="icon">
-                        <svg width="22" height="22" viewBox="0 0 22 22">
-                          <path d="M17.4167 4.58333V6.41667H13.75V4.58333H17.4167ZM8.25 4.58333V10.0833H4.58333V4.58333H8.25ZM17.4167 11.9167V17.4167H13.75V11.9167H17.4167ZM8.25 15.5833V17.4167H4.58333V15.5833H8.25ZM19.25 2.75H11.9167V8.25H19.25V2.75ZM10.0833 2.75H2.75V11.9167H10.0833V2.75ZM19.25 10.0833H11.9167V19.25H19.25V10.0833ZM10.0833 13.75H2.75V19.25H10.0833V13.75Z"/>
-                        </svg>
+                          <i class="lni lni-popup"></i>
                       </span>
                     <span class="text">Commande</span>
                 </a>
-                <ul id="ddmenu_c_c" class="collapse dropdown-nav">
+                <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
                     <li>
-                        <a href="{{ path('app_commande_client_index') }}" class=""> Commande client </a>
+                        <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
                     </li>
                     <li>
-                        <a href="{{ path('app_commande_fournisseur_index') }}" class=""> Commande fournisseur </a>
+                        <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ path('app_moyen_reglement_index') }}">
-              <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.58333 3.66675H17.4167C17.9029 3.66675 18.3692 3.8599 18.713 4.20372C19.0568 4.54754 19.25 5.01385 19.25 5.50008V16.5001C19.25 16.9863 19.0568 17.4526 18.713 17.7964C18.3692 18.1403 17.9029 18.3334 17.4167 18.3334H4.58333C4.0971 18.3334 3.63079 18.1403 3.28697 17.7964C2.94315 17.4526 2.75 16.9863 2.75 16.5001V5.50008C2.75 5.01385 2.94315 4.54754 3.28697 4.20372C3.63079 3.8599 4.0971 3.66675 4.58333 3.66675ZM4.58333 7.33341V11.0001H10.0833V7.33341H4.58333ZM11.9167 7.33341V11.0001H17.4167V7.33341H11.9167ZM4.58333 12.8334V16.5001H10.0833V12.8334H4.58333ZM11.9167 12.8334V16.5001H17.4167V12.8334H11.9167Z"/>
-                </svg>
-              </span>
-                    <span class="text">Moyen de règlement</span>
-                </a>
-            </li>
-
-
-
-            <li class="nav-item nav-item-has-children">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
+            app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
+            ? 'active' : '' }}">
                 <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_1" aria-controls="ddmenu_1"
                    aria-expanded="false" aria-label="Toggle navigation">
                       <span class="icon">
@@ -128,7 +110,7 @@
                           <path d="M17.4167 4.58333V6.41667H13.75V4.58333H17.4167ZM8.25 4.58333V10.0833H4.58333V4.58333H8.25ZM17.4167 11.9167V17.4167H13.75V11.9167H17.4167ZM8.25 15.5833V17.4167H4.58333V15.5833H8.25ZM19.25 2.75H11.9167V8.25H19.25V2.75ZM10.0833 2.75H2.75V11.9167H10.0833V2.75ZM19.25 10.0833H11.9167V19.25H19.25V10.0833ZM10.0833 13.75H2.75V19.25H10.0833V13.75Z"/>
                         </svg>
                       </span>
-                      <span class="text">Dashboard</span>
+                      <span class="text">Règlement</span>
                 </a>
                 <ul id="ddmenu_1" class="collapse dropdown-nav">
                     {#<li>
@@ -136,21 +118,24 @@
                     </li>#}
                 </ul>
             </li>
-            <li class="nav-item nav-item-has-children">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
+            app.request.attributes.get('_route') == 'app_roles_index' or
+            app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
                 <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
               <span class="icon">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.8334 1.83325H5.50008C5.01385 1.83325 4.54754 2.02641 4.20372 2.37022C3.8599 2.71404 3.66675 3.18036 3.66675 3.66659V18.3333C3.66675 18.8195 3.8599 19.2858 4.20372 19.6296C4.54754 19.9734 5.01385 20.1666 5.50008 20.1666H16.5001C16.9863 20.1666 17.4526 19.9734 17.7964 19.6296C18.1403 19.2858 18.3334 18.8195 18.3334 18.3333V7.33325L12.8334 1.83325ZM16.5001 18.3333H5.50008V3.66659H11.9167V8.24992H16.5001V18.3333Z"/>
-                </svg>
+                  <i class="lni lni-cog"></i>
               </span>
                     <span class="text">Settings</span>
                 </a>
-                <ul id="ddmenu_2" class="collapse dropdown-nav">
+                <ul id="ddmenu_2" class="collapse dropdown-nav mx-4">
                     <li>
-                        <a href="{{ path('app_users') }}"> Utilisateurs </a>
+                        <a href="{{ path('app_users') }}"> <i class="lni lni-users"></i> Utilisateurs </a>
                     </li>
                     <li>
-                        <a href="{{ path('app_roles_index') }}"> Roles </a>
+                        <a href="{{ path('app_roles_index') }}"> <i class="lni lni-microphone"></i> Roles </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_moyen_reglement_index') }}"> <i class="lni lni-money-location"></i> Moyen de règlement </a>
                     </li>
                 </ul>
             </li>
@@ -221,7 +206,7 @@
                                         </div>
                                         <div class="content">
                                             <h6>
-                                                John Doe
+                                                {{ app.user.username }}
                                                 <span class="text-regular">
                               comment on a product.
                             </span>
@@ -330,7 +315,7 @@
                             >
                                 <div class="profile-info">
                                     <div class="info">
-                                        <h6>John Doe</h6>
+                                        <h6>{{ app.user.username }}</h6>
                                         <div class="image">
                                             <img
                                                     src="{{ asset('admin/assets/images/profile/profile-image.png') }}"
@@ -342,13 +327,10 @@
                                 </div>
                                 <i class="lni lni-chevron-down"></i>
                             </button>
-                            <ul
-                                    class="dropdown-menu dropdown-menu-end"
-                                    aria-labelledby="profile"
-                            >
-                                <li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
+                                {#<li>
                                     <a href="#0">
-                                        <i class="lni lni-user"></i> View Profile
+                                        <i class="lni lni-user"></i> Voir Profil
                                     </a>
                                 </li>
                                 <li>
@@ -361,9 +343,9 @@
                                 </li>
                                 <li>
                                     <a href="#0"> <i class="lni lni-cog"></i> Settings </a>
-                                </li>
+                                </li>#}
                                 <li>
-                                    <a href="{{ path('app_logout') }}"> <i class="lni lni-exit"></i> Sign Out </a>
+                                    <a href="{{ path('app_logout') }}"> <i class="lni lni-exit"></i> Déconnexion </a>
                                 </li>
                             </ul>
                         </div>

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route('/produit')]
+#[Route('/dashboard/produit')]
 class ProduitController extends AbstractController
 {
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
