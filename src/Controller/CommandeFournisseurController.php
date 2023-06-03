@@ -65,6 +65,7 @@ class CommandeFournisseurController extends AbstractController
                 $produitCommandeFounisseur->setNumeroCommande($numCommandeFournisseur);
                 $produitCommandeFounisseur->setEtatTraite(false);
                 $produitCommandeFounisseur->setQuantite($cookieData['qte']);
+                $produitCommandeFounisseur->setCommentaire($cookieData['comment']);
                 $produitCommandeFounisseur->setUpdatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeFounisseur->setCreatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeFournisseurRepository->save($produitCommandeFounisseur, true);

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProduitCommandeFournisseurRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitCommandeFournisseurRepository::class)]
@@ -41,6 +42,9 @@ class ProduitCommandeFournisseur
 
     #[ORM\Column(nullable: true)]
     private ?int $quantiteUpdate = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $commentaire = null;
 
     public function getId(): ?int
     {
@@ -151,6 +155,18 @@ class ProduitCommandeFournisseur
     public function setQuantiteUpdate(?int $quantiteUpdate): self
     {
         $this->quantiteUpdate = $quantiteUpdate;
+
+        return $this;
+    }
+
+    public function getCommentaire(): ?string
+    {
+        return $this->commentaire;
+    }
+
+    public function setCommentaire(?string $commentaire): self
+    {
+        $this->commentaire = $commentaire;
 
         return $this;
     }

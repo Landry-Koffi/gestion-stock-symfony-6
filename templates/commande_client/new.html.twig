@@ -84,8 +84,8 @@
                         newRow.append('<td>' + produit.prix + '</td>');
                         newRow.append('<td><input type="number" class="quantite-input" id="quantiteInput_' + produitCode + '" required="required" min="1" max="'+ produit.stock +'" required="required" style="width: 100px" name="qte'+ produit.id +'" value="'+ produit.qte +'"></td>');
                         newRow.append('<td><button type="button" class="btn btn-danger btn-sm delete-row">Supprimer</button></td>');
+                        newRow.append('<td><textarea placeholder="Votre commentaire" id="commentInput_' + produitCode + '" name="comment'+ produit.id +'" class="comment-input form-control">'+ produit.comment +'</textarea></td>');
                         newRow.append('<td class="total-cell">' + produit.total + '</td>');
-
                         tableBody.append(newRow);
                     }
                 }
@@ -120,6 +120,7 @@
                             stock: data.stock,
                             qte: 1,
                             prix: prix,
+                            comment: "",
                             total: parseInt(prix),
                             image: data.image
                         };
@@ -173,6 +174,17 @@
                 mettreAJourSommeTotal()
             });
 
+
+            // Écouteur d'événement pour la modification du commentaire
+            $(document).on('input', '.comment-input', function() {
+                var produitCode = $(this).attr('id').split('_')[1]; // Obtenir l'ID du produit à partir de l'attribut id
+                var commentaire = $(this).val();
+
+                // Mettre à jour le commentaire du produit correspondant
+                produitsAjoutes[produitCode].comment = commentaire;
+
+                document.cookie = "produitsAjoutes=" + JSON.stringify(produitsAjoutes)+"; path=/";
+            });
 
 
             // Gestionnaire d'événements pour la suppression d'une ligne de produit

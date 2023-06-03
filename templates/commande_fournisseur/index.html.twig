@@ -51,6 +51,7 @@
                                             <th scope="col">Produit</th>
                                             <th scope="col">Qte cmd</th>
                                             <th scope="col">Qte Livrée</th>
+                                            <th scope="col">Commentaire</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                         </thead>
@@ -68,6 +69,9 @@
                                                                    name="qte{{ produit_commande_fournisseur.id }}"
                                                                    value="{{ produit_commande_fournisseur.quantiteLivree == null ? 0 : produit_commande_fournisseur.quantiteLivree  }}"
                                                                    data-produit-id="{{ produit_commande_fournisseur.id }}">
+                                                        </td>
+                                                        <td>
+                                                            {{ produit_commande_fournisseur.commentaire }}
                                                         </td>
                                                         <td>
                                                             <button {{ commande_fournisseur.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>

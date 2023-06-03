@@ -60,6 +60,7 @@
                                             <th scope="col">P.T cmd</th>
                                             <th scope="col">Qte Livrée</th>
                                             <th scope="col">P.T livré</th>
+                                            <th scope="col">Commentaire</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                         </thead>
@@ -84,6 +85,9 @@
                                                             <input type="number" {{ commande_client.etatValide ? 'disabled' : '' }} readonly class="prix-total-input"
                                                                    name="prixTotal{{ produit_commande_client.id }}"
                                                                    value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree * produit_commande_client.produit.prixVente }}">
+                                                        </td>
+                                                        <td>
+                                                            {{ produit_commande_client.commentaire }}
                                                         </td>
                                                         <td>
                                                             <button {{ commande_client.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>

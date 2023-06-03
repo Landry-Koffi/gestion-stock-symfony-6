@@ -66,6 +66,7 @@ class CommandeClientController extends AbstractController
                 $produitCommandeClient->setEtatTraite(false);
                 $produitCommandeClient->setPrixTotal($cookieData['total']);
                 $produitCommandeClient->setQuantite($cookieData['qte']);
+                $produitCommandeClient->setCommentaire($cookieData['comment']);
                 $produitCommandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeClient->setCreatedAt(new \DateTimeImmutable('now'));
                 $produitCommandeClientRepository->save($produitCommandeClient, true);
