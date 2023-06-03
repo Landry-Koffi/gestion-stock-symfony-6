@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" media="print" href="{{ asset('css/print.css') }}" />
-
+    <link rel="stylesheet" href="https:////cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -409,6 +409,7 @@
     });
 </script>
 
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/Chart.min.js') }}"></script>
@@ -423,7 +424,6 @@
 
 <script>
     // ======== jvectormap activation
-
     function messageSuccess( jQuery ) {
         $("#messageSuccess")
             .delay(3000)  // Delay of 1 second (1000 milliseconds)
@@ -440,6 +440,10 @@
     }
     $( window ).on( "load", messageError );
 
+    $(document).ready( function () {
+        $('#table').DataTable();
+    });
+
     var markers = [
         {name: "Egypt", coords: [26.8206, 30.8025]},
         {name: "Russia", coords: [61.524, 105.3188]},
@@ -447,7 +451,6 @@
         {name: "Greenland", coords: [71.7069, -42.6043]},
         {name: "Brazil", coords: [-14.235, -51.9253]},
     ];
-
 
     var jvm = new jsVectorMap({
         map: "world_merc",

@@ -1,55 +1,57 @@
 {{ form_start(form) }}
     {{ form_row(form.libelle, {
-        label: false,
+        label: "Libellé",
         attr: {
             placeholder: "Libellé",
             class: "form-control mb-3"
         }
     }) }}
     {{ form_row(form.prixAchat, {
-        label: false,
+        label: "Prix achat",
         attr: {
             placeholder: "Prix achat",
             class: "form-control mb-3"
         }
     }) }}
     {{ form_row(form.prixVente, {
-        label: false,
+        label: "Prix vente",
         attr: {
             placeholder: "Prix vente",
             class: "form-control mb-3"
         }
     }) }}
     {{ form_row(form.tva, {
-        label: false,
+        label: "Tva",
         attr: {
             placeholder: "Tva",
             class: "form-control mb-3"
         }
     }) }}
     {{ form_row(form.stock, {
-        label: false,
+        label: "Stock",
         attr: {
             placeholder: "Stock",
             class: "form-control mb-3"
         }
     }) }}
-    {{ form_row(form.image, {
-        label: false,
-        attr: {
-            placeholder: "image",
-            class: "form-control mb-3"
-        }
-    }) }}
+    {% if edit == 'false' %}
+        {{ form_row(form.image, {
+            label: "Image",
+            attr: {
+                placeholder: "Image",
+                class: "form-control mb-3"
+            }
+        }) }}
+    {% endif %}
     {{ form_row(form.numeroArticle, {
-        label: false,
+        label: "N° Article",
         attr: {
             placeholder: "N° Article",
             class: "form-control mb-3"
         }
     }) }}
     {{ form_row(form.category, {
-        label: false,
+        label: "Catégorie",
         attr: {
             placeholder: "Catégorie",
             class: "form-control mb-3"

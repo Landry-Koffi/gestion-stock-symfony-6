@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Produit;
 use App\Form\ProduitType;
+use App\Form\ProduitType1;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -68,6 +69,7 @@ class ProduitController extends AbstractController
         return $this->renderForm('produit/new.html.twig', [
             'produit' => $produit,
             'form' => $form,
+            'edit' => 'false'
         ]);
     }
 
@@ -103,7 +105,7 @@ class ProduitController extends AbstractController
     #[Route('/{id}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Produit $produit, ProduitRepository $produitRepository): Response
     {
-        $form = $this->createForm(ProduitType::class, $produit);
+        $form = $this->createForm(ProduitType1::class, $produit);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -115,6 +117,7 @@ class ProduitController extends AbstractController
         return $this->renderForm('produit/edit.html.twig', [
             'produit' => $produit,
             'form' => $form,
+            'edit' => 'true'
         ]);
     }
 

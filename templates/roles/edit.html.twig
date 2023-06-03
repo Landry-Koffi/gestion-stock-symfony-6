@@ -3,11 +3,13 @@
 {% block title %}Edit Roles{% endblock %}
 
 {% block body %}
-    <h1>Edit Roles</h1>
+<section class="section mt-3">
+    <div class="container-fluid">
+    <h1>Modifier Roles</h1>
 
     {{ include('roles/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_roles_index') }}">back to list</a>
-
-    {{ include('roles/_delete_form.html.twig') }}
+    </div>
+</section>
 {% endblock %}
