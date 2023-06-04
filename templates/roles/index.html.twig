@@ -14,8 +14,17 @@
                 <a href="{{ path('app_roles_new') }}" class="btn btn-primary">Ajouter un rôle</a>
             </div>
         </div>
-
-        <table class="table table-striped mt-3">
+        <div class="row">
+            <div class="col-10 mt-3">
+                <button id="exportCSV" onclick="exportCSV()" class="btn btn-warning">CSV</button>
+                <button id="exportExcel" onclick="exportExcel()" n class="btn btn-warning">Excel</button>
+                <button id="exportPDF" onclick="exportPDF()" class="btn btn-warning">PDF</button>
+            </div>
+            <div class="col-2 text-end mt-3">
+                <input type="text" id="search-all" class="form-control" placeholder="Search in tableau">
+            </div>
+        </div>
+        <table class="table table-striped mt-3" id="myTable">
             <thead class="table-primary p-1">
             <tr>
                 <th><h6>Libellé</h6></th>
@@ -49,4 +58,9 @@
 
     </div>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
 {% endblock %}
