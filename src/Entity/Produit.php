@@ -46,6 +46,9 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommandeFournisseur::class)]
     private Collection $produitCommandeFournisseurs;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $datePeremptionAt = null;
+
     public function __construct()
     {
         $this->produitCommandeClients = new ArrayCollection();
@@ -209,6 +212,18 @@ class Produit
                 $produitCommandeFournisseur->setProduit(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDatePeremptionAt(): ?\DateTimeImmutable
+    {
+        return $this->datePeremptionAt;
+    }
+
+    public function setDatePeremptionAt(?\DateTimeImmutable $datePeremptionAt): self
+    {
+        $this->datePeremptionAt = $datePeremptionAt;
 
         return $this;
     }

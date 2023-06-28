@@ -46,6 +46,7 @@
                 <th>PrixVente</th>
                 <th>Tva</th>
                 <th>Stock</th>
+                <th>Date péremption</th>
                 <th>Image</th>
                 <th>Actions</th>
             </tr>
@@ -59,6 +60,7 @@
                 <td>{{ produit.prixVente }} FCFA</td>
                 <td>{{ produit.tva }}</td>
                 <td>{{ produit.stock }}</td>
+                <td>{{ produit.datePeremptionAt|date('d/m/Y') }}</td>
                 <td class="zoom-cell"><img class="img-fluid img-thumbnail zoom-image" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ produit.image }}" alt="{{ produit.libelle }}"></td>
                 <td>
                     <a class="text-dark-emphasis" href="{{ path('app_produit_edit', {'id': produit.id}) }}">

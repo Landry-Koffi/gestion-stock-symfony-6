@@ -1,0 +1,18 @@
+<form action="" method="post">
+    {% set fidele = [] %}
+    {% for fidelisation in fidelisations %}
+        {% set fidele = fidele | merge([fidelisation.id]) %}
+    {% endfor %}
+    <label for="client">Choisissez un client</label>
+    <select name="client" required id="client" class="form-control">
+        <option value="">Sélectionnez un client</option>
+        {% for client in clients %}
+            {% if client.id in fidele %}
+                <option value="{{ client.id }}" disabled>{{ client.libelle }}</option>
+            {% else %}
+                <option value="{{ client.id }}">{{ client.libelle }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <button class="btn btn-success mt-3">{{ button_label|default('Sauvegarder') }}</button>
+</form>

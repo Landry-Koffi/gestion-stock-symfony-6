@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EnvoiSms index{% endblock %}
+
+{% block body %}
+<section class="table-components table-responsive table-responsive mt-5">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-6">
+                <h2>Liste des configuration d'envoi d'sms</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('app_envoi_sms_new') }}" class="btn btn-primary">Ajouter une nouvelle configuration</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10 mt-3">
+                <button id="exportCSV" onclick="exportCSV()" class="btn btn-warning">CSV</button>
+                <button id="exportExcel" onclick="exportExcel()" class="btn btn-warning">Excel</button>
+                <button id="exportPDF" onclick="exportPDF()" class="btn btn-warning">PDF</button>
+            </div>
+            <div class="col-2 text-end mt-3">
+                <input type="text" id="search-all" class="form-control" placeholder="Search in tableau">
+            </div>
+        </div>
+
+    <table class="table table-striped table-bordered mt-3"  id="myTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Denomination</th>
+                <th>Date debut envoi</th>
+                <th>Date fin envoi</th>
+                <th>Fréquence</th>
+                <th>Jour envoi</th>
+                <th>Heure envoi</th>
+                <th>Minute envoi</th>
+                <th>Date création</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for envoi_sm in envoi_sms %}
+            <tr>
+                <td>{{ envoi_sm.denomination }}</td>
+                <td>{{ envoi_sm.dateDebutEnvoiAt ? envoi_sm.dateDebutEnvoiAt|date('Y-m-d H:i') : '' }}</td>
+                <td>{{ envoi_sm.dateFinEnvoiAt ? envoi_sm.dateFinEnvoiAt|date('Y-m-d H:i') : '' }}</td>
+                <td>{{ envoi_sm.frequence }}</td>
+                <td>{{ envoi_sm.jourEnvoi }}</td>
+                <td>{{ envoi_sm.heureEnvoi }}</td>
+                <td>{{ envoi_sm.minuteEnvoi }}</td>
+                <td>{{ envoi_sm.createdAt ? envoi_sm.createdAt|date('Y-m-d H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_envoi_sms_edit', {'id': envoi_sm.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
+{% endblock %}

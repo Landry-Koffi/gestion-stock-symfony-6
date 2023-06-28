@@ -48,9 +48,13 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: CommandeClient::class)]
     private Collection $commandeClients;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Fidelisation::class)]
+    private Collection $fidelisations;
+
     public function __construct()
     {
         $this->commandeClients = new ArrayCollection();
+        $this->fidelisations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +206,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($commandeClient->getClient() === $this) {
                 $commandeClient->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Fidelisation>
+     */
+    public function getFidelisations(): Collection
+    {
+        return $this->fidelisations;
+    }
+
+    public function addFidelisation(Fidelisation $fidelisation): self
+    {
+        if (!$this->fidelisations->contains($fidelisation)) {
+            $this->fidelisations->add($fidelisation);
+            $fidelisation->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFidelisation(Fidelisation $fidelisation): self
+    {
+        if ($this->fidelisations->removeElement($fidelisation)) {
+            // set the owning side to null (unless already changed)
+            if ($fidelisation->getClient() === $this) {
+                $fidelisation->setClient(null);
             }
         }
 

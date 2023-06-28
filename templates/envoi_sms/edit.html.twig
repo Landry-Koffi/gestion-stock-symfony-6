@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit EnvoiSms{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container-fluid">
+    <h1>Edit EnvoiSms</h1>
+
+    {{ include('envoi_sms/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('app_envoi_sms_index') }}">back to list</a>
+
+    </div>
+</section>
+{% endblock %}

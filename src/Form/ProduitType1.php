@@ -6,10 +6,9 @@ use App\Entity\Category;
 use App\Entity\Produit;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
 
 class ProduitType1 extends AbstractType
 {
@@ -21,6 +20,10 @@ class ProduitType1 extends AbstractType
             ->add('prixVente')
             ->add('tva')
             ->add('stock')
+            ->add('datePeremptionAt', DateType::class, [
+                'input' => 'datetime_immutable',
+                'widget' => 'single_text'
+            ])
             ->add('numeroArticle')
             ->add('category', EntityType::class, [
                 "class" => Category::class,

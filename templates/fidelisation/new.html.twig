@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Fidelisation{% endblock %}
+
+{% block body %}
+<section class="section mt-3">
+    <div class="container-fluid">
+    <h1>Ajouter un client fidèle</h1>
+
+    {{ include('fidelisation/_form.html.twig') }}
+
+    <a href="{{ path('app_fidelisation_index') }}">back to list</a>
+    </div>
+</section>
+{% endblock %}

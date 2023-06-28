@@ -1,0 +1,73 @@
+{{ form_start(form) }}
+<div class="container w-50 shadow-lg">
+    <div class="row mt-3">
+        <div class="col-md-12 mt-3">
+            {{ form_row(form.denomination, {
+                label: 'Dénomination (Ex: PUB-PECTO-12_01_2023-20_01_2023)',
+                attr: {
+                    class: 'form-control mb-3',
+                    placeholder: "Ex: PUB-PECTO-12_01_2023-20_01_2023"
+                }
+            }) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.dateFinEnvoiAt, {
+                label: "Date de fin d'envoi",
+                attr: {
+                    class: 'form-control mb-3',
+                }
+            }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.dateDebutEnvoiAt, {
+                label: "Date de debut d'envoi",
+                attr: {
+                    class: 'form-control mb-3',
+                }
+            }) }}
+        </div>
+    </div>
+    <div class="col-md-12">
+        {{ form_row(form.frequence, {
+            label: "Fréquence d'envoi",
+            attr: {
+                class: 'form-control mb-3',
+            }
+        }) }}
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.heureEnvoi, {
+                label: "Heure d'envoi",
+                attr: {
+                    class: 'form-control mb-3',
+                    placeholder: "Ex: 15"
+                }
+            }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.jourEnvoi, {
+                label: "Jour d'envoi",
+                attr: {
+                    class: 'form-control mb-3',
+                    placeholder: "Ex: 21"
+                }
+            }) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_row(form.minuteEnvoi, {
+                label: "Minute d'envoi",
+                attr: {
+                    class: 'form-control mb-3',
+                    placeholder: "Ex: 12"
+                }
+            }) }}
+        </div>
+    </div>
+    <button class="btn btn-success mb-3 form-control">{{ button_label|default('Enregistrer') }}</button>
+</div>
+{{ form_end(form) }}

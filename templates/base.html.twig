@@ -80,9 +80,9 @@
 
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_category_index' ? 'active' : '' }}">
                 <a href="{{ path('app_category_index') }}">
-              <span class="icon">
-                <i class="lni lni-list"></i>
-              </span>
+                      <span class="icon">
+                        <i class="lni lni-list"></i>
+                      </span>
                     <span class="text">Catégories</span>
                 </a>
             </li>
@@ -90,21 +90,30 @@
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
             app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
             ? 'active' : '' }}">
-            <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
+                <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
                    aria-expanded="true" aria-label="Toggle navigation">
                       <span class="icon">
                           <i class="lni lni-popup"></i>
                       </span>
                     <span class="text">Commande</span>
                 </a>
-            <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
-                <li>
+                <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
+                    <li>
                         <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
                     </li>
-                <li>
+                    <li>
                         <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
                     </li>
-            </ul>
+                </ul>
+            </li>
+
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fidelisation_index' ? 'active' : '' }}">
+                <a href="{{ path('app_fidelisation_index') }}">
+              <span class="icon">
+                <i class="lni lni-hand"></i>
+              </span>
+                    <span class="text">Fidelisation</span>
+                </a>
             </li>
 
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_reglement_index' ? 'active' : '' }}">
@@ -118,14 +127,19 @@
 
             <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
             app.request.attributes.get('_route') == 'app_roles_index' or
+            app.request.attributes.get('_route') == 'app_envoi_sms_index' or
             app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
                 <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
               <span class="icon">
                   <i class="lni lni-cog"></i>
               </span>
-                    <span class="text">Settings</span>
+                    <span class="text">Paramètres</span>
                 </a>
                 <ul id="ddmenu_2" class="collapse dropdown-nav mx-4">
+                    <li>
+                        <a href="{{ path('app_envoi_sms_index') }}"> <i class="lni lni-mobile"></i> Envoi SMS </a>
+                    </li>
+
                     <li>
                         <a href="{{ path('app_users') }}"> <i class="lni lni-users"></i> Utilisateurs </a>
                     </li>
@@ -156,7 +170,6 @@
 <!-- ======== sidebar-nav end =========== -->
 <!-- ======== main-wrapper start =========== -->
 <main class="main-wrapper">
-
     <!-- ========== header start ========== -->
     <header class="header print">
         <div class="container-fluid">
@@ -164,10 +177,7 @@
                 <div class="col-lg-5 col-md-5 col-6">
                     <div class="header-left d-flex align-items-center">
                         <div class="menu-toggle-btn mr-20">
-                            <button
-                                    id="menu-toggle"
-                                    class="main-btn primary-btn btn-hover"
-                            >
+                            <button id="menu-toggle" class="main-btn primary-btn btn-hover">
                                 <i class="lni lni-chevron-left me-2"></i> Menu
                             </button>
                         </div>
@@ -304,21 +314,12 @@
                         <!-- filter end -->
                         <!-- profile start -->
                         <div class="profile-box ml-15">
-                            <button
-                                    class="dropdown-toggle bg-transparent border-0"
-                                    type="button"
-                                    id="profile"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                            >
+                            <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile" data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="profile-info">
                                     <div class="info">
                                         <h6>{{ app.user.username }}</h6>
                                         <div class="image">
-                                            <img
-                                                    src="{{ asset('admin/assets/images/profile/profile-image.png') }}"
-                                                    alt=""
-                                            />
+                                            <img src="{{ asset('admin/assets/images/profile/profile-image.png') }}" alt=""/>
                                             <span class="status"></span>
                                         </div>
                                     </div>
@@ -395,7 +396,6 @@
             placeholder: 'Veuillez choisir un ou plusieurs rôles'
         });
     });
-
 </script>
 
 <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>

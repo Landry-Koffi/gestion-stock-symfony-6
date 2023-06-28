@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New EnvoiSms{% endblock %}
+
+{% block body %}
+<section class="section mt-3">
+    <div class="container-fluid">
+        <h1 class="text-center">Ajoutez une nouvelle configuration</h1>
+
+        {{ include('envoi_sms/_form.html.twig') }}
+
+        <div class="text-center mt-3">
+            <a class="btn btn-primary" href="{{ path('app_envoi_sms_index') }}">Retour à la liste</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
