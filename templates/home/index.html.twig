@@ -35,80 +35,79 @@
             </div>
             <!-- ========== title-wrapper end ========== -->
 
-            <!-- ========== title-wrapper end ========== -->
-            <div class="row">
-                <div class="col-xl-3 col-lg-4 col-sm-6">
-                    <div class="icon-card mb-30">
-                        <div class="icon orange">
-                            <i class="lni lni-jsfiddle"></i>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <!-- ========== title-wrapper end ========== -->
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon orange">
+                                <i class="lni lni-jsfiddle"></i>
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Commande client</h6>
+                                <h6 class="text-bold mb-10">{{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA</h6>
+                                <p class="text-sm text-danger">
+                                    <i class="lni lni-cart-full"></i> {{ nb_commande_client_encours }}
+                                    <span class="text-gray">Encour{{ nb_commande_client_encours > 1 ? 's':'' }}</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="content">
-                            <h6 class="mb-10">Commande client</h6>
-                            <h6 class="text-bold mb-10">{{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA</h6>
-                            <p class="text-sm text-danger">
-                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_encours }}
-                                <span class="text-gray">Encour{{ nb_commande_client_encours > 1 ? 's':'' }}</span>
-                            </p>
-                        </div>
+                        <!-- End Icon Cart -->
                     </div>
-                    <!-- End Icon Cart -->
-                </div>
-                <!-- End Col -->
-                <div class="col-xl-3 col-lg-4 col-sm-6">
-                    <div class="icon-card mb-30">
-                        <div class="icon success">
-                            <i class="lni lni-checkmark"></i>
+                    <!-- End Col -->
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon success">
+                                <i class="lni lni-checkmark"></i>
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Commande client</h6>
+                                <h6 class="text-bold mb-10">{{ somme_commande_client_traites|number_format(0, '.', '.') }} FCFA</h6>
+                                <p class="text-sm text-success">
+                                    <i class="lni lni-cart-full"></i> {{ nb_commande_client_traite }}
+                                    <span class="text-gray">Traitée{{ nb_commande_client_traite > 1 ? 's':'' }}</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="content">
-                            <h6 class="mb-10">Commande client</h6>
-                            <h6 class="text-bold mb-10">{{ somme_commande_client_traites|number_format(0, '.', '.') }} FCFA</h6>
-                            <p class="text-sm text-success">
-                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_traite }}
-                                <span class="text-gray">Traitée{{ nb_commande_client_traite > 1 ? 's':'' }}</span>
-                            </p>
-                        </div>
+                        <!-- End Icon Cart -->
                     </div>
-                    <!-- End Icon Cart -->
-                </div>
-                <!-- End Col -->
-                <div class="col-xl-3 col-lg-4 col-sm-6">
-                    <div class="icon-card mb-30">
-                        <div class="icon orange">
-                            <i class="lni lni-spinner"></i>
+                    <!-- End Col -->
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon orange">
+                                <i class="lni lni-spinner"></i>
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Commande client</h6>
+                                <h6 class="text-bold mb-10">{{ somme_commande_client_attente_validations|number_format(0, '.', '.') }} FCFA</h6>
+                                <p class="text-sm text-danger">
+                                    <i class="lni lni-cart-full"></i> {{ nb_commande_client_en_attente_validation }}
+                                    <span class="text-gray"> Attente{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }} validation{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }}</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="content">
-                            <h6 class="mb-10">Commande client</h6>
-                            <h6 class="text-bold mb-10">{{ somme_commande_client_attente_validations|number_format(0, '.', '.') }} FCFA</h6>
-                            <p class="text-sm text-danger">
-                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_en_attente_validation }}
-                                <span class="text-gray"> Attente{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }} validation{{ nb_commande_client_en_attente_validation > 1 ? 's':'' }}</span>
-                            </p>
-                        </div>
+                        <!-- End Icon Cart -->
                     </div>
-                    <!-- End Icon Cart -->
-                </div>
-                <!-- End Col -->
-                <div class="col-xl-3 col-lg-4 col-sm-6">
-                    <div class="icon-card mb-30">
-                        <div class="icon success">
-                            <i class="lni lni-checkmark"></i>
+                    <!-- End Col -->
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon success">
+                                <i class="lni lni-checkmark"></i>
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Commande client</h6>
+                                <h6 class="text-bold mb-10">{{ somme_commande_client_validees|number_format(0, '.', '.') }} FCFA</h6>
+                                <p class="text-sm text-success">
+                                    <i class="lni lni-cart-full"></i> {{ nb_commande_client_validee }}
+                                    <span class="text-gray"> Validée{{ nb_commande_client_validee > 1 ? 's':'' }}</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="content">
-                            <h6 class="mb-10">Commande client</h6>
-                            <h6 class="text-bold mb-10">{{ somme_commande_client_validees|number_format(0, '.', '.') }} FCFA</h6>
-                            <p class="text-sm text-success">
-                                <i class="lni lni-cart-full"></i> {{ nb_commande_client_validee }}
-                                <span class="text-gray"> Validée{{ nb_commande_client_validee > 1 ? 's':'' }}</span>
-                            </p>
-                        </div>
+                        <!-- End Icon Cart -->
                     </div>
-                    <!-- End Icon Cart -->
+                    <!-- End Col -->
                 </div>
-                <!-- End Col -->
-            </div>
-
-
-            <div class="row">
+                <div class="row">
                 <div class="col-xl-3 col-lg-4 col-sm-6">
                     <div class="icon-card mb-30">
                         <div class="icon orange">
@@ -174,9 +173,164 @@
                 </div>
                 <!-- End Col -->
             </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-warning">
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Monnaies ({{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA)</h6>
+                                <p class="text-sm text-danger">
+                                    <a href="" class="btn btn-warning"><i class="lni lni-money-protection"></i> Voir l'historique</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-danger">
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Points de fidélité </h6>
+                                <h6 class="text-bold text-danger mb-10">{{ points == null ? 0 : points }} pts</h6>
+                                <p class="text-sm text-success">
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-info">
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Historiques d'achat</h6>
+                                <p class="text-sm text-danger">
+                                    <a href="" class="btn btn-info"><i class="lni lni-spinner"></i> Voir l'historique</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-secondary">
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Coupons </h6>
+                                <p class="text-sm text-success">
+                                    <a href="" class="btn btn-secondary"><i class="lni lni-checkmark"></i> Voir les coupons</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-primary">
+                            </div>
+                            <div class="content">
+                                <h6 class="mb-10">Remises spéciales </h6>
+                                <p class="text-sm text-success">
+                                    <a href="" class="btn btn-primary"><i class="lni lni-checkmark"></i> Voir les remises</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="icon-card mb-30">
+                            <div class="icon bg-success"></div>
+                            <div class="content">
+                                <h6 class="mb-10">Feedback </h6>
+                                <p class="text-sm text-success">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#feedback" class="btn btn-success"><i class="lni lni-envelope"></i> Envoyer</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+
+                    <div class="col-xl-12 col-lg-12 col-sm-12">
+                        <div class="icon-card mb-30">
+                            <div class="content">
+                                <h6 class="mb-10">Modifier mon mot de passe </h6>
+                                <p class="text-sm text-success">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#password" class="btn btn-success form-control"><i class="lni lni-protection"></i> Modifier</a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- End Icon Cart -->
+                    </div>
+                    <!-- End Col -->
+                </div>
+            {% endif %}
             <!-- End Row -->
         </div>
         <!-- end container -->
     </section>
     <!-- ========== table components end ========== -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="feedbackLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form action="" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center" id="feedbackLabel">Envoyez-nous un feedback</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control" placeholder="Entrez le titre..." name="title">
+                        </div>
+                        <div class="form-group mb-3">
+                            <textarea class="form-control" rows="4" placeholder="Entrez le contenu..." name="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-success" disabled><i class="fa fa-send"></i> Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal password -->
+    <div class="modal fade" id="password" tabindex="-1" aria-labelledby="passwordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form id="passform" action="{{ path('app_users_edit_password') }}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center" id="passwordLabel">Modification du mot de passe</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-3">
+                            <input type="password" id="password" class="form-control" placeholder="Mot de passe actuel..." name="password">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" class="form-control" placeholder="Nouveau mot de passe..." name="newPassword">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" class="form-control" placeholder="Confirmation du nouveau mot de passe..." name="newPassword2">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success" id="submitPass"><i class="fa fa-send"></i> Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

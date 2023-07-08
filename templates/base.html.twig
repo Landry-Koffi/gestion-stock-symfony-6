@@ -50,85 +50,85 @@
     <nav class="sidebar-nav">
         <span class="divider"><hr/></span>
         <ul>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_produit_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_produit_index') }}">
+                  <span class="icon">
+                    <i class="lni lni-producthunt"></i>
+                  </span>
+                        <span class="text">Produits</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_produit_index' ? 'active' : '' }}">
-                <a href="{{ path('app_produit_index') }}">
-              <span class="icon">
-                <i class="lni lni-producthunt"></i>
-              </span>
-                    <span class="text">Produits</span>
-                </a>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_client_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_client_index') }}">
+                  <span class="icon">
+                    <i class="lni lni-users"></i>
+                  </span>
+                        <span class="text">Clients</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_client_index' ? 'active' : '' }}">
-                <a href="{{ path('app_client_index') }}">
-              <span class="icon">
-                <i class="lni lni-users"></i>
-              </span>
-                    <span class="text">Clients</span>
-                </a>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fournisseur_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_fournisseur_index') }}">
+                  <span class="icon">
+                    <i class="lni lni-users"></i>
+                  </span>
+                        <span class="text">Fournisseurs</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fournisseur_index' ? 'active' : '' }}">
-                <a href="{{ path('app_fournisseur_index') }}">
-              <span class="icon">
-                <i class="lni lni-users"></i>
-              </span>
-                    <span class="text">Fournisseurs</span>
-                </a>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_category_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_category_index') }}">
+                          <span class="icon">
+                            <i class="lni lni-list"></i>
+                          </span>
+                        <span class="text">Catégories</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_category_index' ? 'active' : '' }}">
-                <a href="{{ path('app_category_index') }}">
-                      <span class="icon">
-                        <i class="lni lni-list"></i>
-                      </span>
-                    <span class="text">Catégories</span>
-                </a>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
+                app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
+                ? 'active' : '' }}">
+                    <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
+                       aria-expanded="true" aria-label="Toggle navigation">
+                          <span class="icon">
+                              <i class="lni lni-popup"></i>
+                          </span>
+                        <span class="text">Commande</span>
+                    </a>
+                    <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
+                        <li>
+                            <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
+                        </li>
+                    </ul>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
-            app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
-            ? 'active' : '' }}">
-                <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
-                   aria-expanded="true" aria-label="Toggle navigation">
-                      <span class="icon">
-                          <i class="lni lni-popup"></i>
-                      </span>
-                    <span class="text">Commande</span>
-                </a>
-                <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
-                    <li>
-                        <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
-                    </li>
-                </ul>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fidelisation_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_fidelisation_index') }}">
+                  <span class="icon">
+                    <i class="lni lni-hand"></i>
+                  </span>
+                        <span class="text">Fidelisation</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_fidelisation_index' ? 'active' : '' }}">
-                <a href="{{ path('app_fidelisation_index') }}">
-              <span class="icon">
-                <i class="lni lni-hand"></i>
-              </span>
-                    <span class="text">Fidelisation</span>
-                </a>
-            </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_reglement_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_reglement_index') }}">
+                  <span class="icon">
+                    <i class="lni lni-codepen"></i>
+                  </span>
+                        <span class="text">Règlement</span>
+                    </a>
+                </li>
 
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_reglement_index' ? 'active' : '' }}">
-                <a href="{{ path('app_reglement_index') }}">
-              <span class="icon">
-                <i class="lni lni-codepen"></i>
-              </span>
-                    <span class="text">Règlement</span>
-                </a>
-            </li>
-
-            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
-            app.request.attributes.get('_route') == 'app_roles_index' or
-            app.request.attributes.get('_route') == 'app_envoi_sms_index' or
-            app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
+                app.request.attributes.get('_route') == 'app_roles_index' or
+                app.request.attributes.get('_route') == 'app_envoi_sms_index' or
+                app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
                 <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
               <span class="icon">
                   <i class="lni lni-cog"></i>
@@ -151,6 +151,7 @@
                     </li>
                 </ul>
             </li>
+            {% endif %}
         </ul>
     </nav>
 {#    <div class="promo-box">

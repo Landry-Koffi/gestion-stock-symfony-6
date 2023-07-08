@@ -29,6 +29,7 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $client->setPoints(0);
             $client->setCreatedAt(new \DateTimeImmutable('now'));
             $client->setUpdateAt(new \DateTimeImmutable('now'));
             $clientRepository->save($client, true);

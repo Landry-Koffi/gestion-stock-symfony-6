@@ -3,26 +3,26 @@
     <div class="row mt-3">
         <div class="col-md-12 mt-3">
             {{ form_row(form.denomination, {
-                label: 'Dénomination (Ex: PUB-PECTO-12_01_2023-20_01_2023)',
+                label: 'Libellé (Ex: PUB-PECTO)',
                 attr: {
                     class: 'form-control mb-3',
-                    placeholder: "Ex: PUB-PECTO-12_01_2023-20_01_2023"
+                    placeholder: "Ex: PUB-PECTO"
                 }
             }) }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            {{ form_row(form.dateFinEnvoiAt, {
-                label: "Date de fin d'envoi",
+            {{ form_row(form.dateDebutEnvoiAt, {
+                label: "Date de debut d'envoi",
                 attr: {
                     class: 'form-control mb-3',
                 }
             }) }}
         </div>
         <div class="col-md-6">
-            {{ form_row(form.dateDebutEnvoiAt, {
-                label: "Date de debut d'envoi",
+            {{ form_row(form.dateFinEnvoiAt, {
+                label: "Date de fin d'envoi",
                 attr: {
                     class: 'form-control mb-3',
                 }

@@ -6,8 +6,10 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[UniqueEntity('tel', message: 'Ce numéro de téléphone est déjà utilisé')]
 class Client
 {
     #[ORM\Id]
@@ -30,7 +32,7 @@ class Client
     #[ORM\Column(length: 255)]
     private ?string $ville = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $tel = null;
 
     #[ORM\Column(length: 255)]
@@ -50,6 +52,9 @@ class Client
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Fidelisation::class)]
     private Collection $fidelisations;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $points = null;
 
     public function __construct()
     {
@@ -238,6 +243,18 @@ class Client
                 $fidelisation->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(?int $points): self
+    {
+        $this->points = $points;
 
         return $this;
     }

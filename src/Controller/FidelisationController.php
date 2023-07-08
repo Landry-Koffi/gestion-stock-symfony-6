@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Fidelisation;
+use App\Entity\Users;
 use App\Form\FidelisationType;
 use App\Repository\ClientRepository;
 use App\Repository\FidelisationRepository;
+use App\Repository\RolesRepository;
+use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/dashboard/fidelisation')]
@@ -23,14 +27,33 @@ class FidelisationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_fidelisation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FidelisationRepository $fidelisationRepository, ClientRepository $clientRepository): Response
+    public function new(Request $request, FidelisationRepository $fidelisationRepository,
+                        ClientRepository $clientRepository, RolesRepository $rolesRepository,
+                        UserPasswordHasherInterface $userPasswordHasher, UsersRepository $usersRepository): Response
     {
         $fidelisation = new Fidelisation();
         $client_form = $request->request->get("client");
+        $roles = $request->request->get("roles");
 
         $client = $clientRepository->findOneBy(['id' => $client_form]);
 
         if ($client != null){
+
+            $users = new Users();
+            $users->setTel($client->getTel());
+            $users->setVille($client->getVille());
+            $users->setEntreprise('Pas entreprise');
+            $users->setAdresse($client->getAdresse());
+            $users->setState(false); // Client non bloqué
+
+            $username = $client->getTel();
+            $users->setPassword($userPasswordHasher->hashPassword($users, $username));
+            $users->setUsername($username);
+            $users->setRoles([$roles]);
+            $users->setCreatedAt(new \DateTimeImmutable('now'));
+            $users->setUpdatedAt(new \DateTimeImmutable('now'));
+            $usersRepository->save($users, true);
+
             $fidelisation->setClient($client);
             $fidelisation->setEtat(true);
             $fidelisation->setCreatedAt(new \DateTimeImmutable('now'));
@@ -43,6 +66,7 @@ class FidelisationController extends AbstractController
             'fidelisation' => $fidelisation,
             'fidelisations' => $fidelisationRepository->findAll(),
             'clients' => $clientRepository->findAll(),
+            'roles' => $rolesRepository->findAll()
         ]);
     }
 

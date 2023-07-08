@@ -6,11 +6,13 @@ use App\Entity\CommandeClient;
 use App\Entity\ProduitCommandeClient;
 use App\Entity\Reglement;
 use App\Form\CommandeClientType;
+use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\ReglementRepository;
+use App\Services\GenerationPoints;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -140,8 +142,11 @@ class CommandeClientController extends AbstractController
         return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function valider($id, Request $request, GenerationPoints $generationPoints, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
@@ -150,12 +155,17 @@ class CommandeClientController extends AbstractController
             $moyenPaiement = $moyenReglementRepository->findOneBy(['id' => $moyenPaiement]);
 
             $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
+
             $commandeClient->setEtatValide(true);
             $commandeClient->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
             $commandeClient->setMoyenPaiement($moyenPaiement);
             $commandeClient->setEcheance($echeance);
             $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
             $commandeClientRepository->save($commandeClient, true);
+
+            $client = $commandeClient->getClient();
+            $client->setPoints($generationPoints->addPoints($client, $commandeClient->getTotalTtc()));
+            $clientRepository->save($client, true);
 
             // Save reglement
             $reglement = new Reglement();
@@ -164,6 +174,7 @@ class CommandeClientController extends AbstractController
             $reglement->setModeReglement($moyenPaiement);
             $reglement->setEcheanceAt($echeance);
             $reglementRepository->save($reglement, true);
+
             $this->addFlash('success', 'Commande client validée !');
         }else{
             $this->addFlash('error', 'Veuillez renseigner tous les champs svp !');

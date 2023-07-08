@@ -14,5 +14,16 @@
             {% endif %}
         {% endfor %}
     </select>
+    <label for="roles">ROLE</label>
+    <select name="roles" required id="roles" class="form-control">
+        <option value="">Sélectionnez un rôle</option>
+        {% for role in roles %}
+            {% if role.libelle != 'ROLE_CLIENT' %}
+                <option value="{{ role.libelle }}" disabled>{{ role.libelle }}</option>
+            {% else %}
+                <option value="{{ role.libelle }}">{{ role.libelle }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
     <button class="btn btn-success mt-3">{{ button_label|default('Sauvegarder') }}</button>
 </form>

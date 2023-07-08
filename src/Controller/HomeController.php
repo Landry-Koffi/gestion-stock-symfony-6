@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\CommandeFournisseurRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use App\Repository\ProduitRepository;
+use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(CommandeClientRepository $commandeClientRepository, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, ProduitRepository $produitRepository): Response
+    public function index(CommandeClientRepository $commandeClientRepository, UsersRepository $usersRepository, ClientRepository $clientRepository, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, ProduitRepository $produitRepository): Response
     {
         $commandeClients_encours = $commandeClientRepository->findBy(['deletedAt' => null, 'etatTraite' => false]);
         $commandeClients_traites = $commandeClientRepository->findBy(['deletedAt' => null, 'etatTraite' => true]);
@@ -49,6 +51,10 @@ class HomeController extends AbstractController
                 }
             }
         }
+
+        $user = $usersRepository->findOneBy(['id' => $this->getUser()]);
+        $client = $clientRepository->findOneBy(['tel' => $user->getTel()]);
+
         return $this->render('home/index.html.twig', [
             "nb_commande_client_encours" => $commandeClientRepository->count(['deletedAt' => null ,'etatTraite' => false]),
             "nb_commande_client_traite" => $commandeClientRepository->count(['deletedAt' => null ,'etatTraite' => true]),
@@ -62,6 +68,7 @@ class HomeController extends AbstractController
             "somme_commande_client_traites" => $somme_commande_client_traites,
             "somme_commande_client_attente_validations" => $somme_commande_client_attente_validations,
             "somme_commande_client_validees" => $somme_commande_client_validees,
+            "points" => $client->getPoints(),
         ]);
     }
 }

@@ -30,6 +30,7 @@
                 <th>Client</th>
                 <th>Date d'ajout</th>
                 <th>Etat</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,9 @@
                 <td>{{ fidelisation.client.libelle }}</td>
                 <td>{{ fidelisation.createdAt ? fidelisation.createdAt|date('Y-m-d H:i') : '' }}</td>
                 <td>{{ fidelisation.etat ? 'Actif' : 'Pas actif' }}</td>
+                <td>
+                    <a href="#" class="btn btn-primary">Monnaie <i class="fa fa-money"></i></a>
+                </td>
             </tr>
         {% else %}
             <tr>

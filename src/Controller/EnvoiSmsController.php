@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\EnvoiSms;
 use App\Form\EnvoiSmsType;
 use App\Repository\EnvoiSmsRepository;
+use App\Security\SlugGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class EnvoiSmsController extends AbstractController
     public function index(EnvoiSmsRepository $envoiSmsRepository): Response
     {
         return $this->render('envoi_sms/index.html.twig', [
-            'envoi_sms' => $envoiSmsRepository->findAll(),
+            'envoi_sms' => $envoiSmsRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 
@@ -28,7 +29,21 @@ class EnvoiSmsController extends AbstractController
         $form = $this->createForm(EnvoiSmsType::class, $envoiSm);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $denomination = $form['denomination']->getData();
+            $dateDebutEnvoiAt = $form['dateDebutEnvoiAt']->getData();
+            $dateFinEnvoiAt = $form['dateFinEnvoiAt']->getData();
 
+            $dateDebutEnvoiAt1 = $dateDebutEnvoiAt->format('d-m-Y');
+            $dateFinEnvoiAt1 = $dateFinEnvoiAt->format('d-m-Y');
+
+
+            $denomination2 = SlugGenerator::generateSlug($denomination);
+            $dateDebutEnvoiAt2 = SlugGenerator::generateSlug($dateDebutEnvoiAt1);
+            $dateFinEnvoiAt2 = SlugGenerator::generateSlug($dateFinEnvoiAt1);
+
+            $slug = strtoupper($denomination2).'_'.$dateDebutEnvoiAt2.'-'.$dateFinEnvoiAt2;
+
+            $envoiSm->setDenomination($slug);
             $envoiSm->setCreatedAt(new \DateTimeImmutable('now'));
             $envoiSm->setUpdatedAt(new \DateTimeImmutable('now'));
             $envoiSmsRepository->save($envoiSm, true);
