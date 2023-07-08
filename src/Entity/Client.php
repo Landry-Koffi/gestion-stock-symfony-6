@@ -59,11 +59,15 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedBack::class)]
     private Collection $feedBacks;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientCoupons::class)]
+    private Collection $clientCoupons;
+
     public function __construct()
     {
         $this->commandeClients = new ArrayCollection();
         $this->fidelisations = new ArrayCollection();
         $this->feedBacks = new ArrayCollection();
+        $this->clientCoupons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -287,6 +291,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($feedBack->getClient() === $this) {
                 $feedBack->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ClientCoupons>
+     */
+    public function getClientCoupons(): Collection
+    {
+        return $this->clientCoupons;
+    }
+
+    public function addClientCoupon(ClientCoupons $clientCoupon): self
+    {
+        if (!$this->clientCoupons->contains($clientCoupon)) {
+            $this->clientCoupons->add($clientCoupon);
+            $clientCoupon->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientCoupon(ClientCoupons $clientCoupon): self
+    {
+        if ($this->clientCoupons->removeElement($clientCoupon)) {
+            // set the owning side to null (unless already changed)
+            if ($clientCoupon->getClient() === $this) {
+                $clientCoupon->setClient(null);
             }
         }
 

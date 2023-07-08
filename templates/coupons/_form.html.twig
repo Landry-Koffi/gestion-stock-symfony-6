@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+    {{ form_row(form.libelle, {
+        label: 'Libellé',
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    {{ form_row(form.montant, {
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    {{ form_row(form.dateFin, {
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    <button class="btn btn-success form-control">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

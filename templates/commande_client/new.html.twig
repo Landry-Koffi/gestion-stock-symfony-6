@@ -93,7 +93,7 @@
 
             $('#commande_client_produits').change(function() {
                 $.ajax({
-                    url: "/produit/" + $(this).val(),
+                    url: "/dashboard/produit/" + $(this).val(),
                     type: "GET",
                     success: function(data) {
                         var produitId = data.id;

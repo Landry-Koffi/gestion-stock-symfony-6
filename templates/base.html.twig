@@ -125,6 +125,27 @@
                     </a>
                 </li>
 
+
+
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_coupons_index' or
+                app.request.attributes.get('_route') == 'app_attribuer_coupon' }}">
+                    <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="icon">
+                  <i class="lni lni-cog"></i>
+              </span>
+                        <span class="text">Coupons</span>
+                    </a>
+                    <ul id="ddmenu_2" class="collapse dropdown-nav mx-4">
+                        <li>
+                            <a href="{{ path('app_coupons_index') }}"> <i class="lni lni-mobile"></i> Liste des coupons </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path('app_attribuer_coupon') }}"> <i class="lni lni-mobile"></i> Attribuer </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
                 app.request.attributes.get('_route') == 'app_roles_index' or
                 app.request.attributes.get('_route') == 'app_envoi_sms_index' or

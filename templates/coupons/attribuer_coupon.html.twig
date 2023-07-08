@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Coupons{% endblock %}
+
+{% block stylesheets %}
+    <!-- Fichier CSS de Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    <section class="section mt-3">
+        <div class="container-fluid">
+            <h1 class="mb-3">Créer un nouveau client</h1>
+
+            <form action="{{ path('app_attribuer_coupon_add') }}" method="post">
+                <div class="form-group mb-3">
+                    <label for="coupon">Coupons</label>
+                    <select name="coupon" required id="coupon" class="form-control">
+                        <option value="">Veuillez choisir un coupon</option>
+                        {% for coupon in coupons %}
+                            {% if coupon.dateFin == null or coupon.dateFin >= 'now'|date('d-m-Y') %}
+                                <option value="{{ coupon.libelle }}">{{ coupon.libelle }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="clientFidel">Clients fidèles</label>
+                    <select name="clientFidels[]" multiple="multiple" required id="clientFidel" class="form-control">
+                        <option value="">Veuillez choisir un ou plusieurs clients</option>
+                        {% for fidelisation in fidelisations %}
+                            <option value="{{ fidelisation.id }}">{{ fidelisation.client.libelle }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success form-control">Envoyer</button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+{% endblock %}
+

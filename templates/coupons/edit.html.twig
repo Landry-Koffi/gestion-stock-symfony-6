@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Coupons{% endblock %}
+
+{% block body %}
+<section class="section">
+    <div class="container-fluid">
+        <h1>Modifier le coupon</h1>
+
+    {{ include('coupons/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('app_coupons_index') }}">back to list</a>
+    </div>
+</section>
+{% endblock %}
