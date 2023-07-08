@@ -46,7 +46,8 @@ class UsersController extends AbstractController
         $users->setVille($ville);
         $users->setTel($tel);
         //$users->setUsername($username);
-        if ($pass !== null){
+
+        if ($pass !== null AND $pass !== ""){
             $users->setPassword(
                 $userPasswordHasher->hashPassword(
                     $users,

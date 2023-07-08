@@ -2,20 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\FeedBack;
 use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\CommandeFournisseurRepository;
+use App\Repository\FeedBackRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/dashboard')]
 class HomeController extends AbstractController
 {
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/', name: 'app_dashboard')]
     public function index(CommandeClientRepository $commandeClientRepository, UsersRepository $usersRepository, ClientRepository $clientRepository, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, ProduitRepository $produitRepository): Response
     {
         $commandeClients_encours = $commandeClientRepository->findBy(['deletedAt' => null, 'etatTraite' => false]);
@@ -53,7 +57,19 @@ class HomeController extends AbstractController
         }
 
         $user = $usersRepository->findOneBy(['id' => $this->getUser()]);
-        $client = $clientRepository->findOneBy(['tel' => $user->getTel()]);
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())){
+            $point = 0;
+            $cmdClients = null;
+            $prdCmdClients = null;
+        }else{
+            $client = $clientRepository->findOneBy(['tel' => $user->getTel()]);
+
+            $point = $client->getPoints();
+
+            $cmdClients = $commandeClientRepository->findBy(['client' => $client], ['dateCommandeAt'=> 'DESC']);
+            $prdCmdClients = $produitCommandeClientRepository->findBy([], ['createdAt'=> 'DESC']);
+        }
 
         return $this->render('home/index.html.twig', [
             "nb_commande_client_encours" => $commandeClientRepository->count(['deletedAt' => null ,'etatTraite' => false]),
@@ -68,7 +84,35 @@ class HomeController extends AbstractController
             "somme_commande_client_traites" => $somme_commande_client_traites,
             "somme_commande_client_attente_validations" => $somme_commande_client_attente_validations,
             "somme_commande_client_validees" => $somme_commande_client_validees,
-            "points" => $client->getPoints(),
+            "points" => $point,
+            "cmdClients" => $cmdClients,
+            "prdCmdClients" => $prdCmdClients
         ]);
     }
+
+    #[Route('/add-feedback', name: 'app_add_feedback')]
+    public function feedback(UsersRepository $usersRepository, ClientRepository $clientRepository, FeedBackRepository $feedBackRepository, Request $request)
+    {
+        $title = $request->request->get('title');
+        $content = $request->request->get('content');
+
+        $user = $usersRepository->findOneBy(['id' => $this->getUser()]);
+        $client = $clientRepository->findOneBy(['tel' => $user->getTel()]);
+
+        if ($title != "" and $content != ""){
+            $feedback = new FeedBack();
+            $feedback->setTitle($title);
+            $feedback->setContent($content);
+            $feedback->setClient($client);
+            $feedback->setCreatedAt(new \DateTimeImmutable('now'));
+            $feedBackRepository->save($feedback, true);
+            $this->addFlash('success', 'Feedback envoyé avec succès !');
+            return $this->redirectToRoute('app_dashboard');
+        }else{
+            $this->addFlash('error', 'Veuillez renseigner tous les champs !');
+            return $this->redirectToRoute('app_dashboard');
+        }
+    }
+
+
 }

@@ -106,6 +106,7 @@ class CommandeClientController extends AbstractController
         $quantiteUpdate = $produitCommandeClient->getQuantiteUpdate();
         $produitCommandeClient->setQuantiteLivree($qteLivree);
         $produitCommandeClient->setQuantiteUpdate($qteLivree);
+        $produitCommandeClient->setEtatTraite(true);
         $produitCommandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
         $produitCommandeClientRepository->save($produitCommandeClient, true);
 

@@ -56,10 +56,14 @@ class Client
     #[ORM\Column(nullable: true)]
     private ?int $points = null;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedBack::class)]
+    private Collection $feedBacks;
+
     public function __construct()
     {
         $this->commandeClients = new ArrayCollection();
         $this->fidelisations = new ArrayCollection();
+        $this->feedBacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +259,36 @@ class Client
     public function setPoints(?int $points): self
     {
         $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedBack>
+     */
+    public function getFeedBacks(): Collection
+    {
+        return $this->feedBacks;
+    }
+
+    public function addFeedBack(FeedBack $feedBack): self
+    {
+        if (!$this->feedBacks->contains($feedBack)) {
+            $this->feedBacks->add($feedBack);
+            $feedBack->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedBack(FeedBack $feedBack): self
+    {
+        if ($this->feedBacks->removeElement($feedBack)) {
+            // set the owning side to null (unless already changed)
+            if ($feedBack->getClient() === $this) {
+                $feedBack->setClient(null);
+            }
+        }
 
         return $this;
     }

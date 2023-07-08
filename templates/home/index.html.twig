@@ -210,7 +210,7 @@
                             <div class="content">
                                 <h6 class="mb-10">Historiques d'achat</h6>
                                 <p class="text-sm text-danger">
-                                    <a href="" class="btn btn-info"><i class="lni lni-spinner"></i> Voir l'historique</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#historiqueAchat" class="btn btn-info"><i class="lni lni-spinner"></i> Voir l'historique</a>
                                 </p>
                             </div>
                         </div>
@@ -279,26 +279,114 @@
     <!-- ========== table components end ========== -->
 
 
+    <!-- Modal historiqueAchat -->
+    <div class="modal fade" id="historiqueAchat" tabindex="-1" aria-labelledby="historiqueAchatLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form action="{{ path('app_add_feedback') }}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center" id="historiqueAchatLabel">Historique des achats</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card p-1" style="overflow: scroll;height: 400px">
+                            <div class="row  bg-info-600">
+                                <div class="col-4">Numéro commande</div>
+                                <div class="col-3">Total</div>
+                                <div class="col-3 btn">Date commande</div>
+                                <div class="col-2">Etat commande</div>
+                            </div>
+                            <hr>
+                            {% for cmdClient in cmdClients %}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#cmdClient{{ cmdClient.id }}">
+                                    <div class="row">
+                                        <div class="col-4">#{{ cmdClient.numeroCommande }}</div>
+                                        <div class="col-3">{{ cmdClient.totalTtc }} FCFA</div>
+                                        <div class="col-3 btn">{{ cmdClient.dateCommandeAt|date('d-m-Y') }}</div>
+                                        <div class="col-2 {{ cmdClient.etatValide ? 'text-success' : 'text-danger' }}"><i class="{{ cmdClient.etatValide ? 'fa fa-check' : 'fa fa-close' }}"></i></div>
+                                    </div>
+                                    <hr>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% for cmdClient in cmdClients %}
+    <!-- Modal password -->
+    <div class="modal fade" id="cmdClient{{ cmdClient.id }}" tabindex="-1" aria-labelledby="cmdClientLabel{{ cmdClient.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center" id="cmdClientLabel{{ cmdClient.id }}">Liste des produits commandé (#{{ cmdClient.numeroCommande }})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card p-1" style="overflow: scroll;height: 400px">
+                            <div class="row bg-success-600">
+                                <div class="col-1">Image</div>
+                                <div class="col-2">Libellé</div>
+                                <div class="col-1">Qté cmd</div>
+                                <div class="col-1">Total cmd</div>
+                                <div class="col-2">Qté livrée</div>
+                                <div class="col-1">Total livré</div>
+                                <div class="col-3">Commentaire</div>
+                                <div class="col-1">Etat</div>
+                            </div>
+                            <hr>
+                            {% for prdCmdClient in prdCmdClients %}
+                                {% if prdCmdClient.commandeClient.id == cmdClient.id %}
+                                    <div class="row" title="{{ prdCmdClient.produit.numeroArticle }}">
+                                        <div class="col-1"><img style="height: 50px;width: 50px" src="{{ asset('uploads/images/' ~ prdCmdClient.produit.image) }}" /></div>
+                                        <div class="col-2">{{ prdCmdClient.produit.libelle }}</div>
+                                        <div class="col-1">{{ prdCmdClient.quantite }}</div>
+                                        <div class="col-1">{{ prdCmdClient.prixTotal }} FCFA</div>
+                                        <div class="col-2">{{ prdCmdClient.quantiteLivree == null ? 0 : prdCmdClient.quantiteLivree }}</div>
+                                        <div class="col-1">{{ prdCmdClient.produit.prixVente * prdCmdClient.quantiteLivree }} FCFA</div>
+                                        <div class="col-3">{{ prdCmdClient.commentaire }}</div>
+                                        <div class="col-1 {{ prdCmdClient.etatTraite ? 'text-success' : 'text-danger' }}"><i class="{{ prdCmdClient.etatTraite ? 'fa fa-check' : 'fa fa-close' }}"></i></div>
+                                    </div>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
     <!-- Modal -->
     <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="feedbackLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <form action="" method="post">
+                <form action="{{ path('app_add_feedback') }}" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title text-center" id="feedbackLabel">Envoyez-nous un feedback</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <input type="text" class="form-control" placeholder="Entrez le titre..." name="title">
+                            <label for="" class="text-danger">*</label>
+                            <input type="text" required class="form-control" placeholder="Entrez le titre..." name="title">
                         </div>
                         <div class="form-group mb-3">
-                            <textarea class="form-control" rows="4" placeholder="Entrez le contenu..." name="content"></textarea>
+                            <label for="" class="text-danger">*</label>
+                            <textarea class="form-control" required rows="4" placeholder="Entrez le contenu..." name="content"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-success" disabled><i class="fa fa-send"></i> Envoyer</button>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-send"></i> Envoyer</button>
                     </div>
                 </form>
             </div>
@@ -316,13 +404,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <input type="password" id="password" class="form-control" placeholder="Mot de passe actuel..." name="password">
+                            <input type="password" required id="password" class="form-control" placeholder="Mot de passe actuel..." name="password">
                         </div>
                         <div class="form-group mb-3">
-                            <input type="password" class="form-control" placeholder="Nouveau mot de passe..." name="newPassword">
+                            <input type="password" required class="form-control" placeholder="Nouveau mot de passe..." name="newPassword">
                         </div>
                         <div class="form-group mb-3">
-                            <input type="password" class="form-control" placeholder="Confirmation du nouveau mot de passe..." name="newPassword2">
+                            <input type="password" required class="form-control" placeholder="Confirmation du nouveau mot de passe..." name="newPassword2">
                         </div>
                     </div>
                     <div class="modal-footer">
