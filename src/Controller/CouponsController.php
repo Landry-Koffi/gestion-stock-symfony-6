@@ -92,34 +92,67 @@ class CouponsController extends AbstractController
     }
 
     #[Route('/attributer/coupon/add', name: 'app_attribuer_coupon_add')]
-    public function addAttribuerCoupon(CouponsRepository $couponsRepository, ClientRepository $clientRepository, ClientCouponsRepository $clientCouponsRepository, Request $request)
+    public function addAttribuerCoupon(CouponsRepository $couponsRepository, FidelisationRepository $fidelisationRepository, ClientRepository $clientRepository, ClientCouponsRepository $clientCouponsRepository, Request $request)
     {
-        $clientFidels = $request->request->all('clientFidels');
+        $clientFidels = $request->request->get('clientFidels');
         $coupon_get = $request->request->get('coupon');
-        $coupon = $couponsRepository->findOneBy(['libelle' => $coupon_get]);
 
         $count = 0;
 
-        if ($clientFidels !== null and $coupon != null){
-            foreach ($clientFidels as $clientFidel){
-                $client = $clientRepository->findOneBy(['id' => $clientFidel]);
-                $clientCoupon = $clientCouponsRepository->findOneBy(['client' => $client]);
-                if ($clientCoupon->getCoupon()->getLibelle() != $coupon->getLibelle()){
-                    $clientCoupons = new ClientCoupons();
-                    $clientCoupons->setClient($client);
-                    $clientCoupons->setCoupon($coupon);
-                    $clientCoupons->setMontantUtilise(0);
-                    $clientCoupons->setCreatedAt(new \DateTimeImmutable('now'));
-                    $clientCoupons->setUpdatedAt(new \DateTimeImmutable('now'));
-                    $clientCoupons->setEtat(true);
-                    $clientCouponsRepository->save($clientCoupons, true);
-                }else{
-                    ++$count;
-                    $this->addFlash('error', 'Le client avec nom d\'utilisateur '.$clientCoupon->getClient()->getTel().' est déjà lié à ce coupon!');
+        if ($clientFidels !== null and $coupon_get != null){
+            $coupon = $couponsRepository->findOneBy(['id' => $coupon_get]);
+            if ($clientFidels == 'tout'){
+                $clients = $clientRepository->findBy([]);
+                $countClientFidel = $fidelisationRepository->count(['etat' => true]);
+
+                foreach ($clients as $client) {
+
+                    $clientFidel = $fidelisationRepository->findOneBy(['client' => $client, 'etat' => true]);
+
+                    if ($clientFidel){
+
+                        $clientCoupon = $clientCouponsRepository->findOneBy(['client' => $clientFidel->getClient()]);
+                        if ($clientCoupon){
+                            if ($clientCoupon->getCoupon()->getLibelle() != $coupon->getLibelle()) {
+                                $clientCoupons = new ClientCoupons();
+                                $clientCoupons->setClient($client);
+                                $clientCoupons->setCoupon($coupon);
+                                $clientCoupons->setMontantUtilise(0);
+                                $clientCoupons->setCreatedAt(new \DateTimeImmutable('now'));
+                                $clientCoupons->setUpdatedAt(new \DateTimeImmutable('now'));
+                                $clientCoupons->setEtat(true);
+                                $clientCouponsRepository->save($clientCoupons, true);
+                            } else {
+                                ++$count;
+                                $this->addFlash('error', 'Le client avec nom d\'utilisateur ' . $clientCoupon->getClient()->getTel() . ' est déjà lié à ce coupon!');
+                            }
+                        }
+                    }
                 }
-            }
-            if (count($clientFidels) != $count){
-                $this->addFlash('success', 'Coupon attribué avec succès !');
+
+                if ($countClientFidel != $count){
+                    $this->addFlash('success', 'Coupon attribué avec succès !');
+                }
+            }else{
+                $client = $clientRepository->findOneBy(['id' => $clientFidels]);
+                $clientCoupon = $clientCouponsRepository->findOneBy(['client' => $client, 'coupon' => $coupon]);
+                if ($clientCoupon) {
+                    if ($clientCoupon->getCoupon()->getLibelle() != $coupon->getLibelle()) {
+                        $clientCoupons = new ClientCoupons();
+                        $clientCoupons->setClient($client);
+                        $clientCoupons->setCoupon($coupon);
+                        $clientCoupons->setMontantUtilise(0);
+                        $clientCoupons->setCreatedAt(new \DateTimeImmutable('now'));
+                        $clientCoupons->setUpdatedAt(new \DateTimeImmutable('now'));
+                        $clientCoupons->setEtat(true);
+                        $clientCouponsRepository->save($clientCoupons, true);
+                        $this->addFlash('success', 'Coupon attribué avec succès !');
+                    } else {
+                        $this->addFlash('error', 'Le client avec nom d\'utilisateur ' . $clientCoupon->getClient()->getTel() . ' est déjà lié à ce coupon!');
+                    }
+                }else{
+                    $this->addFlash('error', 'Le client avec nom d\'utilisateur ' . $client->getTel() . ' est déjà lié à ce coupon!');
+                }
             }
         }else{
             $this->addFlash('error', 'Veuillez renseigner tous les champs !');

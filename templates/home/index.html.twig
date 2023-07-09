@@ -180,9 +180,9 @@
                             <div class="icon bg-warning">
                             </div>
                             <div class="content">
-                                <h6 class="mb-10">Monnaies ({{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA)</h6>
+                                <h6 class="mb-10">Monnaie</h6>
+                                <h6 class="text-bold text-warning mb-10">{{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA</h6>
                                 <p class="text-sm text-danger">
-                                    <a href="" class="btn btn-warning"><i class="lni lni-money-protection"></i> Voir l'historique</a>
                                 </p>
                             </div>
                         </div>
@@ -224,7 +224,7 @@
                             <div class="content">
                                 <h6 class="mb-10">Coupons </h6>
                                 <p class="text-sm text-success">
-                                    <a href="" class="btn btn-secondary"><i class="lni lni-checkmark"></i> Voir les coupons</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#coupons" class="btn btn-secondary"><i class="lni lni-checkmark"></i> Voir les coupons</a>
                                 </p>
                             </div>
                         </div>
@@ -365,7 +365,42 @@
     </div>
     {% endfor %}
 
-    <!-- Modal -->
+    <!-- Modal coupons-->
+    <div class="modal fade" id="coupons" tabindex="-1" aria-labelledby="couponsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center" id="couponsLabel">Liste des coupons</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card p-1" style="overflow: scroll;height: 400px">
+                            <div class="row bg-info-600">
+                                <div class="col-4">Coupon</div>
+                                <div class="col-4">Montant restant</div>
+                                <div class="col-4 btn">Dernière mise à jour</div>
+                            </div>
+                            <hr>
+                            {% for coupon in coupons %}
+                                {% if coupon.coupon.etat %}
+                                    <div class="row">
+                                        <div class="col-4">{{ coupon.coupon.libelle }}</div>
+                                        <div class="col-4">{{ coupon.coupon.montant - coupon.montantUtilise }} FCFA</div>
+                                        <div class="col-4 btn">{{ coupon.createdAt|date('d-m-Y') }}</div>
+                                    </div>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal feedback-->
     <div class="modal fade" id="feedback" tabindex="-1" aria-labelledby="feedbackLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">

@@ -19,15 +19,15 @@
                         <option value="">Veuillez choisir un coupon</option>
                         {% for coupon in coupons %}
                             {% if coupon.dateFin == null or coupon.dateFin >= 'now'|date('d-m-Y') %}
-                                <option value="{{ coupon.libelle }}">{{ coupon.libelle }}</option>
+                                <option value="{{ coupon.id }}">{{ coupon.libelle }}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="clientFidel">Clients fidèles</label>
-                    <select name="clientFidels[]" multiple="multiple" required id="clientFidel" class="form-control">
-                        <option value="">Veuillez choisir un ou plusieurs clients</option>
+                    <label for="clientFidel">Veuillez choisir un ou plusieurs clients</label>
+                    <select name="clientFidels" required id="clientFidel" class="form-control">
+                        <option value="tout">Tout</option>
                         {% for fidelisation in fidelisations %}
                             <option value="{{ fidelisation.id }}">{{ fidelisation.client.libelle }}</option>
                         {% endfor %}

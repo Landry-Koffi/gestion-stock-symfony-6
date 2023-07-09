@@ -170,9 +170,16 @@ class CommandeClientController extends AbstractController
                     return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
                 }
 
-                if ($coupon->getDateFin()->format('Y-m-d') < date('Y-m-d') OR !$coupon->isEtat()){
-                    $this->addFlash('error', 'Le coupon n\'est plus valide !');
-                    return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                if ($coupon->getDateFin() != null){
+                    if ($coupon->getDateFin()->format('Y-m-d') < date('Y-m-d') OR !$coupon->isEtat()){
+                        $this->addFlash('error', 'Le coupon n\'est plus valide !');
+                        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                    }
+                }else{
+                    if (!$coupon->isEtat()){
+                        $this->addFlash('error', 'Le coupon n\'est plus valide !');
+                        return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                    }
                 }
 
                 $clientCoupon = $clientCouponsRepository->findOneBy(['coupon' => $coupon, 'client' => $commandeClient->getClient()]);
