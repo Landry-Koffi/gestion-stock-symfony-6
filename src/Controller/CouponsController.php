@@ -25,6 +25,15 @@ class CouponsController extends AbstractController
         ]);
     }
 
+    #[Route('/liste/attribution', name: 'app_coupons_liste_attribue', methods: ['GET'])]
+    public function listeAttribue(ClientCouponsRepository $clientCouponsRepository, CouponsRepository $couponsRepository): Response
+    {
+        return $this->render('coupons/liste_cooupon_attribue.html.twig', [
+            'clientCoupons' => $clientCouponsRepository->findBy([], ['id' => 'DESC']),
+            'coupons' => $couponsRepository->findBy([], ['id' => 'DESC']),
+        ]);
+    }
+
     #[Route('/new', name: 'app_coupons_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CouponsRepository $couponsRepository): Response
     {
@@ -59,6 +68,20 @@ class CouponsController extends AbstractController
         return $this->redirectToRoute('app_coupons_index');
     }
 
+    #[Route('/client/coupon/{id}', name: 'app_client_coupon_state')]
+    public function clientCouponState(ClientCoupons $clientCoupons, ClientCouponsRepository $clientCouponsRepository)
+    {
+        if ($clientCoupons->isEtat()){
+            $clientCoupons->setEtat(false);
+            $this->addFlash('success', 'Coupon désactivé !');
+        }else{
+            $clientCoupons->setEtat(true);
+            $this->addFlash('success', 'Coupon activé !');
+        }
+        $clientCouponsRepository->save($clientCoupons, true);
+        return $this->redirectToRoute('app_coupons_liste_attribue');
+    }
+
     #[Route('/attributer/coupon', name: 'app_attribuer_coupon')]
     public function attribuerCoupon(CouponsRepository $couponsRepository, FidelisationRepository $fidelisationRepository): Response
     {
@@ -75,23 +98,34 @@ class CouponsController extends AbstractController
         $coupon_get = $request->request->get('coupon');
         $coupon = $couponsRepository->findOneBy(['libelle' => $coupon_get]);
 
+        $count = 0;
+
         if ($clientFidels !== null and $coupon != null){
             foreach ($clientFidels as $clientFidel){
                 $client = $clientRepository->findOneBy(['id' => $clientFidel]);
-                $clientCoupons = new ClientCoupons();
-                $clientCoupons->setClient($client);
-                $clientCoupons->setCoupon($coupon);
-                $clientCoupons->setMontantUtilise(0);
-                $clientCoupons->setCreatedAt(new \DateTimeImmutable('now'));
-                $clientCoupons->setUpdatedAt(new \DateTimeImmutable('now'));
-                $clientCouponsRepository->save($clientCoupons, true);
+                $clientCoupon = $clientCouponsRepository->findOneBy(['client' => $client]);
+                if ($clientCoupon->getCoupon()->getLibelle() != $coupon->getLibelle()){
+                    $clientCoupons = new ClientCoupons();
+                    $clientCoupons->setClient($client);
+                    $clientCoupons->setCoupon($coupon);
+                    $clientCoupons->setMontantUtilise(0);
+                    $clientCoupons->setCreatedAt(new \DateTimeImmutable('now'));
+                    $clientCoupons->setUpdatedAt(new \DateTimeImmutable('now'));
+                    $clientCoupons->setEtat(true);
+                    $clientCouponsRepository->save($clientCoupons, true);
+                }else{
+                    ++$count;
+                    $this->addFlash('error', 'Le client avec nom d\'utilisateur '.$clientCoupon->getClient()->getTel().' est déjà lié à ce coupon!');
+                }
             }
-            $this->addFlash('success', 'Coupon attribué avec succès !');
+            if (count($clientFidels) != $count){
+                $this->addFlash('success', 'Coupon attribué avec succès !');
+            }
         }else{
             $this->addFlash('error', 'Veuillez renseigner tous les champs !');
         }
 
-        return $this->redirectToRoute('app_coupons_index');
+        return $this->redirectToRoute('app_coupons_liste_attribue');
     }
 
     #[Route('/{id}/edit', name: 'app_coupons_edit', methods: ['GET', 'POST'])]

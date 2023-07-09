@@ -39,6 +39,7 @@
                     <th>Total Ht</th>
                     <th>Total Tva</th>
                     <th>Total Ttc</th>
+                    <th>Coupon</th>
                     <th>N° Facture</th>
                 </tr>
                 </thead>
@@ -53,6 +54,7 @@
                         <td>{{ commande_client.totalHt }}</td>
                         <td>{{ commande_client.totalTva }}</td>
                         <td>{{ commande_client.totalTtc }}</td>
+                        <td>{{ commande_client.coupon }}</td>
                         <td>{{ commande_client.numeroFacture }}</td>
                     </tr>
                     <tr>
@@ -173,6 +175,10 @@
                                             <div class="form-group mt-3">
                                                 <label for="echeance">Echéance <span class="text-danger">*</span></label>
                                                 <input required type="text" name="echeance" id="echeance" class="form-control">
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label for="coupon">Coupon</label>
+                                                <input type="text" name="coupon" id="coupon" class="form-control">
                                             </div>
                                             <div class="form-group mt-3">
                                                 <label for="moyenPaiement">Moyen de paiement <span class="text-danger">*</span></label>

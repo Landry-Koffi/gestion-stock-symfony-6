@@ -68,6 +68,9 @@ class CommandeClient
     #[ORM\ManyToOne(inversedBy: 'commandeClients')]
     private ?MoyenReglement $moyenPaiement = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $coupon = null;
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
@@ -315,6 +318,18 @@ class CommandeClient
     public function setMoyenPaiement(?MoyenReglement $moyenPaiement): self
     {
         $this->moyenPaiement = $moyenPaiement;
+
+        return $this;
+    }
+
+    public function getCoupon(): ?int
+    {
+        return $this->coupon;
+    }
+
+    public function setCoupon(?int $coupon): self
+    {
+        $this->coupon = $coupon;
 
         return $this;
     }

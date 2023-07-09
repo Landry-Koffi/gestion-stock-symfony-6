@@ -30,13 +30,13 @@
 </head>
 <body>
 {% for messageSuccess in app.flashes('success') %}
-    <div id="messageSuccess" class="alert alert-success text-center">
+    <div class="alert alert-success text-center messageSuccess">
         {{ messageSuccess }}
     </div>
 {% endfor %}
 
 {% for messageError in app.flashes('error') %}
-    <div id="messageError" class="alert alert-danger text-center">
+    <div class="alert alert-danger text-center messageError">
         {{ messageError }}
     </div>
 {% endfor %}
@@ -141,7 +141,7 @@
                         </li>
 
                         <li>
-                            <a href="{{ path('app_attribuer_coupon') }}"> <i class="lni lni-mobile"></i> Attribuer </a>
+                            <a href="{{ path('app_coupons_liste_attribue') }}"> <i class="lni lni-mobile"></i> Attribuer </a>
                         </li>
                     </ul>
                 </li>
@@ -432,7 +432,7 @@
 <script>
     // ======== jvectormap activation
     function messageSuccess(jQuery ) {
-        $("#messageSuccess")
+        $(".messageSuccess")
             .delay(3000)  // Delay of 1 second (1000 milliseconds)
             .fadeOut('slow')
             .slideUp(3000)
@@ -440,7 +440,7 @@
     $( window ).on( "load", messageSuccess );
 
     function messageError( jQuery ) {
-        $("#messageError")
+        $(".messageError")
             .delay(3000)  // Delay of 1 second (1000 milliseconds)
             .fadeOut('slow')
             .slideUp(3000)

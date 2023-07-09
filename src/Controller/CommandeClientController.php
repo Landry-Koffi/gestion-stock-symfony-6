@@ -6,8 +6,10 @@ use App\Entity\CommandeClient;
 use App\Entity\ProduitCommandeClient;
 use App\Entity\Reglement;
 use App\Form\CommandeClientType;
+use App\Repository\ClientCouponsRepository;
 use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
+use App\Repository\CouponsRepository;
 use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
@@ -147,15 +149,58 @@ class CommandeClientController extends AbstractController
      * @throws \Exception
      */
     #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, GenerationPoints $generationPoints, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function valider($id, Request $request, GenerationPoints $generationPoints, CouponsRepository $couponsRepository, ClientCouponsRepository $clientCouponsRepository, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
         $echeance = $request->request->get("echeance");
+        $coupon_get = $request->request->get("coupon");
+
+
         if ($dateLivraison != null and $moyenPaiement != null and $echeance != null){
             $moyenPaiement = $moyenReglementRepository->findOneBy(['id' => $moyenPaiement]);
 
             $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
+
+
+            if ($coupon_get != null){
+                $coupon = $couponsRepository->findOneBy(['libelle' => $coupon_get]);
+                if (!$coupon){
+                    $this->addFlash('error', 'Le coupon n\'existe pas !');
+                    return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                }
+
+                if ($coupon->getDateFin()->format('Y-m-d') < date('Y-m-d') OR !$coupon->isEtat()){
+                    $this->addFlash('error', 'Le coupon n\'est plus valide !');
+                    return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                }
+
+                $clientCoupon = $clientCouponsRepository->findOneBy(['coupon' => $coupon, 'client' => $commandeClient->getClient()]);
+
+                if (!$clientCoupon){
+                    $this->addFlash('error', 'Le coupon n\'existe pas !');
+                    return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                }
+
+                if (!$clientCoupon->getCoupon()->isEtat()){
+                    $this->addFlash('error', 'Votre coupon n\'est plus valide !');
+                    return $this->redirectToRoute('app_commande_client_index', [], Response::HTTP_SEE_OTHER);
+                }
+
+                $montantCouponFinal = $coupon->getMontant() - $clientCoupon->getMontantUtilise();
+
+                if ($montantCouponFinal > $commandeClient->getTotalTtc()){
+                    $commandeClient->setCoupon($commandeClient->getTotalTtc());
+                    $clientCoupon->setMontantUtilise($clientCoupon->getMontantUtilise() + $commandeClient->getTotalTtc());
+                }elseif ($montantCouponFinal == $commandeClient->getTotalTtc()){
+                    $commandeClient->setCoupon($commandeClient->getTotalTtc());
+                    $clientCoupon->setMontantUtilise($clientCoupon->getMontantUtilise() + $commandeClient->getTotalTtc());
+                    $clientCoupon->setEtat(false);
+                } else{
+                    $commandeClient->setCoupon($montantCouponFinal);
+                    $clientCoupon->setMontantUtilise($clientCoupon->getMontantUtilise() + $montantCouponFinal);
+                }
+            }
 
             $commandeClient->setEtatValide(true);
             $commandeClient->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
