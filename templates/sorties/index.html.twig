@@ -1,29 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produit index{% endblock %}
+{% block title %}Sorties index{% endblock %}
 
 {% block stylesheets %}
-<style>
-    .zoom-image {
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .zoom-image:hover {
-        transform: scale(4) translate(-30%, -30%);
-        z-index: 9999;
-        cursor: zoom-out;
-    }
+    <style>
+        .zoom-image {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .zoom-image:hover {
+            transform: scale(4) translate(-30%, -30%);
+            z-index: 9999;
+            cursor: zoom-out;
+        }
 
-</style>
+    </style>
 {% endblock %}
+
 {% block body %}
 <section class="table-components table-responsive table-responsive mt-5">
     <div class="container-fluid">
         <div class="row">
             <div class="col-6">
-                <h2>Liste des produits</h2>
+                <h2>Liste des sorties</h2>
             </div>
             <div class="col-6 text-end">
-                <a href="{{ path('app_produit_new') }}" class="btn btn-primary">Ajouter un produit</a>
+                <a href="{{ path('app_sorties_new') }}" class="btn btn-primary">Ajouter une sortie</a>
             </div>
         </div>
         <div class="row">
@@ -40,33 +41,27 @@
         <table class="table table-striped mt-3" id="myTable">
             <thead class="table-dark">
             <tr>
-                <th>N° article</th>
-                <th>Libelle</th>
-                <th>PrixAchat</th>
-                <th>PrixVente</th>
-                <th>Tva</th>
-                <th>Stock</th>
-                <th>Date péremption</th>
+                <th>Admin</th>
+                <th>Motif</th>
+                <th>Date de retrait</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Prix total</th>
                 <th>Image</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for produit in produits %}
+        {% for sorty in sorties %}
             <tr>
-                <td>{{ produit.numeroArticle }}</td>
-                <td>{{ produit.libelle }}</td>
-                <td>{{ produit.prixAchat }} FCFA</td>
-                <td>{{ produit.prixVente }} FCFA</td>
-                <td>{{ produit.tva }}</td>
-                <td>{{ produit.stock }}</td>
-                <td>{{ produit.datePeremptionAt|date('m/Y') }}</td>
-                <td class="zoom-cell"><img class="img-fluid img-thumbnail zoom-image" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ produit.image }}" alt="{{ produit.libelle }}"></td>
-                <td>
-                    <a class="text-dark-emphasis" href="{{ path('app_produit_edit', {'id': produit.id}) }}">
-                        <i class="lni lni-pencil"></i>
-                    </a>
+                <td>{{ sorty.admin.username }}</td>
+                <td class="min-width">
+                    <span class="status-btn danger-btn">{{ sorty.motif }}</span>
                 </td>
+                <td>{{ sorty.createdAt ? sorty.createdAt|date('Y-m-d H:i') : '' }}</td>
+                <td>{{ sorty.quantite }}</td>
+                <td>{{ sorty.prixUnitaire }} FCFA</td>
+                <td>{{ sorty.prixTotal }} FCFA</td>
+                <td class="zoom-cell"><img class="img-fluid img-thumbnail zoom-image" style="height:50px;width:50px" src="{{ asset('uploads/images/') }}{{ sorty.produits.image }}" alt="{{ sorty.produits.libelle }}"></td>
             </tr>
         {% else %}
             <tr>

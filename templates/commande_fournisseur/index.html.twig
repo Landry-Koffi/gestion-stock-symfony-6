@@ -6,6 +6,12 @@
         .pointer:hover {
             cursor: pointer;
         }
+        .point-vert{
+            height: 15px;
+            width: 15px;
+            background: darkgreen;
+            border-radius: 50%;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -41,9 +47,12 @@
                 </thead>
                 <tbody>
                 {% for commande_fournisseur in commande_fournisseurs %}
-                    <tr class="border-1 pointer {{ commande_fournisseur.etatValide ? 'text-bg-success text-light' : '' }}" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_fournisseur.id }}"
+                    <tr class="border-1 pointer" data-bs-toggle="collapse" data-bs-target="#accordion{{ commande_fournisseur.id }}"
                         aria-expanded="false" aria-controls="accordion{{ commande_fournisseur.id }}">
-                        <td scope="row">{{ commande_fournisseur.numeroCommande }}</td>
+                        <td scope="row">
+                            <span class="{{ commande_fournisseur.etatValide ? 'point-vert' : '' }}"></span>
+                            {{ commande_fournisseur.numeroCommande }}
+                        </td>
                         <td>{{ commande_fournisseur.dateCommandeAt ? commande_fournisseur.dateCommandeAt|date('d-m-Y à H:i') : '' }}</td>
                         <td>{{ commande_fournisseur.dateLivraisonAt ? commande_fournisseur.dateLivraisonAt|date('d-m-Y à H:i') : '' }}</td>
                         <td>{{ commande_fournisseur.observation }}</td>

@@ -13,7 +13,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="title mb-30">
-                            <h2>Sign up</h2>
+                            <h2>Inscription</h2>
                         </div>
                     </div>
                     <!-- end col -->
@@ -26,7 +26,7 @@
                                     </li>
                                     <li class="breadcrumb-item"><a href="#0">Auth</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">
-                                        Sign up
+                                        Inscription
                                     </li>
                                 </ol>
                             </nav>
@@ -47,6 +47,24 @@
                                     <div class="col-12">
                                         <div class="input-style-1">
                                             {{ form_row(registrationForm.username, {
+                                                attr: {
+                                                    class: 'form-control'
+                                                }
+                                            }) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="input-style-1">
+                                            {{ form_row(registrationForm.nom, {
+                                                attr: {
+                                                    class: 'form-control'
+                                                }
+                                            }) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="input-style-1">
+                                            {{ form_row(registrationForm.prenoms, {
                                                 attr: {
                                                     class: 'form-control'
                                                 }
@@ -114,9 +132,10 @@
                                                 width: 100% !important;
                                             }
                                         </style>
-                                        <div class="input-style-1 form-control">
+                                        <div class="input-style-1">
                                             <label for="select-multiple">Veuillez choisir un ou plusieurs rôles</label>
-                                            <select id="select-multiple" multiple name="roles[]">
+                                            <select id="select-multiple" required class="form-control" name="roles">
+                                                <option value="">Veuillez choisir un ou plusieurs rôles</option>
                                                 {% for role in roles %}
                                                     <option value="{{ role.libelle }}">{{ role.libelle }}</option>
                                                 {% endfor %}

@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Entity\Client;
+use App\Entity\Fidelisation;
 
 class GenerationPoints
 {
-    public function addPoints(Client $client, int $montant){
-        if ($client->getPoints() == null){
+    public function addPoints(Fidelisation $fidelisation, int $montant){
+        if ($fidelisation->getPoints() == null){
             $point = 0;
         } else {
-            $point = $client->getPoints();
+            $point = $fidelisation->getPoints();
         }
 
         if ($montant < 5000) {

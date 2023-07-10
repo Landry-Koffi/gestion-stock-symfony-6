@@ -25,7 +25,7 @@ class RegistrationController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $roles = $request->request->all('roles');
+            $roles = $request->request->get('roles');
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -33,7 +33,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user->setRoles($roles);
+            $user->setRoles([$roles]);
             $user->setCreatedAt(new \DateTimeImmutable('now'));
             $user->setUpdatedAt(new \DateTimeImmutable('now'));
             $user->setState(false);

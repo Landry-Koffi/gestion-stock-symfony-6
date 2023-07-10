@@ -10,6 +10,7 @@ use App\Repository\ClientCouponsRepository;
 use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\CouponsRepository;
+use App\Repository\FidelisationRepository;
 use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
@@ -149,7 +150,7 @@ class CommandeClientController extends AbstractController
      * @throws \Exception
      */
     #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, GenerationPoints $generationPoints, CouponsRepository $couponsRepository, ClientCouponsRepository $clientCouponsRepository, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function valider($id, Request $request, FidelisationRepository $fidelisationRepository, GenerationPoints $generationPoints, CouponsRepository $couponsRepository, ClientCouponsRepository $clientCouponsRepository, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
@@ -217,8 +218,11 @@ class CommandeClientController extends AbstractController
             $commandeClientRepository->save($commandeClient, true);
 
             $client = $commandeClient->getClient();
-            $client->setPoints($generationPoints->addPoints($client, $commandeClient->getTotalTtc()));
-            $clientRepository->save($client, true);
+            $clientFidel = $fidelisationRepository->findOneBy(['client' => $client, 'etat' => true]);
+            if ($clientFidel){
+                $clientFidel->setPoints($generationPoints->addPoints($clientFidel, $commandeClient->getTotalTtc()));
+                $fidelisationRepository->save($clientFidel, true);
+            }
 
             // Save reglement
             $reglement = new Reglement();

@@ -24,7 +24,7 @@ class ProduitType extends AbstractType
             ->add('stock')
             ->add('datePeremptionAt', DateType::class, [
                 'input' => 'datetime_immutable',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
             ])
             ->add('image', FileType::class, [
                 'constraints' => [

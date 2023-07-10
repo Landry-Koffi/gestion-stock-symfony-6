@@ -181,7 +181,7 @@
                             </div>
                             <div class="content">
                                 <h6 class="mb-10">Monnaie</h6>
-                                <h6 class="text-bold text-warning mb-10">{{ somme_commande_client_encours|number_format(0, '.', '.') }} FCFA</h6>
+                                <h6 class="text-bold text-warning mb-10">{{ (monnaie == null ? 0 : monnaie)|number_format(0, '.', '.') }} FCFA</h6>
                                 <p class="text-sm text-danger">
                                 </p>
                             </div>

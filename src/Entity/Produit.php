@@ -49,10 +49,14 @@ class Produit
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $datePeremptionAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'produits', targetEntity: Sorties::class)]
+    private Collection $sorties;
+
     public function __construct()
     {
         $this->produitCommandeClients = new ArrayCollection();
         $this->produitCommandeFournisseurs = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,6 +228,36 @@ class Produit
     public function setDatePeremptionAt(?\DateTimeImmutable $datePeremptionAt): self
     {
         $this->datePeremptionAt = $datePeremptionAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sorties>
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sorties $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties->add($sorty);
+            $sorty->setProduits($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sorties $sorty): self
+    {
+        if ($this->sorties->removeElement($sorty)) {
+            // set the owning side to null (unless already changed)
+            if ($sorty->getProduits() === $this) {
+                $sorty->setProduits(null);
+            }
+        }
 
         return $this;
     }

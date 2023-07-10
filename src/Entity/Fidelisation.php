@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FidelisationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FidelisationRepository::class)]
@@ -22,6 +24,17 @@ class Fidelisation
 
     #[ORM\Column]
     private ?bool $etat = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $monnaie = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $points = null;
+
+    public function __construct()
+    {
+        $this->monnaies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,30 @@ class Fidelisation
     public function setEtat(bool $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getMonnaie(): ?int
+    {
+        return $this->monnaie;
+    }
+
+    public function setMonnaie(?int $monnaie): self
+    {
+        $this->monnaie = $monnaie;
+
+        return $this;
+    }
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(?int $points): self
+    {
+        $this->points = $points;
 
         return $this;
     }

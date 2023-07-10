@@ -87,22 +87,20 @@
                     </a>
                 </li>
 
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
-                app.request.attributes.get('_route') == 'app_commande_fournisseur_index'
-                ? 'active' : '' }}">
-                    <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c"
-                       aria-expanded="true" aria-label="Toggle navigation">
-                          <span class="icon">
-                              <i class="lni lni-popup"></i>
+                <li class="nav-item nav-item-has-children {{ app.request.attributes.get('_route') == 'app_commande_client_index' or
+                app.request.attributes.get('_route') == 'app_commande_fournisseur_index' ? 'active' : '' }}">
+                    <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_c_c" aria-controls="ddmenu_c_c" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="icon">
+                              <i class="fa fa-shopping-cart"></i>
                           </span>
                         <span class="text">Commande</span>
                     </a>
                     <ul id="ddmenu_c_c" class="collapse dropdown-nav mx-4">
                         <li>
-                            <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Commande client </a>
+                            <a href="{{ path('app_commande_client_index') }}" class=""><i class="lni lni-user"></i> Client </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Commande fournisseur </a>
+                            <a href="{{ path('app_commande_fournisseur_index') }}" class=""><i class="lni lni-network"></i> Fournisseur </a>
                         </li>
                     </ul>
                 </li>
@@ -125,38 +123,45 @@
                     </a>
                 </li>
 
-
-
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_coupons_index' or
-                app.request.attributes.get('_route') == 'app_attribuer_coupon' }}">
+                <li class="nav-item nav-item-has-children {{ app.request.attributes.get('_route') == 'app_coupons_index' or
+                app.request.attributes.get('_route') == 'app_attribuer_coupon' ? 'active' : '' }}">
                     <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
               <span class="icon">
-                  <i class="lni lni-cog"></i>
+                  <i class="lni lni-code"></i>
               </span>
                         <span class="text">Coupons</span>
                     </a>
                     <ul id="ddmenu_2" class="collapse dropdown-nav mx-4">
                         <li>
-                            <a href="{{ path('app_coupons_index') }}"> <i class="lni lni-mobile"></i> Liste des coupons </a>
+                            <a href="{{ path('app_coupons_index') }}"> <i class="lni lni-gift"></i> Liste </a>
                         </li>
 
                         <li>
-                            <a href="{{ path('app_coupons_liste_attribue') }}"> <i class="lni lni-mobile"></i> Attribuer </a>
+                            <a href="{{ path('app_coupons_liste_attribue') }}"> <i class="fa fa-external-link"></i> Attribution </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_users' or
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_sorties_index' ? 'active' : '' }}">
+                    <a href="{{ path('app_sorties_index') }}">
+                  <span class="icon">
+                    <i class="fa fa-chain-broken"></i>
+                  </span>
+                        <span class="text">Sorties</span>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-item-has-children {{ app.request.attributes.get('_route') == 'app_users' or
                 app.request.attributes.get('_route') == 'app_roles_index' or
                 app.request.attributes.get('_route') == 'app_envoi_sms_index' or
                 app.request.attributes.get('_route') == 'app_moyen_reglement_index' ? 'active' : '' }}">
-                <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_2" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_3" aria-controls="ddmenu_3" aria-expanded="false" aria-label="Toggle navigation">
               <span class="icon">
                   <i class="lni lni-cog"></i>
               </span>
                     <span class="text">Paramètres</span>
                 </a>
-                <ul id="ddmenu_2" class="collapse dropdown-nav mx-4">
+                <ul id="ddmenu_3" class="collapse dropdown-nav mx-4">
                     <li>
                         <a href="{{ path('app_envoi_sms_index') }}"> <i class="lni lni-mobile"></i> Envoi SMS </a>
                     </li>

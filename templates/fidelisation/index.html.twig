@@ -29,6 +29,8 @@
             <tr>
                 <th>Client</th>
                 <th>Date d'ajout</th>
+                <th>Monnaie</th>
+                <th>Point fidelité</th>
                 <th>Etat</th>
                 <th>Action</th>
             </tr>
@@ -38,11 +40,92 @@
             <tr>
                 <td>{{ fidelisation.client.libelle }}</td>
                 <td>{{ fidelisation.createdAt ? fidelisation.createdAt|date('Y-m-d H:i') : '' }}</td>
-                <td>{{ fidelisation.etat ? 'Actif' : 'Pas actif' }}</td>
+                <td>{{ fidelisation.monnaie == null ? 0 : fidelisation.monnaie }} FCFA</td>
+                <td>{{ fidelisation.points }}</td>
+                <td class="min-width">
+                    <a href="{{ path('app_fidelisation_state', {id: fidelisation.id}) }}">
+                        {% if fidelisation.etat == true %}
+                            <span class="status-btn success-btn">Activé</span>
+                        {% else %}
+                            <span class="status-btn danger-btn">Désactivé</span>
+                        {% endif %}
+                    </a>
+                </td>
                 <td>
-                    <a href="#" class="btn btn-primary">Monnaie <i class="fa fa-money"></i></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#ajouterMonnaie{{ fidelisation.id }}" class="btn btn-primary">Ajouter monnaie <i class="fa fa-money"></i></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#retirerMonnaie{{ fidelisation.id }}" class="btn btn-danger {{ fidelisation.monnaie == null or fidelisation.monnaie == 0 ? 'disabled' : '' }}">Retirer monnaie <i class="fa fa-money"></i></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#retirerPoints{{ fidelisation.id }}" class="btn btn-warning {{ fidelisation.points == null or fidelisation.point == 0 ? 'disabled' : '' }}">Retirer les points</a>
                 </td>
             </tr>
+
+            <!-- Modal points -->
+            <div class="modal fade" id="retirerPoints{{ fidelisation.id }}" tabindex="-1" aria-labelledby="retirerPointsLabel{{ fidelisation.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="retirerPointsLabel{{ fidelisation.id }}">Retirer les points</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="">Points actuels : {{ fidelisation.points == null ? 0 : fidelisation.points }}</h5>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <a href="{{ path('app_fidelisation_retirer_points', {id : fidelisation.id}) }}" class="btn btn-danger">Retirer</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal password -->
+            <div class="modal fade" id="ajouterMonnaie{{ fidelisation.id }}" tabindex="-1" aria-labelledby="ajouterMonnaieLabel{{ fidelisation.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <form id="passform" action="{{ path('app_fidelisation_add_monnaie') }}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="ajouterMonnaieLabel{{ fidelisation.id }}">Ajouter une monnaie</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="">Montant actuelle : {{ fidelisation.monnaie == null ? 0 : fidelisation.monnaie }} FCFA</h5>
+                                <div class="form-group mb-3">
+                                    <input type="hidden" required value="{{ fidelisation.client.id }}" name="client">
+                                    <input type="number" required id="montant" class="form-control" placeholder="Somme..." name="montant">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-success" id="submitPass"><i class="fa fa-send"></i> Ajouter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal password -->
+            <div class="modal fade" id="retirerMonnaie{{ fidelisation.id }}" tabindex="-1" aria-labelledby="retirerMonnaieLabel{{ fidelisation.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <form id="passform" action="{{ path('app_fidelisation_retirer_monnaie') }}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="retirerMonnaieLabel{{ fidelisation.id }}">Retirer une monnaie</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="">Montant actuelle : {{ fidelisation.monnaie == null ? 0 : fidelisation.monnaie }} FCFA</h5>
+                                <div class="form-group mb-3">
+                                    <input type="hidden" required value="{{ fidelisation.client.id }}" name="client">
+                                    <input type="number" required id="montant" class="form-control" placeholder="Somme..." name="montant">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-danger" id="submitPass"><i class="fa fa-send"></i> Retirer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         {% else %}
             <tr>
                 <td colspan="4">no records found</td>

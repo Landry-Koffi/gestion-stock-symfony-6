@@ -53,9 +53,6 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Fidelisation::class)]
     private Collection $fidelisations;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $points = null;
-
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: FeedBack::class)]
     private Collection $feedBacks;
 
@@ -251,18 +248,6 @@ class Client
                 $fidelisation->setClient(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPoints(): ?int
-    {
-        return $this->points;
-    }
-
-    public function setPoints(?int $points): self
-    {
-        $this->points = $points;
 
         return $this;
     }

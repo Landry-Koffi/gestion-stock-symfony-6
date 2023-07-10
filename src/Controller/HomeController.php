@@ -8,6 +8,7 @@ use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\CommandeFournisseurRepository;
 use App\Repository\FeedBackRepository;
+use App\Repository\FidelisationRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use App\Repository\ProduitRepository;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
-    public function index(CommandeClientRepository $commandeClientRepository, ClientCouponsRepository $clientCouponsRepository, UsersRepository $usersRepository, ClientRepository $clientRepository, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, ProduitRepository $produitRepository): Response
+    public function index(CommandeClientRepository $commandeClientRepository, FidelisationRepository $fidelisationRepository, ClientCouponsRepository $clientCouponsRepository, UsersRepository $usersRepository, ClientRepository $clientRepository, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeClientRepository $produitCommandeClientRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, ProduitRepository $produitRepository): Response
     {
         $commandeClients_encours = $commandeClientRepository->findBy(['deletedAt' => null, 'etatTraite' => false]);
         $commandeClients_traites = $commandeClientRepository->findBy(['deletedAt' => null, 'etatTraite' => true]);
@@ -64,14 +65,15 @@ class HomeController extends AbstractController
             $cmdClients = null;
             $prdCmdClients = null;
             $coupons = null;
+            $monnaie = 0;
         }else{
             $client = $clientRepository->findOneBy(['tel' => $user->getTel()]);
-
-            $point = $client->getPoints();
 
             $cmdClients = $commandeClientRepository->findBy(['client' => $client], ['dateCommandeAt'=> 'DESC']);
             $prdCmdClients = $produitCommandeClientRepository->findBy([], ['createdAt'=> 'DESC']);
             $coupons = $clientCouponsRepository->findBy(['client' => $client, 'etat' => true], ['createdAt'=> 'DESC']);
+            $monnaie = $fidelisationRepository->findOneBy(['client' => $client])->getMonnaie();
+            $point = $fidelisationRepository->findOneBy(['client' => $client])->getPoints();
         }
 
         return $this->render('home/index.html.twig', [
@@ -90,7 +92,8 @@ class HomeController extends AbstractController
             "points" => $point,
             "cmdClients" => $cmdClients,
             "prdCmdClients" => $prdCmdClients,
-            'coupons' => $coupons
+            'coupons' => $coupons,
+            'monnaie' => $monnaie,
         ]);
     }
 

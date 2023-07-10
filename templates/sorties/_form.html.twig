@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+    {{ form_row(form.produits, {
+        label: "Veuillez choisir un produit",
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    {{ form_row(form.quantite, {
+        label: "Quantité",
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    {{ form_row(form.motif, {
+        label: "Motif",
+        attr: {
+            class: 'form-control mb-3'
+        }
+    }) }}
+    <button class="btn btn-primary form-control">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}
