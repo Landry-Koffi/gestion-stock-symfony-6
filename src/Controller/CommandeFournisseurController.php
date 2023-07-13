@@ -10,6 +10,7 @@ use App\Repository\CommandeFournisseurRepository;
 use App\Repository\LotRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use App\Repository\ProduitRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,11 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommandeFournisseurController extends AbstractController
 {
     #[Route('/', name: 'app_commande_fournisseur_index', methods: ['GET'])]
-    public function index(CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository): Response
+    public function index(CommandeFournisseurRepository $commandeFournisseurRepository, Pagination $paginator, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository): Response
     {
         $count_commande_fournisseur_etat_false = $commandeFournisseurRepository->count(['etatValide' => false, 'deletedAt' => null]);
         return $this->render('commande_fournisseur/index.html.twig', [
-            'commande_fournisseurs' => $commandeFournisseurRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
+            'commande_fournisseurs' => $paginator->generate($commandeFournisseurRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC'])),
+
             'produit_commande_fournisseurs' => $produitCommandeFournisseurRepository->findBy([],["id" => "DESC"]),
             'count_commande_fournisseur_etat_false' => $count_commande_fournisseur_etat_false
         ]);

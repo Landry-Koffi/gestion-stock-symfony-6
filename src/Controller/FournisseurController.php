@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Fournisseur;
 use App\Form\FournisseurType;
 use App\Repository\FournisseurRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class FournisseurController extends AbstractController
 {
     #[Route('/', name: 'app_fournisseur_index', methods: ['GET'])]
-    public function index(FournisseurRepository $fournisseurRepository): Response
+    public function index(FournisseurRepository $fournisseurRepository, Pagination $paginator): Response
     {
         return $this->render('fournisseur/index.html.twig', [
-            'fournisseurs' => $fournisseurRepository->findAll(),
+            'fournisseurs' => $paginator->generate($fournisseurRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 

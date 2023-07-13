@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use App\Repository\UsersRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsersController extends AbstractController
 {
     #[Route('/dashboard/users', name: 'app_users')]
-    public function index(UsersRepository $usersRepository): Response
+    public function index(UsersRepository $usersRepository, Pagination $paginator): Response
     {
         return $this->render('users/index.html.twig', [
-            'users' => $usersRepository->findBy(['deletedAt' => null], ['username'=>'ASC']),
+            'users' => $paginator->generate($usersRepository->findBy(['deletedAt' => null], ['username'=>'ASC'])),
         ]);
     }
 

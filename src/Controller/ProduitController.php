@@ -6,6 +6,7 @@ use App\Entity\Produit;
 use App\Form\ProduitType;
 use App\Form\ProduitType1;
 use App\Repository\ProduitRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,10 +19,10 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProduitController extends AbstractController
 {
     #[Route('/', name: 'app_produit_index', methods: ['GET'])]
-    public function index(ProduitRepository $produitRepository): Response
+    public function index(ProduitRepository $produitRepository, Pagination $paginator): Response
     {
         return $this->render('produit/index.html.twig', [
-            'produits' => $produitRepository->findAll(),
+            'produits' => $paginator->generate($produitRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 
@@ -58,9 +59,6 @@ class ProduitController extends AbstractController
                 // instead of its contents
                 $produit->setImage($newFilename);
             }
-
-
-
             $produitRepository->save($produit, true);
             $this->addFlash('success', 'Produit ajouté !');
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);

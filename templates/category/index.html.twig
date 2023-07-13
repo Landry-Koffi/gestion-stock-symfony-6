@@ -47,8 +47,11 @@
                 <td colspan="3">no records found</td>
             </tr>
         {% endfor %}
+        <!-- Affichez les liens de pagination -->
         </tbody>
     </table>
+        {{ knp_pagination_render(categories) }}
+
     </div>
 </section>
 {% endblock %}

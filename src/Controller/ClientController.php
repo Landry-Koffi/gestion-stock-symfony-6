@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Form\ClientType;
 use App\Repository\ClientRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClientController extends AbstractController
 {
     #[Route('/', name: 'app_client_index', methods: ['GET'])]
-    public function index(ClientRepository $clientRepository): Response
+    public function index(ClientRepository $clientRepository, Pagination $paginator): Response
     {
         return $this->render('client/index.html.twig', [
-            'clients' => $clientRepository->findAll(),
+            'clients' => $paginator->generate($clientRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 

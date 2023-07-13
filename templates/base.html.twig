@@ -20,6 +20,36 @@
     <link rel="stylesheet" type="text/css" media="print" href="{{ asset('css/print.css') }}" />
 
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination span {
+            padding: 5px;
+            margin: 1px;
+            height: 30px;
+            width: 30px;
+            background: #e9ecef;
+            color: #495057;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .pagination span > a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .pagination span.active {
+            background: #0d6efd;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Roles;
 use App\Form\RolesType;
 use App\Repository\RolesRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class RolesController extends AbstractController
 {
     #[Route('/', name: 'app_roles_index', methods: ['GET'])]
-    public function index(RolesRepository $rolesRepository): Response
+    public function index(RolesRepository $rolesRepository, Pagination $paginator): Response
     {
         return $this->render('roles/index.html.twig', [
-            'roles' => $rolesRepository->findAll(),
+            'roles' => $paginator->generate($rolesRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 

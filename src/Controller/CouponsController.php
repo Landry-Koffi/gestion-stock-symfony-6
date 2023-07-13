@@ -9,6 +9,7 @@ use App\Repository\ClientCouponsRepository;
 use App\Repository\ClientRepository;
 use App\Repository\CouponsRepository;
 use App\Repository\FidelisationRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,19 +19,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class CouponsController extends AbstractController
 {
     #[Route('/', name: 'app_coupons_index', methods: ['GET'])]
-    public function index(CouponsRepository $couponsRepository): Response
+    public function index(CouponsRepository $couponsRepository, Pagination $paginator): Response
     {
         return $this->render('coupons/index.html.twig', [
-            'coupons' => $couponsRepository->findBy([], ['id' => 'DESC']),
+            'coupons' => $paginator->generate($couponsRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 
     #[Route('/liste/attribution', name: 'app_coupons_liste_attribue', methods: ['GET'])]
-    public function listeAttribue(ClientCouponsRepository $clientCouponsRepository, CouponsRepository $couponsRepository): Response
+    public function listeAttribue(ClientCouponsRepository $clientCouponsRepository, Pagination $paginator, CouponsRepository $couponsRepository): Response
     {
         return $this->render('coupons/liste_cooupon_attribue.html.twig', [
-            'clientCoupons' => $clientCouponsRepository->findBy([], ['id' => 'DESC']),
-            'coupons' => $couponsRepository->findBy([], ['id' => 'DESC']),
+            'clientCoupons' => $paginator->generate($clientCouponsRepository->findBy([], ['id' => 'DESC'])),
+            'coupons' => $paginator->generate($couponsRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 

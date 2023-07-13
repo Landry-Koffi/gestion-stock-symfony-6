@@ -9,6 +9,7 @@ use App\Repository\ClientRepository;
 use App\Repository\FidelisationRepository;
 use App\Repository\RolesRepository;
 use App\Repository\UsersRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class FidelisationController extends AbstractController
 {
     #[Route('/', name: 'app_fidelisation_index', methods: ['GET'])]
-    public function index(FidelisationRepository $fidelisationRepository): Response
+    public function index(FidelisationRepository $fidelisationRepository, Pagination $paginator): Response
     {
         return $this->render('fidelisation/index.html.twig', [
-            'fidelisations' => $fidelisationRepository->findBy([], ['id' => 'DESC']),
+            'fidelisations' => $paginator->generate($fidelisationRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 
@@ -142,9 +143,9 @@ class FidelisationController extends AbstractController
 
         return $this->renderForm('fidelisation/new.html.twig', [
             'fidelisation' => $fidelisation,
-            'fidelisations' => $fidelisationRepository->findAll(),
-            'clients' => $clientRepository->findAll(),
-            'roles' => $rolesRepository->findAll()
+            'fidelisations' => $fidelisationRepository->findBy([], ['id' => 'DESC']),
+            'clients' => $clientRepository->findBy([], ['id' => 'DESC']),
+            'roles' => $rolesRepository->findBy([], ['id' => 'DESC'])
         ]);
     }
 

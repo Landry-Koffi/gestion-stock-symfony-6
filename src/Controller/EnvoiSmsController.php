@@ -6,6 +6,7 @@ use App\Entity\EnvoiSms;
 use App\Form\EnvoiSmsType;
 use App\Repository\EnvoiSmsRepository;
 use App\Security\SlugGenerator;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class EnvoiSmsController extends AbstractController
 {
     #[Route('/', name: 'app_envoi_sms_index', methods: ['GET'])]
-    public function index(EnvoiSmsRepository $envoiSmsRepository): Response
+    public function index(EnvoiSmsRepository $envoiSmsRepository, Pagination $paginator): Response
     {
         return $this->render('envoi_sms/index.html.twig', [
-            'envoi_sms' => $envoiSmsRepository->findBy([], ['id' => 'DESC']),
+            'envoi_sms' => $paginator->generate($envoiSmsRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 

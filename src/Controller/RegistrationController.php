@@ -23,7 +23,6 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
             $roles = $request->request->get('roles');
             // encode the plain password
@@ -47,7 +46,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'roles' => $rolesRepository->findAll(),
+            'roles' => $rolesRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 }

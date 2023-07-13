@@ -18,6 +18,7 @@ use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\ReglementRepository;
 use App\Services\GenerationPoints;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,12 +31,12 @@ use DateTime;
 class CommandeClientController extends AbstractController
 {
     #[Route('/', name: 'app_commande_client_index', methods: ['GET'])]
-    public function index(MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function index(MoyenReglementRepository $moyenReglementRepository, Pagination $paginator, CommandeClientRepository $commandeClientRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $count_commande_client_etat_false = $commandeClientRepository->count(['etatValide' => false, 'deletedAt' => null]);
         return $this->render('commande_client/index.html.twig', [
-            'commande_clients' => $commandeClientRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
-            'produit_commande_clients' => $produitCommandeClientRepository->findBy([],["numeroCommande" => "DESC"]),
+            'commande_clients' => $paginator->generate($commandeClientRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC'])),
+            'produit_commande_clients' =>  $produitCommandeClientRepository->findBy([],["numeroCommande" => "DESC"]),
             'moyen_reglements' => $moyenReglementRepository->findBy([],["libelle" => "DESC"]),
             'count_commande_client_etat_false' => $count_commande_client_etat_false
         ]);

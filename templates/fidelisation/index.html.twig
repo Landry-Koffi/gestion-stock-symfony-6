@@ -54,7 +54,7 @@
                 <td>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#ajouterMonnaie{{ fidelisation.id }}" class="btn btn-primary">Ajouter monnaie <i class="fa fa-money"></i></a>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#retirerMonnaie{{ fidelisation.id }}" class="btn btn-danger {{ fidelisation.monnaie == null or fidelisation.monnaie == 0 ? 'disabled' : '' }}">Retirer monnaie <i class="fa fa-money"></i></a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#retirerPoints{{ fidelisation.id }}" class="btn btn-warning {{ fidelisation.points == null or fidelisation.point == 0 ? 'disabled' : '' }}">Retirer les points</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#retirerPoints{{ fidelisation.id }}" class="btn btn-warning {{ fidelisation.points == null or fidelisation.points == 0 ? 'disabled' : '' }}">Retirer les points</a>
                 </td>
             </tr>
 
@@ -133,6 +133,7 @@
         {% endfor %}
         </tbody>
     </table>
+        {{ knp_pagination_render(fidelisations) }}
 
     </div>
 </section>

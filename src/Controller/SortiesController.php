@@ -6,6 +6,7 @@ use App\Entity\Sorties;
 use App\Form\SortiesType;
 use App\Repository\ProduitRepository;
 use App\Repository\SortiesRepository;
+use App\Services\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortiesController extends AbstractController
 {
     #[Route('/', name: 'app_sorties_index', methods: ['GET'])]
-    public function index(SortiesRepository $sortiesRepository): Response
+    public function index(SortiesRepository $sortiesRepository, Pagination $paginator): Response
     {
         return $this->render('sorties/index.html.twig', [
-            'sorties' => $sortiesRepository->findAll(),
+            'sorties' => $paginator->generate($sortiesRepository->findBy([], ['id' => 'DESC'])),
         ]);
     }
 
