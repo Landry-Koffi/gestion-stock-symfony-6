@@ -50,9 +50,13 @@ class CommandeFournisseur
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateLivraisonAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'commandeFournisseur', targetEntity: Lot::class)]
+    private Collection $lots;
+
     public function __construct()
     {
         $this->produitCommandeFournisseurs = new ArrayCollection();
+        $this->lots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,6 +210,36 @@ class CommandeFournisseur
     public function setDateLivraisonAt(?\DateTimeImmutable $dateLivraisonAt): self
     {
         $this->dateLivraisonAt = $dateLivraisonAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lot>
+     */
+    public function getLots(): Collection
+    {
+        return $this->lots;
+    }
+
+    public function addLot(Lot $lot): self
+    {
+        if (!$this->lots->contains($lot)) {
+            $this->lots->add($lot);
+            $lot->setCommandeFournisseur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLot(Lot $lot): self
+    {
+        if ($this->lots->removeElement($lot)) {
+            // set the owning side to null (unless already changed)
+            if ($lot->getCommandeFournisseur() === $this) {
+                $lot->setCommandeFournisseur(null);
+            }
+        }
 
         return $this;
     }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}CommandeFournisseur index{% endblock %}
+{% block title %}Liste des commandes fournisseurs{% endblock %}
 {% block stylesheets %}
     <style>
         .pointer:hover {
@@ -67,6 +67,7 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Produit</th>
+                                            <th scope="col">Date péremption</th>
                                             <th scope="col">Qte cmd</th>
                                             <th scope="col">Qte Livrée</th>
                                             <th scope="col">Commentaire</th>
@@ -80,9 +81,10 @@
                                                     <tr>
                                                         <th scope="row">{{ produit_commande_fournisseur.produit.numeroArticle }}</th>
                                                         <td>{{ produit_commande_fournisseur.produit.libelle }}</td>
+                                                        <td>{{ produit_commande_fournisseur.datePeremptionAt|date('d-m-Y') }}</td>
                                                         <td>{{ produit_commande_fournisseur.quantite }}</td>
                                                         <td>
-                                                            <input type="number" {{ commande_fournisseur.etatValide ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
+                                                            <input type="number" {{ commande_fournisseur.etatTraite ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
                                                                    max="{{ produit_commande_fournisseur.quantite }}"
                                                                    name="qte{{ produit_commande_fournisseur.id }}"
                                                                    value="{{ produit_commande_fournisseur.quantiteLivree == null ? 0 : produit_commande_fournisseur.quantiteLivree  }}"
@@ -92,7 +94,7 @@
                                                             {{ produit_commande_fournisseur.commentaire }}
                                                         </td>
                                                         <td>
-                                                            <button {{ commande_fournisseur.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
+                                                            <button {{ commande_fournisseur.etatTraite ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
                                                         </td>
                                                     </tr>
                                                 </form>

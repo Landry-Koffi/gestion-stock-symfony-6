@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New CommandeFournisseur{% endblock %}
+{% block title %}Créer une nouvelle Commande Fournisseur{% endblock %}
 
 {% block body %}
     <section class="section mt-3">
@@ -20,6 +20,7 @@
     <script>
         $(document).ready(function() {
             var produitsAjoutesFournisseur = {};
+            var i = getCookie('i') || 0;
 
             // Récupérer les produits ajoutés depuis le cookie, s'il existe
             var produitsAjoutesFournisseurCookie = getCookie('produitsAjoutesFournisseur');
@@ -44,11 +45,13 @@
 
                         var newRow = $('<tr class="table-primary">');
                         newRow.append('<td>' + produitCode + '</td>');
+                        newRow.append('<td>' + produit.code + '</td>');
                         newRow.append('<td>' + produit.libelle + '</td>');
                         newRow.append('<td><img style="height: 60px;width: 60px" src="{{ asset('uploads/images/') }}' + produit.image + '" alt="Image du produit"></td>');
                         newRow.append('<td><input type="number" class="quantite-input" id="quantiteInput_' + produitCode + '" required="required" min="1" max="'+ produit.stock +'" style="width: 100px" name="qte'+ produit.id +'" value="'+ produit.qte +'"></td>');
-                        newRow.append('<td><button type="button" class="btn btn-danger btn-sm delete-row">Supprimer</button></td>');
+                        newRow.append('<td><input type="date" class="date-input form-control" id="datePeremption_' + produitCode + '" required="required" style="width: 150px" name="datePeremption'+ produit.id +'" value="'+ produit.datePeremption +'"></td>');
                         newRow.append('<td><textarea placeholder="Votre commentaire" id="commentInput_' + produitCode + '" name="comment'+ produit.id +'" class="comment-input form-control">'+ produit.comment +'</textarea></td>');
+                        newRow.append('<td><button type="button" class="btn btn-danger delete-row mx-3"><i class="fa fa-trash"></i></button></td>');
                         tableBody.append(newRow);
                     }
                 }
@@ -62,7 +65,7 @@
                         var produitId = data.id;
                         //var prix = data.pv;
 
-                        if (produitsAjoutesFournisseur.hasOwnProperty(data.code)) {
+                        /*if (produitsAjoutesFournisseur.hasOwnProperty(data.code)) {
                             $('#messageProductAdd').text("Ce produit a déjà été ajouté.");
                             // Récupérer le contenu de la div
                             var message = $('#messageProductAdd').text();
@@ -74,18 +77,22 @@
                             return;
                         }
                         $('#messageProductAdd').text("");
-                        $('#messageProductAdd').hide();
+                        $('#messageProductAdd').hide();*/
 
-                        produitsAjoutesFournisseur[data.code] = {
+
+                        produitsAjoutesFournisseur[++i] = {
                             id_product: produitId,
                             code: data.code,
                             libelle: data.libelle,
                             stock: data.stock,
                             qte: 1,
                             comment: "",
-                            //total: parseInt(prix),
+                            datePeremption: "",
                             image: data.image
                         };
+                        // Stocker la valeur mise à jour de 'i' dans le cookie
+                        document.cookie = "i=" + JSON.stringify(i)+"; path=/";
+
 
                         document.cookie = "produitsAjoutesFournisseur=" + JSON.stringify(produitsAjoutesFournisseur)+"; path=/";
                         audio();
@@ -122,8 +129,16 @@
                 document.cookie = "produitsAjoutesFournisseur=" + JSON.stringify(produitsAjoutesFournisseur)+"; path=/";
             });
 
+            // Écouteur d'événement pour la modification de la date de péremption
+            $(document).on('input', '.date-input', function() {
+                var produitCode = $(this).attr('id').split('_')[1]; // Obtenir l'ID du produit à partir de l'attribut id
+                var datePeremption = $(this).val();
 
+                // Mettre à jour le commentaire du produit correspondant
+                produitsAjoutesFournisseur[produitCode].datePeremption = datePeremption;
 
+                document.cookie = "produitsAjoutesFournisseur=" + JSON.stringify(produitsAjoutesFournisseur)+"; path=/";
+            });
 
             // Gestionnaire d'événements pour la suppression d'une ligne de produit
             $(document).on('click', '.delete-row', function() {

@@ -151,6 +151,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_lot' ? 'active' : '' }}">
+                    <a href="{{ path('app_lot') }}">
+                  <span class="icon">
+                    <i class="fa fa-gift"></i>
+                  </span>
+                        <span class="text">Lots</span>
+                    </a>
+                </li>
+
                 <li class="nav-item nav-item-has-children {{ app.request.attributes.get('_route') == 'app_users' or
                 app.request.attributes.get('_route') == 'app_roles_index' or
                 app.request.attributes.get('_route') == 'app_envoi_sms_index' or

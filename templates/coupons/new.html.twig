@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Coupons{% endblock %}
+{% block title %}Ajouter un coupon{% endblock %}
 
 {% block body %}
 <section class="section mt-3">
@@ -9,7 +9,7 @@
 
     {{ include('coupons/_form.html.twig') }}
 
-    <a href="{{ path('app_coupons_index') }}">back to list</a>
+    <a href="{{ path('app_coupons_index') }}">Retour à la liste</a>
     </div>
 </section>
 {% endblock %}

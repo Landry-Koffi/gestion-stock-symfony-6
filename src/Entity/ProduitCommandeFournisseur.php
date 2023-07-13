@@ -46,6 +46,9 @@ class ProduitCommandeFournisseur
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $datePeremptionAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -167,6 +170,18 @@ class ProduitCommandeFournisseur
     public function setCommentaire(?string $commentaire): self
     {
         $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    public function getDatePeremptionAt(): ?\DateTimeImmutable
+    {
+        return $this->datePeremptionAt;
+    }
+
+    public function setDatePeremptionAt(?\DateTimeImmutable $datePeremptionAt): self
+    {
+        $this->datePeremptionAt = $datePeremptionAt;
 
         return $this;
     }

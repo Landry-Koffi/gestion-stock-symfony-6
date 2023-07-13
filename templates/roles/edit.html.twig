@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Roles{% endblock %}
+{% block title %}Modifier Roles{% endblock %}
 
 {% block body %}
 <section class="section mt-3">
     <div class="container-fluid">
     <h1>Modifier Roles</h1>
 
-    {{ include('roles/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('roles/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    <a href="{{ path('app_roles_index') }}">back to list</a>
+    <a href="{{ path('app_roles_index') }}">Retour à la liste</a>
     </div>
 </section>
 {% endblock %}

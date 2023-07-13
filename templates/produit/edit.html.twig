@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Produit{% endblock %}
+{% block title %}Modifier Produit{% endblock %}
 
 {% block body %}
 <section class="section">
     <div class="container-fluid">
-    <h1>Edit Produit</h1>
+    <h1>Modifier Produit</h1>
 
-    {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('produit/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    <a href="{{ path('app_produit_index') }}">back to list</a>
+    <a href="{{ path('app_produit_index') }}">Retour à la liste</a>
     </div>
 </section>
 {% endblock %}

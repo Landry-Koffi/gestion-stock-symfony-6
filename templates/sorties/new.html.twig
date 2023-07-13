@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sorties{% endblock %}
+{% block title %}Créer une nouvelle sortie{% endblock %}
 
 {% block body %}
 <section class="section mt-3">
@@ -9,7 +9,7 @@
 
     {{ include('sorties/_form.html.twig') }}
 
-    <a href="{{ path('app_sorties_index') }}">back to list</a>
+    <a href="{{ path('app_sorties_index') }}">Retour à la liste</a>
     </div>
 </section>
 {% endblock %}

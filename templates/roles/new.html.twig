@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Roles{% endblock %}
+{% block title %}Créer un nouveau rôle{% endblock %}
 
 {% block body %}
 <section class="section mt-3">
@@ -9,7 +9,7 @@
 
     {{ include('roles/_form.html.twig') }}
 
-    <a href="{{ path('app_roles_index') }}">back to list</a>
+    <a href="{{ path('app_roles_index') }}">Retour à la liste</a>
     </div>
 </section>
 {% endblock %}

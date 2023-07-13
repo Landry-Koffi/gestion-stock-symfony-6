@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit MoyenReglement{% endblock %}
+{% block title %}Modifier Moyen de Règlement{% endblock %}
 
 {% block body %}
 <section class="section">
     <div class="container-fluid">
-    <h1>Edit MoyenReglement</h1>
+    <h1>Modifier Moyen de Règlement</h1>
 
-    {{ include('moyen_reglement/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('moyen_reglement/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    <a href="{{ path('app_moyen_reglement_index') }}">back to list</a>
+    <a href="{{ path('app_moyen_reglement_index') }}">Retour à la liste</a>
 
-    {{ include('moyen_reglement/_delete_form.html.twig') }}
     </div>
 </section>
 {% endblock %}

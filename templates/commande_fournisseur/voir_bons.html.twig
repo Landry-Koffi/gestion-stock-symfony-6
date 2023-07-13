@@ -88,20 +88,26 @@
                                         <tr class="text-center">
                                             <th class="text-start">Article</th>
                                             <th>Description</th>
-                                            <th>Qte</th>
+                                            <th>Date péremption</th>
+                                            <th>Qte cmd</th>
+                                            <th>Qte Livrée</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for produitCommandeFournisseur in produitCommandeFournisseurs %}
                                             <tr class="text-center">
                                                 <td class="text-start">{{ produitCommandeFournisseur.produit.libelle }}</td>
-                                                <td>Description</td>
+                                                <td>{{ produitCommandeFournisseur.commentaire|raw }}</td>
+                                                <td>{{ produitCommandeFournisseur.datePeremptionAt|date('d-m-Y') }}</td>
                                                 <td>{{ produitCommandeFournisseur.quantite }}</td>
+                                                <td>{{ produitCommandeFournisseur.quantiteLivree }}</td>
                                             </tr>
                                         {% endfor %}
                                         {% set i = 0 %}
-                                        {% for i in 1..2 %}
+                                        {% for i in 1..3 %}
                                         <tr class="text-center">
+                                            <td></td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>

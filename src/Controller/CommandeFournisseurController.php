@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\CommandeFournisseur;
+use App\Entity\Lot;
 use App\Entity\ProduitCommandeFournisseur;
 use App\Form\CommandeFournisseurType;
 use App\Repository\CommandeFournisseurRepository;
+use App\Repository\LotRepository;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,12 +25,15 @@ class CommandeFournisseurController extends AbstractController
     {
         return $this->render('commande_fournisseur/index.html.twig', [
             'commande_fournisseurs' => $commandeFournisseurRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
-            'produit_commande_fournisseurs' => $produitCommandeFournisseurRepository->findBy([],["numeroCommande" => "DESC"]),
+            'produit_commande_fournisseurs' => $produitCommandeFournisseurRepository->findBy([],["id" => "DESC"]),
         ]);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/new', name: 'app_commande_fournisseur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitRepository $produitRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository): Response
+    public function new(Request $request, CommandeFournisseurRepository $commandeFournisseurRepository, ProduitRepository $produitRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, LotRepository $lotRepository): Response
     {
         $commandeFournisseur = new CommandeFournisseur();
         $form = $this->createForm(CommandeFournisseurType::class, $commandeFournisseur);
@@ -56,16 +61,27 @@ class CommandeFournisseurController extends AbstractController
 
             foreach ($cookieDatas as $cookieData){
                 $produit = $produitRepository->findOneBy(['id' => $cookieData['id_product']]);
-                $produitCommandeFounisseur = new ProduitCommandeFournisseur();
-                $produitCommandeFounisseur->setCommandeFournisseur($commandeFournisseur);
-                $produitCommandeFounisseur->setProduit($produit);
-                $produitCommandeFounisseur->setNumeroCommande($numCommandeFournisseur);
-                $produitCommandeFounisseur->setEtatTraite(false);
-                $produitCommandeFounisseur->setQuantite($cookieData['qte']);
-                $produitCommandeFounisseur->setCommentaire($cookieData['comment']);
-                $produitCommandeFounisseur->setUpdatedAt(new \DateTimeImmutable('now'));
-                $produitCommandeFounisseur->setCreatedAt(new \DateTimeImmutable('now'));
-                $produitCommandeFournisseurRepository->save($produitCommandeFounisseur, true);
+
+                $datePeremption = new \DateTimeImmutable($cookieData['datePeremption']);
+
+                $produitCommandeFournisseur_get = $produitCommandeFournisseurRepository->findOneBy(['produit' => $produit, 'datePeremptionAt' => $datePeremption, 'commandeFournisseur' => $commandeFournisseur]);
+
+                if ($produitCommandeFournisseur_get){
+                    $produitCommandeFournisseur_get->setQuantite($produitCommandeFournisseur_get->getQuantite() + $cookieData['qte']);
+                    $produitCommandeFournisseurRepository->save($produitCommandeFournisseur_get, true);
+                }else{
+                    $produitCommandeFounisseur = new ProduitCommandeFournisseur();
+                    $produitCommandeFounisseur->setCommandeFournisseur($commandeFournisseur);
+                    $produitCommandeFounisseur->setProduit($produit);
+                    $produitCommandeFounisseur->setNumeroCommande($numCommandeFournisseur);
+                    $produitCommandeFounisseur->setEtatTraite(false);
+                    $produitCommandeFounisseur->setQuantite($cookieData['qte']);
+                    $produitCommandeFounisseur->setCommentaire($cookieData['comment']);
+                    $produitCommandeFounisseur->setDatePeremptionAt($datePeremption);
+                    $produitCommandeFounisseur->setUpdatedAt(new \DateTimeImmutable('now'));
+                    $produitCommandeFounisseur->setCreatedAt(new \DateTimeImmutable('now'));
+                    $produitCommandeFournisseurRepository->save($produitCommandeFounisseur, true);
+                }
             }
             $this->addFlash('success', 'Commande fournisseur créée !');
             $response = new RedirectResponse($this->generateUrl('app_commande_fournisseur_index'), Response::HTTP_SEE_OTHER);
@@ -135,8 +151,11 @@ class CommandeFournisseurController extends AbstractController
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/valider/{id}', name: 'app_commande_fournisseur_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, CommandeFournisseurRepository $commandeFournisseurRepository): Response
+    public function valider($id, Request $request, LotRepository $lotRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, CommandeFournisseurRepository $commandeFournisseurRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         if ($dateLivraison != null){
@@ -145,6 +164,24 @@ class CommandeFournisseurController extends AbstractController
             $commandeFournisseur->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
             $commandeFournisseur->setUpdatedAt(new \DateTimeImmutable('now'));
             $commandeFournisseurRepository->save($commandeFournisseur, true);
+
+            $produitCommandeFournisseurs = $produitCommandeFournisseurRepository->findBy(['commandeFournisseur' => $commandeFournisseur]);
+            foreach ($produitCommandeFournisseurs as $produitCommandeFournisseur){
+                $lot_get = $lotRepository->findOneBy(['produit' => $produitCommandeFournisseur->getProduit(), 'datePeremptionAt' => $produitCommandeFournisseur->getDatePeremptionAt()]);
+                if ($lot_get and $lot_get->getStock() != 0){
+                    $lot_get->setStock($lot_get->getStock() + $produitCommandeFournisseur->getQuantiteLivree());
+                    $lotRepository->save($lot_get, true);
+                }else{
+                    $lot = new Lot();
+                    $lot->setProduit($produitCommandeFournisseur->getProduit());
+                    $lot->setStock($produitCommandeFournisseur->getQuantiteLivree());
+                    $lot->setCommandeFournisseur($commandeFournisseur);
+                    $lot->setDatePeremptionAt($produitCommandeFournisseur->getDatePeremptionAt());
+                    $lot->setCreatedAt(new \DateTimeImmutable('now'));
+                    $lotRepository->save($lot, true);
+                }
+            }
+
             $this->addFlash('success', 'Commande fournisseur validée !');
         }else{
             $this->addFlash('error', 'Veuillez renseigner tous les champs svp !');

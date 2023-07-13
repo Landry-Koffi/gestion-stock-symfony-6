@@ -52,11 +52,15 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produits', targetEntity: Sorties::class)]
     private Collection $sorties;
 
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Lot::class)]
+    private Collection $lots;
+
     public function __construct()
     {
         $this->produitCommandeClients = new ArrayCollection();
         $this->produitCommandeFournisseurs = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->lots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,6 +260,36 @@ class Produit
             // set the owning side to null (unless already changed)
             if ($sorty->getProduits() === $this) {
                 $sorty->setProduits(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lot>
+     */
+    public function getLots(): Collection
+    {
+        return $this->lots;
+    }
+
+    public function addLot(Lot $lot): self
+    {
+        if (!$this->lots->contains($lot)) {
+            $this->lots->add($lot);
+            $lot->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLot(Lot $lot): self
+    {
+        if ($this->lots->removeElement($lot)) {
+            // set the owning side to null (unless already changed)
+            if ($lot->getProduit() === $this) {
+                $lot->setProduit(null);
             }
         }
 
