@@ -22,7 +22,7 @@
                     <h2>Liste des commandes fournisseurs</h2>
                 </div>
                 <div class="col-6 text-end">
-                    <a href="{{ path('app_commande_fournisseur_new') }}" class="btn btn-primary">Ajouter une commande</a>
+                    <a href="{{ path('app_commande_fournisseur_new') }}" class="btn btn-primary {{ count_commande_fournisseur_etat_false > 0 ? 'disabled' : ''}}">Ajouter une commande</a>
                 </div>
             </div>
             <div class="row">
@@ -162,8 +162,8 @@
                                         <h5>Etes-vous sûr de bien vouloir <span class="text-danger">valider</span> cette commande ?
                                             <br>Cette action est irreverssible</h5>
                                         <div class="form-group mt-3">
-                                            <label for="dateLivraison">Date de livraison <span class="text-danger">*</span></label>
-                                            <input required type="date" name="dateLivraison" id="dateLivraison" class="form-control">
+                                            <label for="dateLivraison">Date de livraison</label>
+                                            <input type="date" name="dateLivraison" id="dateLivraison" class="form-control">
                                         </div>
                                     </div>
                                     <div class="modal-footer">

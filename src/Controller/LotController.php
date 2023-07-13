@@ -14,7 +14,7 @@ class LotController extends AbstractController
     public function index(LotRepository $lotRepository): Response
     {
         return $this->render('lot/index.html.twig', [
-            'lots' => $lotRepository->findBy([], ['datePeremptionAt' => 'DESC'])
+            'lots' => $lotRepository->findBy([], ['datePeremptionAt' => 'ASC'])
         ]);
     }
 }

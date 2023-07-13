@@ -22,7 +22,7 @@
                     <h2>Liste des commandes clients</h2>
                 </div>
                 <div class="col-6 text-end">
-                    <a href="{{ path('app_commande_client_new') }}" class="btn btn-primary">Ajouter une commande</a>
+                    <a href="{{ path('app_commande_client_new') }}" class="btn btn-primary {{ count_commande_client_etat_false > 0 ? 'disabled' : ''}} ">Ajouter une commande</a>
                 </div>
             </div>
             <div class="row">
@@ -95,7 +95,7 @@
                                                         <td>{{ produit_commande_client.quantite }}</td>
                                                         <td>{{ produit_commande_client.prixTotal }} FCFA</td>
                                                         <td>
-                                                            <input type="number" {{ commande_client.etatValide ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
+                                                            <input type="number" {{ commande_client.etatTraite ? 'disabled' : '' }} style="width:100px" class="qte-input" min="0"
                                                                    max="{{ produit_commande_client.quantite }}"
                                                                    name="qte{{ produit_commande_client.id }}"
                                                                    value="{{ produit_commande_client.quantiteLivree == null ? 0 : produit_commande_client.quantiteLivree  }}"
@@ -110,7 +110,7 @@
                                                             {{ produit_commande_client.commentaire }}
                                                         </td>
                                                         <td>
-                                                            <button {{ commande_client.etatValide ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
+                                                            <button {{ commande_client.etatTraite ? 'disabled' : '' }} type="submit" class="btn btn-warning"><i class="fa fa-send"></i></button>
                                                         </td>
                                                     </tr>
                                                 </form>

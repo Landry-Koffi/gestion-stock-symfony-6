@@ -45,7 +45,7 @@
     <div id="messageProductAdd" class="alert alert-danger text-center" style="display: none"></div>
 
     <select name="produit" class="select-sm form-control" id="commande_client_produits">
-        <option>Sélectionnez un produit</option>
+        <option class="default-option">Sélectionnez un produit</option>
         {% for produit in produits %}
             <option data-id="{{ produit.id }}" value="{{ produit.id }}">{{ produit.libelle }}</option>
         {% endfor %}
@@ -69,7 +69,7 @@
     </thead>
     <tfoot>
     <tr>
-        <td colspan="6" style="text-align:right;"><strong>Total:</strong></td>
+        <td colspan="7" style="text-align:right;"><strong>Total:</strong></td>
         <td id="sommeTotal">0</td>
     </tr>
     </tfoot>
@@ -85,7 +85,7 @@
     </tr>
     </tbody>
 </table>
-<button class="btn btn-success form-control">{{ button_label|default('Enregistrer') }} <i class="fa fa-floppy-o"></i></button>
+<button class="btn btn-success form-control" id="enregistrerButton" disabled>{{ button_label|default('Enregistrer') }} <i class="fa fa-floppy-o"></i></button>
 {{ form_end(form) }}
 
 

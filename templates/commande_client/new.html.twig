@@ -22,6 +22,16 @@
         $(document).ready(function() {
             var produitsAjoutes = {};
 
+            // Fonction pour vérifier si des produits ont été ajoutés
+            function produitsAjoutesExist() {
+                for (var produitCode in produitsAjoutes) {
+                    if (produitsAjoutes.hasOwnProperty(produitCode)) {
+                        return true; // Au moins un produit est présent
+                    }
+                }
+                return false; // Aucun produit n'est ajouté
+            }
+
 
             // Calculer la somme totale des produits ajoutés
             function calculerSommeTotal() {
@@ -41,6 +51,14 @@
                 $('#sommeTotal').text(sommeTotal);
                 $('#commande_client_totalHt').val(sommeTotal);
                 $('#commande_client_totalTtc').val(sommeTotal + sommeTotal * (tva/100));
+
+                // Vérifier si des produits sont ajoutés et activer ou désactiver le bouton "Enregistrer" en conséquence
+                var enregistrerButton = $('#enregistrerButton');
+                if (produitsAjoutesExist()) {
+                    enregistrerButton.prop('disabled', false);
+                } else {
+                    enregistrerButton.prop('disabled', true);
+                }
             }
 
             // Écouteur d'événement pour la modification de la TVA
@@ -83,7 +101,7 @@
                         newRow.append('<td><img style="height: 60px;width: 60px" src="{{ asset('uploads/images/') }}' + produit.image + '" alt="Image du produit"></td>');
                         newRow.append('<td>' + produit.prix + '</td>');
                         newRow.append('<td><input type="number" class="quantite-input" id="quantiteInput_' + produitCode + '" required="required" min="1" max="'+ produit.stock +'" required="required" style="width: 100px" name="qte'+ produit.id +'" value="'+ produit.qte +'"></td>');
-                        newRow.append('<td><button type="button" class="btn btn-danger btn-sm delete-row">Supprimer</button></td>');
+                        newRow.append('<td><button type="button" class="btn btn-danger btn-sm delete-row"><i class="fa fa-trash"></i></button></td>');
                         newRow.append('<td><textarea placeholder="Votre commentaire" id="commentInput_' + produitCode + '" name="comment'+ produit.id +'" class="comment-input form-control">'+ produit.comment +'</textarea></td>');
                         newRow.append('<td class="total-cell">' + produit.total + '</td>');
                         tableBody.append(newRow);
@@ -144,6 +162,11 @@
                         mettreAJourSommeTotal()
                     }
                 });
+                // Vérifier si l'option sélectionnée n'est pas la valeur par défaut
+                if (!$(this).find('option:selected').hasClass('default-option')) {
+                    // Réinitialiser la sélection à l'option par défaut
+                    $(this).val('default').find('.default-option').prop('selected', true);
+                }
             });
 
             // Écouteur d'événement pour la modification de la quantité

@@ -22,6 +22,26 @@
             var produitsAjoutesFournisseur = {};
             var i = getCookie('i') || 0;
 
+            // Fonction pour vérifier si des produits ont été ajoutés
+            function produitsAjoutesFournisseurExist() {
+                for (var produitCode in produitsAjoutesFournisseur) {
+                    if (produitsAjoutesFournisseur.hasOwnProperty(produitCode)) {
+                        return true; // Au moins un produit est présent
+                    }
+                }
+                return false; // Aucun produit n'est ajouté
+            }
+
+            // Mettre à jour l'état du bouton "Enregistrer"
+            function mettreAJourEtatEnregistrer() {
+                var enregistrerButton = $('#enregistrerButton');
+                if (produitsAjoutesFournisseurExist()) {
+                    enregistrerButton.prop('disabled', false);
+                } else {
+                    enregistrerButton.prop('disabled', true);
+                }
+            }
+
             // Récupérer les produits ajoutés depuis le cookie, s'il existe
             var produitsAjoutesFournisseurCookie = getCookie('produitsAjoutesFournisseur');
             if (produitsAjoutesFournisseurCookie) {
@@ -99,8 +119,16 @@
 
                         // Afficher les produits ajoutés dans la table
                         afficherproduitsAjoutesFournisseur();
+
+                        // Mettre à jour l'état du bouton "Enregistrer"
+                        mettreAJourEtatEnregistrer();
                     }
                 });
+                // Vérifier si l'option sélectionnée n'est pas la valeur par défaut
+                if (!$(this).find('option:selected').hasClass('default-option')) {
+                    // Réinitialiser la sélection à l'option par défaut
+                    $(this).val('default').find('.default-option').prop('selected', true);
+                }
             });
 
             // Écouteur d'événement pour la modification de la quantité
@@ -154,7 +182,12 @@
                 document.cookie = "produitsAjoutesFournisseur=" + JSON.stringify(produitsAjoutesFournisseurCookie) + "; path=/";
                 // Supprimer la ligne de la table
                 row.remove();
+
+                // Mettre à jour l'état du bouton "Enregistrer"
+                mettreAJourEtatEnregistrer();
             });
+            // Mettre à jour l'état initial du bouton "Enregistrer"
+            mettreAJourEtatEnregistrer();
         });
 
         function getCookie(name) {

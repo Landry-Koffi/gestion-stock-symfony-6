@@ -23,9 +23,11 @@ class CommandeFournisseurController extends AbstractController
     #[Route('/', name: 'app_commande_fournisseur_index', methods: ['GET'])]
     public function index(CommandeFournisseurRepository $commandeFournisseurRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository): Response
     {
+        $count_commande_fournisseur_etat_false = $commandeFournisseurRepository->count(['etatValide' => false, 'deletedAt' => null]);
         return $this->render('commande_fournisseur/index.html.twig', [
             'commande_fournisseurs' => $commandeFournisseurRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
             'produit_commande_fournisseurs' => $produitCommandeFournisseurRepository->findBy([],["id" => "DESC"]),
+            'count_commande_fournisseur_etat_false' => $count_commande_fournisseur_etat_false
         ]);
     }
 
@@ -158,7 +160,6 @@ class CommandeFournisseurController extends AbstractController
     public function valider($id, Request $request, LotRepository $lotRepository, ProduitCommandeFournisseurRepository $produitCommandeFournisseurRepository, CommandeFournisseurRepository $commandeFournisseurRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
-        if ($dateLivraison != null){
             $commandeFournisseur = $commandeFournisseurRepository->findOneBy(['id' => $id]);
             $commandeFournisseur->setEtatValide(true);
             $commandeFournisseur->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
@@ -168,13 +169,18 @@ class CommandeFournisseurController extends AbstractController
             $produitCommandeFournisseurs = $produitCommandeFournisseurRepository->findBy(['commandeFournisseur' => $commandeFournisseur]);
             foreach ($produitCommandeFournisseurs as $produitCommandeFournisseur){
                 $lot_get = $lotRepository->findOneBy(['produit' => $produitCommandeFournisseur->getProduit(), 'datePeremptionAt' => $produitCommandeFournisseur->getDatePeremptionAt()]);
+                if ($produitCommandeFournisseur->getQuantiteLivree() == null){
+                    $qte = 0;
+                }else{
+                    $qte = $produitCommandeFournisseur->getQuantiteLivree();
+                }
                 if ($lot_get and $lot_get->getStock() != 0){
-                    $lot_get->setStock($lot_get->getStock() + $produitCommandeFournisseur->getQuantiteLivree());
+                    $lot_get->setStock($lot_get->getStock() + $qte);
                     $lotRepository->save($lot_get, true);
                 }else{
                     $lot = new Lot();
                     $lot->setProduit($produitCommandeFournisseur->getProduit());
-                    $lot->setStock($produitCommandeFournisseur->getQuantiteLivree());
+                    $lot->setStock($qte);
                     $lot->setCommandeFournisseur($commandeFournisseur);
                     $lot->setDatePeremptionAt($produitCommandeFournisseur->getDatePeremptionAt());
                     $lot->setCreatedAt(new \DateTimeImmutable('now'));
@@ -183,9 +189,7 @@ class CommandeFournisseurController extends AbstractController
             }
 
             $this->addFlash('success', 'Commande fournisseur validée !');
-        }else{
-            $this->addFlash('error', 'Veuillez renseigner tous les champs svp !');
-        }
+
         return $this->redirectToRoute('app_commande_fournisseur_index', [], Response::HTTP_SEE_OTHER);
     }
 

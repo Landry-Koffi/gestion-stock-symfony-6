@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CommandeClient;
+use App\Entity\Lot;
 use App\Entity\ProduitCommandeClient;
 use App\Entity\Reglement;
 use App\Form\CommandeClientType;
@@ -11,6 +12,7 @@ use App\Repository\ClientRepository;
 use App\Repository\CommandeClientRepository;
 use App\Repository\CouponsRepository;
 use App\Repository\FidelisationRepository;
+use App\Repository\LotRepository;
 use App\Repository\MoyenReglementRepository;
 use App\Repository\ProduitCommandeClientRepository;
 use App\Repository\ProduitRepository;
@@ -30,10 +32,12 @@ class CommandeClientController extends AbstractController
     #[Route('/', name: 'app_commande_client_index', methods: ['GET'])]
     public function index(MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
+        $count_commande_client_etat_false = $commandeClientRepository->count(['etatValide' => false, 'deletedAt' => null]);
         return $this->render('commande_client/index.html.twig', [
             'commande_clients' => $commandeClientRepository->findBy(['deletedAt' => null], ['dateCommandeAt' => 'DESC']),
             'produit_commande_clients' => $produitCommandeClientRepository->findBy([],["numeroCommande" => "DESC"]),
             'moyen_reglements' => $moyenReglementRepository->findBy([],["libelle" => "DESC"]),
+            'count_commande_client_etat_false' => $count_commande_client_etat_false
         ]);
     }
 
@@ -150,7 +154,7 @@ class CommandeClientController extends AbstractController
      * @throws \Exception
      */
     #[Route('/valider/{id}', name: 'app_commande_client_valider', methods: ['GET', 'POST'])]
-    public function valider($id, Request $request, FidelisationRepository $fidelisationRepository, GenerationPoints $generationPoints, CouponsRepository $couponsRepository, ClientCouponsRepository $clientCouponsRepository, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
+    public function valider($id, Request $request, LotRepository $lotRepository, FidelisationRepository $fidelisationRepository, GenerationPoints $generationPoints, CouponsRepository $couponsRepository, ClientCouponsRepository $clientCouponsRepository, ClientRepository $clientRepository, MoyenReglementRepository $moyenReglementRepository, CommandeClientRepository $commandeClientRepository, ReglementRepository $reglementRepository, ProduitCommandeClientRepository $produitCommandeClientRepository): Response
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
@@ -223,6 +227,32 @@ class CommandeClientController extends AbstractController
                 $clientFidel->setPoints($generationPoints->addPoints($clientFidel, $commandeClient->getTotalTtc()));
                 $fidelisationRepository->save($clientFidel, true);
             }
+
+            // Edit Lot
+            $produitCommandeClients = $produitCommandeClientRepository->findBy(['commandeClient' => $commandeClient]);
+            foreach ($produitCommandeClients as $produitCommandeClient) {
+                $quantiteCommandee = $produitCommandeClient->getQuantiteLivree(); // Quantité commandée initiale
+                // Triez les lots par ordre croissant de la date de péremption
+                $lots = $lotRepository->findBy(['produit' => $produitCommandeClient->getProduit()], ['datePeremptionAt' => 'ASC']);
+                foreach ($lots as $lot) {
+                    if ($quantiteCommandee <= 0) {
+                        break; // Toutes les quantités ont été satisfaites, sortir de la boucle
+                    }
+                    // Vérifier si le lot a suffisamment de stock pour satisfaire la quantité restante
+                    if ($lot->getStock() >= $quantiteCommandee) {
+                        $lot->setStock($lot->getStock() - $quantiteCommandee);
+                        $quantiteCommandee = 0; // Toutes les quantités ont été satisfaites
+                    } else {
+                        // Le stock du lot est insuffisant pour satisfaire la quantité restante,
+                        // déduire la quantité disponible du lot et mettre à jour la quantité restante
+                        $quantiteCommandee -= $lot->getStock();
+                        $lot->setStock(0);
+                    }
+                    // Enregistrer les modifications du lot
+                    $lotRepository->save($lot, true);
+                }
+            }
+
 
             // Save reglement
             $reglement = new Reglement();
