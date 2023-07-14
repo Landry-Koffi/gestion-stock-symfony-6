@@ -2,45 +2,78 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\EnvoiSmsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_config_sms', 'read_config_sms_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_config_sms']],
+    denormalizationContext: ['groups' => ['write_config_sms']]
+),
+]
 #[ORM\Entity(repositoryClass: EnvoiSmsRepository::class)]
 class EnvoiSms
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_config_sms'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_config_sms'])]
     private ?string $denomination = null;
 
     #[ORM\Column]
+    #[Groups(['read_config_sms'])]
     private ?\DateTime $dateDebutEnvoiAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_config_sms'])]
     private ?\DateTime $dateFinEnvoiAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_config_sms'])]
     private ?string $frequence = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_config_sms'])]
     private ?string $jourEnvoi = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_config_sms'])]
     private ?string $heureEnvoi = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_config_sms'])]
     private ?string $minuteEnvoi = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_config_sms'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_config_sms'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_config_sms'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int

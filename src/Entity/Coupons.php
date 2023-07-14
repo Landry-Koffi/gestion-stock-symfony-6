@@ -2,13 +2,35 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CouponsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_coupons', 'read_coupons_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_coupons']],
+    denormalizationContext: ['groups' => ['write_coupons']]
+),
+]
 #[ORM\Entity(repositoryClass: CouponsRepository::class)]
 #[UniqueEntity('libelle', message: 'Ce libellé existe déjà')]
 class Coupons
@@ -16,18 +38,23 @@ class Coupons
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_coupons'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_coupons'])]
     private ?string $libelle = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['read_coupons'])]
     private ?\DateTimeInterface $dateFin = null;
 
     #[ORM\Column]
+    #[Groups(['read_coupons'])]
     private ?bool $etat = null;
 
     #[ORM\Column]
+    #[Groups(['read_coupons'])]
     private ?int $montant = null;
 
     #[ORM\OneToMany(mappedBy: 'coupon', targetEntity: ClientCoupons::class)]

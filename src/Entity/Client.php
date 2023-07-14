@@ -2,12 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_client', 'read_client_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_client']],
+    denormalizationContext: ['groups' => ['write_client']]
+),
+]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity('tel', message: 'Ce numéro de téléphone est déjà utilisé')]
 class Client
@@ -15,36 +37,47 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $libelle = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $responsable = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $ville = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $tel = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?string $matfiscal = null;
 
     #[ORM\Column]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_client', 'read_clientCoupons', 'read_commande_client', 'read_feed_back', 'read_fidelisation'])]
     private ?\DateTimeImmutable $updateAt = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: CommandeClient::class)]

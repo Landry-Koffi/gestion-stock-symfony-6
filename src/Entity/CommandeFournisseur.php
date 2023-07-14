@@ -2,52 +2,85 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CommandeFournisseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_commande_fournisseur', 'read_commande_fournisseur_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_commande_fournisseur']],
+    denormalizationContext: ['groups' => ['write_commande_fournisseur']]
+),
+]
 #[ORM\Entity(repositoryClass: CommandeFournisseurRepository::class)]
 class CommandeFournisseur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?string $numeroCommande = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandeFournisseurs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?Fournisseur $fournisseur = null;
 
     #[ORM\Column]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $dateCommandeAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?string $observation = null;
 
     #[ORM\Column]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?bool $etatTraite = null;
 
     #[ORM\Column]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?bool $etatValide = null;
 
     #[ORM\Column]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?string $numeroFacture = null;
 
     #[ORM\OneToMany(mappedBy: 'commandeFournisseur', targetEntity: ProduitCommandeFournisseur::class)]
     private Collection $produitCommandeFournisseurs;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_commande_fournisseur', 'read_lot', 'read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $dateLivraisonAt = null;
 
     #[ORM\OneToMany(mappedBy: 'commandeFournisseur', targetEntity: Lot::class)]

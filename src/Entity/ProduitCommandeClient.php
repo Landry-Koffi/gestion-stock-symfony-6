@@ -2,51 +2,85 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProduitCommandeClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_produit_commande_client', 'read_produit_commande_client_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_produit_commande_client']],
+    denormalizationContext: ['groups' => ['write_produit_commande_client']]
+),
+]
 #[ORM\Entity(repositoryClass: ProduitCommandeClientRepository::class)]
 class ProduitCommandeClient
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'produitCommandeClients')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_produit_commande_client'])]
     private ?Produit $produit = null;
 
     #[ORM\ManyToOne(inversedBy: 'produitCommandeClients')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_produit_commande_client'])]
     private ?CommandeClient $commandeClient = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_produit_commande_client'])]
     private ?string $numeroCommande = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?int $quantite = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?int $prixTotal = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?bool $etatTraite = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_client'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produit_commande_client'])]
     private ?int $quantiteLivree = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produit_commande_client'])]
     private ?int $quantiteUpdate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read_produit_commande_client'])]
     private ?string $commentaire = null;
 
     public function getId(): ?int

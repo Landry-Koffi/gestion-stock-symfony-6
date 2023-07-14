@@ -2,42 +2,73 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_produits', 'read_produits_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_produits']],
+    denormalizationContext: ['groups' => ['write_produits']]
+),
+]
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?string $libelle = null;
 
     #[ORM\Column]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?int $prixAchat = null;
 
     #[ORM\Column]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?int $prixVente = null;
 
     #[ORM\Column]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?float $tva = null;
 
     #[ORM\Column]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?int $stock = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?Category $category = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?string $numeroArticle = null;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommandeClient::class)]
@@ -47,6 +78,7 @@ class Produit
     private Collection $produitCommandeFournisseurs;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produits', 'read_lot', 'read_produit_commande_client', 'read_produit_commande_fournisseur', 'read_sorties'])]
     private ?\DateTimeImmutable $datePeremptionAt = null;
 
     #[ORM\OneToMany(mappedBy: 'produits', targetEntity: Sorties::class)]

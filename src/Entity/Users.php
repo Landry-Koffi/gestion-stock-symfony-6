@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +15,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_users', 'read_users_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_users']],
+    denormalizationContext: ['groups' => ['write_users']]
+),
+]
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'Ce nom d\'utilisateur est déjà utilisé')]
 #[UniqueEntity('tel', message: 'Ce numéro de téléphone est déjà utilisé')]
@@ -18,12 +40,15 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $username = null;
 
     #[ORM\Column]
+    #[Groups(['read_users', 'read_sorties'])]
     private array $roles = [];
 
     /**
@@ -33,33 +58,43 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $adresse = null;
 
     #[ORM\Column]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?bool $state = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $entreprise = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $ville = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $tel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read_users', 'read_sorties'])]
     private ?string $prenoms = null;
 
     #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Sorties::class)]

@@ -20,7 +20,7 @@ class Pagination
         return $this->paginator->paginate(
             $categories,
             $this->request->query->getInt('page', 1), // Numéro de page actuel, récupéré à partir de la requête GET
-            2 // Nombre d'éléments à afficher par page
+            10 // Nombre d'éléments à afficher par page
         );
     }
 }

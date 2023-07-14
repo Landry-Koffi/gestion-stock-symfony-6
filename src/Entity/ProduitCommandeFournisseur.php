@@ -2,51 +2,85 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProduitCommandeFournisseurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_produit_commande_fournisseur', 'read_produit_commande_fournisseur_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_produit_commande_fournisseur']],
+    denormalizationContext: ['groups' => ['write_produit_commande_fournisseur']]
+),
+]
 #[ORM\Entity(repositoryClass: ProduitCommandeFournisseurRepository::class)]
 class ProduitCommandeFournisseur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'produitCommandeFournisseurs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?Produit $produit = null;
 
     #[ORM\ManyToOne(inversedBy: 'produitCommandeFournisseurs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?CommandeFournisseur $commandeFournisseur = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?string $numeroCommande = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?int $quantite = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?bool $etatTraite = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?int $quantiteLivree = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?int $quantiteUpdate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?string $commentaire = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_produit_commande_fournisseur'])]
     private ?\DateTimeImmutable $datePeremptionAt = null;
 
     public function getId(): ?int

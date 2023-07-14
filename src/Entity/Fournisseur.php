@@ -2,50 +2,84 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\FournisseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource
+(
+    operations: [
+        new Post(),
+        new Put(),
+        new Delete(),
+        new Get(
+            normalizationContext: ['groups' => ['read_fournisseur', 'read_fournisseur_item']]
+        ),
+        new GetCollection()
+    ],
+    normalizationContext: ['groups' => ['read_fournisseur']],
+    denormalizationContext: ['groups' => ['write_fournisseur']]
+),
+]
 #[ORM\Entity(repositoryClass: FournisseurRepository::class)]
 class Fournisseur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $libelle = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $entreprise = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $responsable = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $ville = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $tel = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?string $matfiscal = null;
 
     #[ORM\Column]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read_fournisseur', 'read_commande_fournisseur'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'fournisseur', targetEntity: CommandeFournisseur::class)]
