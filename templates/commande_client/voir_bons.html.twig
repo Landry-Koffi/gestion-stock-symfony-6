@@ -89,7 +89,7 @@
                                             <th>Vendeur</th>
                                             <th>Paiement</th>
                                             <th>Livraison</th>
-                                            <th>Echéance</th>
+                                            {#<th>Echéance</th>#}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -97,7 +97,7 @@
                                             <td>{{ app.user.entreprise }}</td>
                                             <td>{{ commande_client.moyenPaiement == null ? '' : commande_client.moyenPaiement.libelle }}</td>
                                             <td>{{ commande_client.dateLivraisonAt == null ? commande_client.dateLivraisonAt : commande_client.dateLivraisonAt|date('d/m/Y') }}</td>
-                                            <td>{{ commande_client.echeance }}</td>
+                                            {#<td>{{ commande_client.echeance }}</td>#}
                                         </tr>
                                     </tbody>
                                 </table>

@@ -159,11 +159,11 @@ class CommandeClientController extends AbstractController
     {
         $dateLivraison = $request->request->get("dateLivraison");
         $moyenPaiement = $request->request->get("moyenPaiement");
-        $echeance = $request->request->get("echeance");
+        //$echeance = $request->request->get("echeance");
         $coupon_get = $request->request->get("coupon");
 
 
-        if ($dateLivraison != null and $moyenPaiement != null and $echeance != null){
+        if ($dateLivraison != null and $moyenPaiement != null){
             $moyenPaiement = $moyenReglementRepository->findOneBy(['id' => $moyenPaiement]);
 
             $commandeClient = $commandeClientRepository->findOneBy(['id' => $id]);
@@ -218,7 +218,7 @@ class CommandeClientController extends AbstractController
             $commandeClient->setEtatValide(true);
             $commandeClient->setDateLivraisonAt(new \DateTimeImmutable($dateLivraison));
             $commandeClient->setMoyenPaiement($moyenPaiement);
-            $commandeClient->setEcheance($echeance);
+            //$commandeClient->setEcheance($echeance);
             $commandeClient->setUpdatedAt(new \DateTimeImmutable('now'));
             $commandeClientRepository->save($commandeClient, true);
 
@@ -260,7 +260,7 @@ class CommandeClientController extends AbstractController
             $reglement->setCommandeClient($commandeClient);
             $reglement->setMontant($commandeClient->getTotalTtc());
             $reglement->setModeReglement($moyenPaiement);
-            $reglement->setEcheanceAt($echeance);
+            //$reglement->setEcheanceAt($echeance);
             $reglementRepository->save($reglement, true);
 
             $this->addFlash('success', 'Commande client validée !');

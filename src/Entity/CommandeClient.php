@@ -98,9 +98,9 @@ class CommandeClient
     #[Groups(['read_commande_client', 'read_produit_commande_client', 'read_reglement'])]
     private ?\DateTimeImmutable $dateLivraisonAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    /*#[ORM\Column(length: 255, nullable: true)]
     #[Groups(['read_commande_client', 'read_produit_commande_client', 'read_reglement'])]
-    private ?string $echeance = null;
+    private ?string $echeance = null;*/
 
     #[ORM\ManyToOne(inversedBy: 'commandeClients')]
     #[Groups(['read_commande_client', 'read_produit_commande_client', 'read_reglement'])]
@@ -337,7 +337,7 @@ class CommandeClient
         return $this;
     }
 
-    public function getEcheance(): ?string
+    /*public function getEcheance(): ?string
     {
         return $this->echeance;
     }
@@ -347,7 +347,7 @@ class CommandeClient
         $this->echeance = $echeance;
 
         return $this;
-    }
+    }*/
 
     public function getMoyenPaiement(): ?MoyenReglement
     {

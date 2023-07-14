@@ -26,7 +26,7 @@
                 <th>N° commande</th>
                 <th>Moyen règlement</th>
                 <th>Montant</th>
-                <th>Échéance</th>
+                {#<th>Échéance</th>#}
             </tr>
             </thead>
             <tbody>
@@ -35,7 +35,7 @@
                     <td>{{ reglement.commandeClient.numeroCommande }}</td>
                     <td>{{ reglement.modeReglement.libelle }}</td>
                     <td>{{ reglement.montant }} FCFA</td>
-                    <td>{{ reglement.echeanceAt }}</td>
+                   {# <td>{{ reglement.echeanceAt }}</td>#}
                 </tr>
             {% else %}
                 <tr>

@@ -50,9 +50,9 @@ class Reglement
     #[Groups(['read_reglement'])]
     private ?int $montant = null;
 
-    #[ORM\Column]
+/*    #[ORM\Column]
     #[Groups(['read_reglement'])]
-    private ?String $echeanceAt = null;
+    private ?String $echeanceAt = null;*/
 
     public function getId(): ?int
     {
@@ -95,7 +95,7 @@ class Reglement
         return $this;
     }
 
-    public function getEcheanceAt(): ?String
+    /*public function getEcheanceAt(): ?String
     {
         return $this->echeanceAt;
     }
@@ -105,5 +105,5 @@ class Reglement
         $this->echeanceAt = $echeanceAt;
 
         return $this;
-    }
+    }*/
 }
