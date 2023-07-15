@@ -20,10 +20,6 @@ class ProduitType1 extends AbstractType
             ->add('prixVente')
             ->add('tva')
             ->add('stock')
-            ->add('datePeremptionAt', DateType::class, [
-                'input' => 'datetime_immutable',
-                'widget' => 'single_text'
-            ])
             ->add('numeroArticle')
             ->add('category', EntityType::class, [
                 "class" => Category::class,
